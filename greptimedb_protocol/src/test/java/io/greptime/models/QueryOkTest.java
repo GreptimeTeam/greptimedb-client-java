@@ -16,32 +16,22 @@
  */
 package io.greptime.models;
 
-import io.greptime.common.Endpoint;
+import io.greptime.common.util.Strings;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @author jiachun.fjc
  */
-public class ErrTest {
+public class QueryOkTest {
 
     @Test
-    public void testWriteErr() {
-        Err err = Err.writeErr(300, "test_err", Endpoint.of("127.0.0.1", 8081), null);
+    public void testEmptyQuery() {
+        QueryOk empty = QueryOk.emptyOk();
 
-        Assert.assertFalse(err.mapToResult().isOk());
-        Assert.assertEquals("test_err", err.getError());
-        Assert.assertEquals("127.0.0.1:8081", err.getErrTo().toString());
-        Assert.assertNull(err.getRowsFailed());
-    }
-
-    @Test
-    public void testQueryErr() {
-        Err err = Err.queryErr(300, "test_err", Endpoint.of("127.0.0.1", 8081), "select * from test");
-
-        Assert.assertFalse(err.mapToResult().isOk());
-        Assert.assertEquals("test_err", err.getError());
-        Assert.assertEquals("127.0.0.1:8081", err.getErrTo().toString());
-        Assert.assertEquals(err.getFailedQl(), "select * from test");
+        Assert.assertTrue(empty.mapToResult().isOk());
+        Assert.assertTrue(Strings.isNullOrEmpty(empty.getQl()));
+        Assert.assertEquals(0, empty.getRowCount());
+        Assert.assertEquals(0, empty.stream().count());
     }
 }

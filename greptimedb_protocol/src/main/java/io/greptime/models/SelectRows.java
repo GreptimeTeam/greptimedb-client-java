@@ -16,21 +16,21 @@
  */
 package io.greptime.models;
 
-import com.google.protobuf.ByteStringHelper;
-import io.greptime.v1.ColumnUtil;
 import io.greptime.v1.Columns.Column;
 import io.greptime.v1.Columns.Column.SemanticType;
 import io.greptime.v1.codec.Select;
 
-import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
+ * Data in row format obtained from a query from the DB.
  *
  * @author jiachun.fjc
  */
@@ -42,14 +42,21 @@ public class SelectRows implements Iterator<Row> {
         return EMPTY;
     }
 
-    private final List<Column>        columns;
     private final int                 rowCount;
-    private final Map<String, BitSet> nullMaskCache = new HashMap<>();
-    private int                       cursor        = 0;
+    private final List<Column>        columns;
+    private final Map<String, BitSet> nullMaskCache;
+    private int                       cursor = 0;
 
     public SelectRows(Select.SelectResult result) {
-        this.columns = result == null ? null : result.getColumnsList();
-        this.rowCount = result == null ? 0 : result.getRowCount();
+        if (result == null) {
+            this.rowCount = 0;
+            this.columns = null;
+            this.nullMaskCache = Collections.emptyMap();
+        } else {
+            this.rowCount = result.getRowCount();
+            this.columns = result.getColumnsList();
+            this.nullMaskCache = new HashMap<>(this.columns.size());
+        }
     }
 
     @Override
@@ -59,10 +66,9 @@ public class SelectRows implements Iterator<Row> {
 
     @Override
     public Row next() {
-        List<Value> values = new ArrayList<>(this.columns.size());
-        for (Column column: this.columns) {
-            values.add(new Value() {
-
+        int index = this.cursor++;
+        List<Value> values = this.columns.stream() //
+            .map(column -> new Value() {
                 @Override
                 public String name() {
                     return column.getColumnName();
@@ -80,15 +86,17 @@ public class SelectRows implements Iterator<Row> {
 
                 @Override
                 public Object value() {
-                    byte[] nullMaskBytes = ByteStringHelper.sealByteArray(column.getNullMask());
-                    Function<String, BitSet> func = k -> BitSet.valueOf(nullMaskBytes);
-                    BitSet nullMask = nullMaskCache.computeIfAbsent(column.getColumnName(), func);
-                    return ColumnUtil.getValue(column, cursor, nullMask);
+                    return getColumnValue(column, index);
                 }
-            });
-        }
-        this.cursor++;
+            })
+            .collect(Collectors.toList());
 
         return () -> values;
+    }
+
+    private Object getColumnValue(Column column, int index) {
+        Function<String, BitSet> func = k -> ColumnUtil.getNullMaskBits(column);
+        BitSet nullMask = this.nullMaskCache.computeIfAbsent(column.getColumnName(), func);
+        return ColumnUtil.getValue(column, index, nullMask);
     }
 }

@@ -25,8 +25,7 @@ import io.greptime.rpc.Context;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * CeresDB write API. Writes the streaming data to the database, support
- * failed retries.
+ * Write API: writes data in row format to the DB.
  *
  * @author jiachun.fjc
  */

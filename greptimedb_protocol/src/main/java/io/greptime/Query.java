@@ -14,21 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime.common;
+package io.greptime;
+
+import io.greptime.models.Err;
+import io.greptime.models.QueryOk;
+import io.greptime.models.QueryRequest;
+import io.greptime.models.Result;
+import io.greptime.rpc.Context;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
- * System properties option keys
+ * The query API: query data in row format from the DB.
  *
  * @author jiachun.fjc
  */
-public final class Keys {
-    public static final String OS_NAME                   = "os.name";
-    public static final String USE_OS_SIGNAL             = "greptimedb.use_os_signal";
-    public static final String AVAILABLE_CPUS            = "greptimedb.available_cpus";
-    public static final String GRPC_CONN_RESET_THRESHOLD = "greptimedb.grpc.conn.failures.reset_threshold";
-    public static final String SIG_OUT_DIR               = "greptimedb.signal.out_dir";
-    public static final String REPORT_PERIOD             = "greptimedb.reporter.period_minutes";
+public interface Query {
 
-    private Keys() {
+    /**
+     * @see #query(QueryRequest, Context)
+     */
+    default CompletableFuture<Result<QueryOk, Err>> query(QueryRequest req) {
+        return query(req, Context.newDefault());
     }
+
+    /**
+     * According to the conditions, query data from the DB.
+     *
+     * @param req the query request
+     * @param ctx invoke context
+     * @return query result
+     */
+    CompletableFuture<Result<QueryOk, Err>> query(QueryRequest req, Context ctx);
 }

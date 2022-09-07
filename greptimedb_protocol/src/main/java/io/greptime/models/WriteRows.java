@@ -16,6 +16,11 @@
  */
 package io.greptime.models;
 
+/**
+ * Data in row format, ready to be written to the DB.
+ *
+ * @author jiachun.fjc
+ */
 public class WriteRows {
 
     public String tableName() {

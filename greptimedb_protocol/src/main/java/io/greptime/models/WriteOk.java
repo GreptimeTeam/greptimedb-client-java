@@ -16,10 +16,6 @@
  */
 package io.greptime.models;
 
-import io.greptime.common.util.Ensures;
-
-import java.util.Objects;
-
 /**
  * Contains the success value of write.
  *
@@ -29,7 +25,6 @@ public class WriteOk {
 
     private int    success;
     private int    failed;
-
     private String tableName;
 
     public int getSuccess() {
@@ -42,14 +37,6 @@ public class WriteOk {
 
     public String getTableName() {
         return tableName;
-    }
-
-    public WriteOk combine(WriteOk other) {
-        Ensures.ensure(Objects.equals(this.tableName, other.tableName), "Not the same table: %s <--> %s",
-            this.tableName, other.tableName);
-        this.success += other.success;
-        this.failed += other.failed;
-        return this;
     }
 
     public Result<WriteOk, Err> mapToResult() {

@@ -1,8 +1,25 @@
-package io.greptime.v1;
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.greptime.models;
 
+import com.google.protobuf.ByteStringHelper;
 import com.google.protobuf.Descriptors;
 import io.greptime.common.util.Ensures;
-import io.greptime.models.Value;
+import io.greptime.v1.Columns;
 
 import java.util.BitSet;
 
@@ -13,7 +30,7 @@ import java.util.BitSet;
  */
 public final class ColumnUtil {
 
-    private static final String[] COLUMN_VALUE_NAME_INDEX;
+    private static final String[]     COLUMN_VALUE_NAME_INDEX;
     private static final Value.Type[] COLUMN_VALUE_TYPE_INDEX;
 
     static {
@@ -54,25 +71,33 @@ public final class ColumnUtil {
         return COLUMN_VALUE_TYPE_INDEX[index];
     }
 
-    public static Object getValue(Columns.Column column, int cursor, BitSet nullMask) {
-        int index = column.getValueIndex();
-        Ensures.ensure(index < COLUMN_VALUE_NAME_INDEX.length, "value_index overflow: %d", index);
-        String fieldName = COLUMN_VALUE_NAME_INDEX[index];
+    public static Object getValue(Columns.Column column, int index, BitSet nullMask) {
+        int valueIndex = column.getValueIndex();
+        Ensures.ensure(valueIndex < COLUMN_VALUE_NAME_INDEX.length, "value_index overflow: %d", index);
+        String fieldName = COLUMN_VALUE_NAME_INDEX[valueIndex];
         Columns.Column.Values values = column.getValues();
         Descriptors.FieldDescriptor fd = values.getDescriptorForType().findFieldByName(fieldName);
         if (nullMask.isEmpty()) {
-            return values.getRepeatedField(fd, cursor);
+            return values.getRepeatedField(fd, index);
         }
 
-        Ensures.ensure(cursor < nullMask.size());
+        Ensures.ensure(index < nullMask.size());
 
-        int dataIndex = 0;
-        for(int i = 0; i <= cursor; i++) {
-            if (!nullMask.get(i)) {
-                dataIndex++;
+        if (nullMask.get(index)) {
+            return null;
+        }
+
+        int cardinality = 0;
+        for (int i = 0; i <= index; i++) {
+            if (nullMask.get(i)) {
+                cardinality++;
             }
         }
-        return values.getRepeatedField(fd, dataIndex);
+        return values.getRepeatedField(fd, index - cardinality);
+    }
+
+    public static BitSet getNullMaskBits(Columns.Column column) {
+        return BitSet.valueOf(ByteStringHelper.sealByteArray(column.getNullMask()));
     }
 
     private ColumnUtil() {
