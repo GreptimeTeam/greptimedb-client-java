@@ -18,8 +18,8 @@ package io.greptime;
 
 import io.greptime.models.Err;
 import io.greptime.models.Result;
-import io.greptime.models.WriteRows;
 import io.greptime.models.WriteOk;
+import io.greptime.models.WriteRows;
 import io.greptime.rpc.Context;
 
 import java.util.concurrent.CompletableFuture;

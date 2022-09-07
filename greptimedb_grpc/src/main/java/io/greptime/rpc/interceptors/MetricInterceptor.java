@@ -18,6 +18,7 @@ package io.greptime.rpc.interceptors;
 
 import com.codahale.metrics.Counter;
 import com.google.protobuf.MessageLite;
+import io.greptime.common.util.MetricsUtil;
 import io.grpc.CallOptions;
 import io.grpc.Channel;
 import io.grpc.ClientCall;
@@ -26,7 +27,6 @@ import io.grpc.ForwardingClientCall;
 import io.grpc.ForwardingClientCallListener;
 import io.grpc.Metadata;
 import io.grpc.MethodDescriptor;
-import io.greptime.common.util.MetricsUtil;
 
 /**
  * Request method metric interceptor.
