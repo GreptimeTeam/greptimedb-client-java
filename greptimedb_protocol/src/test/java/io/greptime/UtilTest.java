@@ -14,23 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime.common;
+package io.greptime;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
- * System properties option keys
- *
  * @author jiachun.fjc
  */
-public final class Keys {
-    public static final String OS_NAME                   = "os.name";
-    public static final String USE_OS_SIGNAL             = "greptimedb.use_os_signal";
-    public static final String AVAILABLE_CPUS            = "greptimedb.available_cpus";
-    public static final String SIG_OUT_DIR               = "greptimedb.signal.out_dir";
-    public static final String REPORT_PERIOD             = "greptimedb.reporter.period_minutes";
-    public static final String GRPC_CONN_RESET_THRESHOLD = "greptimedb.grpc.conn.failures.reset_threshold";
-    public static final String GRPC_POOL_CORE_WORKERS    = "greptimedb.grpc.pool.core_workers";
-    public static final String GRPC_POOL_MAXIMUM_WORKERS = "greptimedb.grpc.pool.maximum_works";
+public class UtilTest {
 
-    private Keys() {
+    @Test
+    public void testClientVersion() {
+        String ver = Util.clientVersion();
+        Assert.assertEquals("0.1.0", ver);
     }
 }

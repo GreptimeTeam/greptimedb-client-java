@@ -17,7 +17,6 @@
 package io.greptime.rpc;
 
 import io.greptime.common.Copiable;
-import io.greptime.common.util.Cpus;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author jiachun.fjc
  */
+@SuppressWarnings("unused")
 public class RpcOptions implements Copiable<RpcOptions> {
 
     /**
@@ -33,13 +33,6 @@ public class RpcOptions implements Copiable<RpcOptions> {
      * Default: 10000(10s)
      */
     private int       defaultRpcTimeout       = 10000;
-
-    /**
-     * RPC process thread pool size
-     * Default: 32
-     */
-    private int       rpcThreadPoolSize       = 0;
-    private int       rpcThreadPoolQueueSize  = Cpus.cpus() << 1;
 
     /**
      * Sets the maximum message size allowed to be received on a channel.
@@ -111,22 +104,6 @@ public class RpcOptions implements Copiable<RpcOptions> {
 
     public void setDefaultRpcTimeout(int defaultRpcTimeout) {
         this.defaultRpcTimeout = defaultRpcTimeout;
-    }
-
-    public int getRpcThreadPoolSize() {
-        return rpcThreadPoolSize;
-    }
-
-    public void setRpcThreadPoolSize(int rpcThreadPoolSize) {
-        this.rpcThreadPoolSize = rpcThreadPoolSize;
-    }
-
-    public int getRpcThreadPoolQueueSize() {
-        return rpcThreadPoolQueueSize;
-    }
-
-    public void setRpcThreadPoolQueueSize(int rpcThreadPoolQueueSize) {
-        this.rpcThreadPoolQueueSize = rpcThreadPoolQueueSize;
     }
 
     public int getMaxInboundMessageSize() {
@@ -237,8 +214,6 @@ public class RpcOptions implements Copiable<RpcOptions> {
     public RpcOptions copy() {
         final RpcOptions opts = new RpcOptions();
         opts.defaultRpcTimeout = this.defaultRpcTimeout;
-        opts.rpcThreadPoolSize = this.rpcThreadPoolSize;
-        opts.rpcThreadPoolQueueSize = this.rpcThreadPoolQueueSize;
         opts.maxInboundMessageSize = this.maxInboundMessageSize;
         opts.flowControlWindow = this.flowControlWindow;
         opts.idleTimeoutSeconds = this.idleTimeoutSeconds;
@@ -259,8 +234,6 @@ public class RpcOptions implements Copiable<RpcOptions> {
     public String toString() {
         return "RpcOptions{" + //
                "defaultRpcTimeout=" + defaultRpcTimeout + //
-               ", rpcThreadPoolSize=" + rpcThreadPoolSize + //
-               ", rpcThreadPoolQueueSize=" + rpcThreadPoolQueueSize + //
                ", maxInboundMessageSize=" + maxInboundMessageSize + //
                ", flowControlWindow=" + flowControlWindow + //
                ", idleTimeoutSeconds=" + idleTimeoutSeconds + //

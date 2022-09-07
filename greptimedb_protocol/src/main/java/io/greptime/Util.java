@@ -20,11 +20,11 @@ import io.greptime.common.Display;
 import io.greptime.common.Keys;
 import io.greptime.common.util.ExecutorServiceHelper;
 import io.greptime.common.util.NamedThreadFactory;
-import io.greptime.common.util.ObjectPool;
-import io.greptime.common.util.SharedScheduledPool;
 import io.greptime.common.util.SystemPropertyUtil;
 import io.greptime.common.util.ThreadPoolUtil;
 
+import java.io.IOException;
+import java.util.Properties;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Util {
 
+    private static final String                       VERSION_KEY = "client.version";
     private static final int                      REPORT_PERIOD_MIN;
     private static final ScheduledExecutorService DISPLAY;
 
@@ -72,30 +73,22 @@ public class Util {
     }
 
     /**
-     * Create a shared scheduler pool with the given name.
+     * Returns the version of this client.
      *
-     * @param name    scheduled pool's name
-     * @param workers the num of workers
-     * @return new scheduler poll instance
+     * @return version
      */
-    public static SharedScheduledPool getSharedScheduledPool(String name, int workers) {
-        return new SharedScheduledPool(new ObjectPool.Resource<ScheduledExecutorService>() {
+    public static String clientVersion() {
+        try {
+            return loadProps(Util.class.getClassLoader(), "client_version.properties") //
+                    .getProperty(VERSION_KEY, "Unknown version");
+        } catch (Exception ignored) {
+            return "Unknown version(err)";
+        }
+    }
 
-            @Override
-            public ScheduledExecutorService create() {
-                return ThreadPoolUtil.newScheduledBuilder() //
-                        .poolName(name) //
-                        .coreThreads(workers) //
-                        .enableMetric(true) //
-                        .threadFactory(new NamedThreadFactory(name, true)) //
-                        .rejectedHandler(new ThreadPoolExecutor.DiscardOldestPolicy()) //
-                        .build();
-            }
-
-            @Override
-            public void close(ScheduledExecutorService instance) {
-                ExecutorServiceHelper.shutdownAndAwaitTermination(instance);
-            }
-        });
+    public static Properties loadProps(ClassLoader loader, String name) throws IOException {
+        Properties prop = new Properties();
+        prop.load(loader.getResourceAsStream(name));
+        return prop;
     }
 }
