@@ -14,21 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.greptimedb.common;
+package org.greptimedb;
+
+import org.greptimedb.models.Err;
+import org.greptimedb.models.Result;
+import org.greptimedb.models.Rows;
+import org.greptimedb.models.WriteOk;
+import org.greptimedb.rpc.Context;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
- * System properties option keys
+ * CeresDB write API. Writes the streaming data to the database, support
+ * failed retries.
  *
  * @author jiachun.fjc
  */
-public final class Keys {
-    public static final String OS_NAME                   = "os.name";
-    public static final String USE_OS_SIGNAL             = "greptimedb.use_os_signal";
-    public static final String AVAILABLE_CPUS            = "greptimedb.available_cpus";
-    public static final String GRPC_CONN_RESET_THRESHOLD = "greptimedb.grpc.conn.failures.reset_threshold";
-    public static final String SIG_OUT_DIR               = "greptimedb.signal.out_dir";
-    public static final String COLLECT_WROTE_DETAIL      = "greptimedb.write.collect_wrote_detail";
+public interface Write {
 
-    private Keys() {
+    /**
+     * @see #write(Rows, Context)
+     */
+    default CompletableFuture<Result<WriteOk, Err>> write(Rows rows) {
+        return write(rows, Context.newDefault());
     }
+
+    /**
+     * Write a single table multi rows data to database.
+     *
+     * @param rows rows with one table
+     * @param ctx  invoke context
+     * @return write result
+     */
+    CompletableFuture<Result<WriteOk, Err>> write(Rows rows, Context ctx);
 }

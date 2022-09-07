@@ -16,19 +16,18 @@
  */
 package org.greptimedb.common;
 
+import java.util.stream.Stream;
+
 /**
- * System properties option keys
  *
  * @author jiachun.fjc
  */
-public final class Keys {
-    public static final String OS_NAME                   = "os.name";
-    public static final String USE_OS_SIGNAL             = "greptimedb.use_os_signal";
-    public static final String AVAILABLE_CPUS            = "greptimedb.available_cpus";
-    public static final String GRPC_CONN_RESET_THRESHOLD = "greptimedb.grpc.conn.failures.reset_threshold";
-    public static final String SIG_OUT_DIR               = "greptimedb.signal.out_dir";
-    public static final String COLLECT_WROTE_DETAIL      = "greptimedb.write.collect_wrote_detail";
+public interface Streamable<T> {
 
-    private Keys() {
-    }
+    /**
+     * Returns a sequential {@code Stream} over the elements.
+     *
+     * @return a sequential {@code Stream}.
+     */
+    Stream<T> stream();
 }

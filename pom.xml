@@ -11,6 +11,7 @@
         <module>greptimedb_all</module>
         <module>greptimedb_common</module>
         <module>greptimedb_grpc</module>
+        <module>greptimedb_protocol</module>
         <module>greptimedb_rpc</module>
     </modules>
 
@@ -38,6 +39,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>greptimedb_grpc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>greptimedb_protocol</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -144,6 +150,9 @@
                 <configuration>
                     <configFile>${main.user.dir}/tools/codestyle/formatter.xml</configFile>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <excludes>
+                        <exclude>**/v1/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <!-- sort pom -->
@@ -201,6 +210,9 @@
                         <include>**/src/main/java/**</include>
                         <include>**/src/test/java/**</include>
                     </includes>
+                    <excludes>
+                        <exclude>**/v1/**</exclude>
+                    </excludes>
                     <strictCheck>true</strictCheck>
                     <mapping>
                         <java>SLASHSTAR_STYLE</java>
