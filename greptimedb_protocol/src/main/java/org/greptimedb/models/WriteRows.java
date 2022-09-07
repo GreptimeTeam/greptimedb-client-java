@@ -14,20 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.greptimedb.common;
+package org.greptimedb.models;
 
-/**
- * System properties option keys
- *
- * @author jiachun.fjc
- */
-public final class Keys {
-    public static final String OS_NAME                   = "os.name";
-    public static final String USE_OS_SIGNAL             = "greptimedb.use_os_signal";
-    public static final String AVAILABLE_CPUS            = "greptimedb.available_cpus";
-    public static final String GRPC_CONN_RESET_THRESHOLD = "greptimedb.grpc.conn.failures.reset_threshold";
-    public static final String SIG_OUT_DIR               = "greptimedb.signal.out_dir";
+public class WriteRows {
 
-    private Keys() {
+    public String tableName() {
+        return null; // TODO(jiachun)
     }
 }

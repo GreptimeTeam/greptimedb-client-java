@@ -16,66 +16,39 @@
  */
 package org.greptimedb.models;
 
-import org.greptimedb.common.Keys;
-import org.greptimedb.common.util.SystemPropertyUtil;
+import org.greptimedb.common.util.Ensures;
 
-import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Contains the success value of write.
  *
  * @author jiachun.fjc
  */
-@SuppressWarnings("unused")
 public class WriteOk {
 
-    private static final boolean COLLECT_WROTE_DETAIL = SystemPropertyUtil.getBool(Keys.COLLECT_WROTE_DETAIL, false);
+    private int    success;
+    private int    failed;
 
-    public static boolean isCollectWroteDetail() {
-        return COLLECT_WROTE_DETAIL;
-    }
-
-    private int                success;
-    private int                failed;
-
-    /**
-     * Empty if {@link #COLLECT_WROTE_DETAIL == false}.
-     */
-    private Collection<String> metrics;
+    private String tableName;
 
     public int getSuccess() {
         return success;
-    }
-
-    public void setSuccess(int success) {
-        this.success = success;
     }
 
     public int getFailed() {
         return failed;
     }
 
-    public void setFailed(int failed) {
-        this.failed = failed;
+    public String getTableName() {
+        return tableName;
     }
 
-    public Collection<String> getMetrics() {
-        return metrics;
-    }
-
-    public void setMetrics(Collection<String> metrics) {
-        this.metrics = metrics;
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
     public WriteOk combine(WriteOk other) {
+        Ensures.ensure(Objects.equals(this.tableName, other.tableName), "Not the same table: %s <--> %s",
+            this.tableName, other.tableName);
         this.success += other.success;
         this.failed += other.failed;
-        if (this.metrics == null) {
-            this.metrics = other.metrics;
-        } else if (other.metrics != null) {
-            this.metrics.addAll(other.metrics);
-        }
         return this;
     }
 
@@ -88,7 +61,7 @@ public class WriteOk {
         return "WriteOk{" + //
                "success=" + success + //
                ", failed=" + failed + //
-               ", metrics=" + metrics + //
+               ", tableName=" + tableName + //
                '}';
     }
 
@@ -96,11 +69,11 @@ public class WriteOk {
         return ok(0, 0, null);
     }
 
-    public static WriteOk ok(int success, int failed, Collection<String> metrics) {
+    public static WriteOk ok(int success, int failed, String tableName) {
         WriteOk ok = new WriteOk();
         ok.success = success;
         ok.failed = failed;
-        ok.metrics = metrics;
+        ok.tableName = tableName;
         return ok;
     }
 }

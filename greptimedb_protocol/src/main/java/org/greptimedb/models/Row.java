@@ -14,37 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.greptimedb;
+package org.greptimedb.models;
 
-import org.greptimedb.models.Err;
-import org.greptimedb.models.Result;
-import org.greptimedb.models.WriteRows;
-import org.greptimedb.models.WriteOk;
-import org.greptimedb.rpc.Context;
-
-import java.util.concurrent.CompletableFuture;
+import java.util.List;
 
 /**
- * CeresDB write API. Writes the streaming data to the database, support
- * failed retries.
  *
  * @author jiachun.fjc
  */
-public interface Write {
+public interface Row {
 
-    /**
-     * @see #write(WriteRows, Context)
-     */
-    default CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows) {
-        return write(rows, Context.newDefault());
-    }
-
-    /**
-     * Write a single table multi rows data to database.
-     *
-     * @param rows rows with one table
-     * @param ctx  invoke context
-     * @return write result
-     */
-    CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx);
+    List<Value> values();
 }

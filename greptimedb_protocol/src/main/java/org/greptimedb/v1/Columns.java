@@ -312,12 +312,18 @@ public final class Columns {
     org.greptimedb.v1.Columns.Column.ValuesOrBuilder getValuesOrBuilder();
 
     /**
+     * <code>int32 value_index = 4;</code>
+     * @return The valueIndex.
+     */
+    int getValueIndex();
+
+    /**
      * <pre>
      * Mask maps the positions of null values.
      * If a bit in null_mask is 1, it indicates that the column value at that position is null.
      * </pre>
      *
-     * <code>bytes null_mask = 4;</code>
+     * <code>bytes null_mask = 5;</code>
      * @return The nullMask.
      */
     com.google.protobuf.ByteString getNullMask();
@@ -395,7 +401,12 @@ public final class Columns {
 
               break;
             }
-            case 34: {
+            case 32: {
+
+              valueIndex_ = input.readInt32();
+              break;
+            }
+            case 42: {
 
               nullMask_ = input.readBytes();
               break;
@@ -3591,7 +3602,18 @@ public final class Columns {
       return getValues();
     }
 
-    public static final int NULL_MASK_FIELD_NUMBER = 4;
+    public static final int VALUE_INDEX_FIELD_NUMBER = 4;
+    private int valueIndex_;
+    /**
+     * <code>int32 value_index = 4;</code>
+     * @return The valueIndex.
+     */
+    @java.lang.Override
+    public int getValueIndex() {
+      return valueIndex_;
+    }
+
+    public static final int NULL_MASK_FIELD_NUMBER = 5;
     private com.google.protobuf.ByteString nullMask_;
     /**
      * <pre>
@@ -3599,7 +3621,7 @@ public final class Columns {
      * If a bit in null_mask is 1, it indicates that the column value at that position is null.
      * </pre>
      *
-     * <code>bytes null_mask = 4;</code>
+     * <code>bytes null_mask = 5;</code>
      * @return The nullMask.
      */
     @java.lang.Override
@@ -3630,8 +3652,11 @@ public final class Columns {
       if (values_ != null) {
         output.writeMessage(3, getValues());
       }
+      if (valueIndex_ != 0) {
+        output.writeInt32(4, valueIndex_);
+      }
       if (!nullMask_.isEmpty()) {
-        output.writeBytes(4, nullMask_);
+        output.writeBytes(5, nullMask_);
       }
       unknownFields.writeTo(output);
     }
@@ -3653,9 +3678,13 @@ public final class Columns {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, getValues());
       }
+      if (valueIndex_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, valueIndex_);
+      }
       if (!nullMask_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, nullMask_);
+          .computeBytesSize(5, nullMask_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3680,6 +3709,8 @@ public final class Columns {
         if (!getValues()
             .equals(other.getValues())) return false;
       }
+      if (getValueIndex()
+          != other.getValueIndex()) return false;
       if (!getNullMask()
           .equals(other.getNullMask())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -3701,6 +3732,8 @@ public final class Columns {
         hash = (37 * hash) + VALUES_FIELD_NUMBER;
         hash = (53 * hash) + getValues().hashCode();
       }
+      hash = (37 * hash) + VALUE_INDEX_FIELD_NUMBER;
+      hash = (53 * hash) + getValueIndex();
       hash = (37 * hash) + NULL_MASK_FIELD_NUMBER;
       hash = (53 * hash) + getNullMask().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -3846,6 +3879,8 @@ public final class Columns {
           values_ = null;
           valuesBuilder_ = null;
         }
+        valueIndex_ = 0;
+
         nullMask_ = com.google.protobuf.ByteString.EMPTY;
 
         return this;
@@ -3881,6 +3916,7 @@ public final class Columns {
         } else {
           result.values_ = valuesBuilder_.build();
         }
+        result.valueIndex_ = valueIndex_;
         result.nullMask_ = nullMask_;
         onBuilt();
         return result;
@@ -3939,6 +3975,9 @@ public final class Columns {
         }
         if (other.hasValues()) {
           mergeValues(other.getValues());
+        }
+        if (other.getValueIndex() != 0) {
+          setValueIndex(other.getValueIndex());
         }
         if (other.getNullMask() != com.google.protobuf.ByteString.EMPTY) {
           setNullMask(other.getNullMask());
@@ -4311,6 +4350,37 @@ public final class Columns {
         return valuesBuilder_;
       }
 
+      private int valueIndex_ ;
+      /**
+       * <code>int32 value_index = 4;</code>
+       * @return The valueIndex.
+       */
+      @java.lang.Override
+      public int getValueIndex() {
+        return valueIndex_;
+      }
+      /**
+       * <code>int32 value_index = 4;</code>
+       * @param value The valueIndex to set.
+       * @return This builder for chaining.
+       */
+      public Builder setValueIndex(int value) {
+        
+        valueIndex_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 value_index = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearValueIndex() {
+        
+        valueIndex_ = 0;
+        onChanged();
+        return this;
+      }
+
       private com.google.protobuf.ByteString nullMask_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
@@ -4318,7 +4388,7 @@ public final class Columns {
        * If a bit in null_mask is 1, it indicates that the column value at that position is null.
        * </pre>
        *
-       * <code>bytes null_mask = 4;</code>
+       * <code>bytes null_mask = 5;</code>
        * @return The nullMask.
        */
       @java.lang.Override
@@ -4331,7 +4401,7 @@ public final class Columns {
        * If a bit in null_mask is 1, it indicates that the column value at that position is null.
        * </pre>
        *
-       * <code>bytes null_mask = 4;</code>
+       * <code>bytes null_mask = 5;</code>
        * @param value The nullMask to set.
        * @return This builder for chaining.
        */
@@ -4350,7 +4420,7 @@ public final class Columns {
        * If a bit in null_mask is 1, it indicates that the column value at that position is null.
        * </pre>
        *
-       * <code>bytes null_mask = 4;</code>
+       * <code>bytes null_mask = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearNullMask() {
@@ -5182,27 +5252,28 @@ public final class Columns {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014column.proto\022\013greptime.v1\"\334\003\n\006Column\022\023" +
+      "\n\014column.proto\022\013greptime.v1\"\361\003\n\006Column\022\023" +
       "\n\013column_name\030\001 \001(\t\0227\n\rsemantic_type\030\002 \001" +
       "(\0162 .greptime.v1.Column.SemanticType\022*\n\006" +
       "values\030\003 \001(\0132\032.greptime.v1.Column.Values" +
-      "\022\021\n\tnull_mask\030\004 \001(\014\032\221\002\n\006Values\022\021\n\ti8_val" +
-      "ues\030\001 \003(\005\022\022\n\ni16_values\030\002 \003(\005\022\022\n\ni32_val" +
-      "ues\030\003 \003(\005\022\022\n\ni64_values\030\004 \003(\003\022\021\n\tu8_valu" +
-      "es\030\005 \003(\r\022\022\n\nu16_values\030\006 \003(\r\022\022\n\nu32_valu" +
-      "es\030\007 \003(\r\022\022\n\nu64_values\030\010 \003(\004\022\022\n\nf32_valu" +
-      "es\030\t \003(\002\022\022\n\nf64_values\030\n \003(\001\022\023\n\013bool_val" +
-      "ues\030\013 \003(\010\022\025\n\rbinary_values\030\014 \003(\014\022\025\n\rstri" +
-      "ng_values\030\r \003(\t\"1\n\014SemanticType\022\007\n\003TAG\020\000" +
-      "\022\t\n\005FIELD\020\001\022\r\n\tTIMESTAMP\020\002\"^\n\tColumnDef\022" +
-      "\014\n\004name\030\001 \001(\t\022.\n\tdata_type\030\002 \001(\0162\033.grept" +
-      "ime.v1.ColumnDataType\022\023\n\013is_nullable\030\003 \001" +
-      "(\010*\301\001\n\016ColumnDataType\022\013\n\007BOOLEAN\020\000\022\010\n\004IN" +
-      "T8\020\001\022\t\n\005INT16\020\002\022\t\n\005INT32\020\003\022\t\n\005INT64\020\004\022\t\n" +
-      "\005UINT8\020\005\022\n\n\006UINT16\020\006\022\n\n\006UINT32\020\007\022\n\n\006UINT" +
-      "64\020\010\022\013\n\007FLOAT32\020\t\022\013\n\007FLOAT64\020\n\022\n\n\006BINARY" +
-      "\020\013\022\n\n\006STRING\020\014\022\010\n\004DATE\020\r\022\014\n\010DATETIME\020\016B\034" +
-      "\n\021org.greptimedb.v1B\007Columnsb\006proto3"
+      "\022\023\n\013value_index\030\004 \001(\005\022\021\n\tnull_mask\030\005 \001(\014" +
+      "\032\221\002\n\006Values\022\021\n\ti8_values\030\001 \003(\005\022\022\n\ni16_va" +
+      "lues\030\002 \003(\005\022\022\n\ni32_values\030\003 \003(\005\022\022\n\ni64_va" +
+      "lues\030\004 \003(\003\022\021\n\tu8_values\030\005 \003(\r\022\022\n\nu16_val" +
+      "ues\030\006 \003(\r\022\022\n\nu32_values\030\007 \003(\r\022\022\n\nu64_val" +
+      "ues\030\010 \003(\004\022\022\n\nf32_values\030\t \003(\002\022\022\n\nf64_val" +
+      "ues\030\n \003(\001\022\023\n\013bool_values\030\013 \003(\010\022\025\n\rbinary" +
+      "_values\030\014 \003(\014\022\025\n\rstring_values\030\r \003(\t\"1\n\014" +
+      "SemanticType\022\007\n\003TAG\020\000\022\t\n\005FIELD\020\001\022\r\n\tTIME" +
+      "STAMP\020\002\"^\n\tColumnDef\022\014\n\004name\030\001 \001(\t\022.\n\tda" +
+      "ta_type\030\002 \001(\0162\033.greptime.v1.ColumnDataTy" +
+      "pe\022\023\n\013is_nullable\030\003 \001(\010*\301\001\n\016ColumnDataTy" +
+      "pe\022\013\n\007BOOLEAN\020\000\022\010\n\004INT8\020\001\022\t\n\005INT16\020\002\022\t\n\005" +
+      "INT32\020\003\022\t\n\005INT64\020\004\022\t\n\005UINT8\020\005\022\n\n\006UINT16\020" +
+      "\006\022\n\n\006UINT32\020\007\022\n\n\006UINT64\020\010\022\013\n\007FLOAT32\020\t\022\013" +
+      "\n\007FLOAT64\020\n\022\n\n\006BINARY\020\013\022\n\n\006STRING\020\014\022\010\n\004D" +
+      "ATE\020\r\022\014\n\010DATETIME\020\016B\034\n\021org.greptimedb.v1" +
+      "B\007Columnsb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5213,7 +5284,7 @@ public final class Columns {
     internal_static_greptime_v1_Column_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_Column_descriptor,
-        new java.lang.String[] { "ColumnName", "SemanticType", "Values", "NullMask", });
+        new java.lang.String[] { "ColumnName", "SemanticType", "Values", "ValueIndex", "NullMask", });
     internal_static_greptime_v1_Column_Values_descriptor =
       internal_static_greptime_v1_Column_descriptor.getNestedTypes().get(0);
     internal_static_greptime_v1_Column_Values_fieldAccessorTable = new

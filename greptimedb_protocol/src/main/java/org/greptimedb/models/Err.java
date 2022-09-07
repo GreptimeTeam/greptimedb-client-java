@@ -21,9 +21,6 @@ import org.greptimedb.common.Streamable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -31,24 +28,21 @@ import java.util.stream.Stream;
  *
  * @author jiachun.fjc
  */
-@SuppressWarnings("unused")
 public class Err implements Streamable<Err> {
     // error code from server
-    private int                code;
+    private int             code;
     // error message
-    private String             error;
+    private String          error;
     // the server address where the error occurred
-    private Endpoint           errTo;
+    private Endpoint        errTo;
     // the data of wrote failed, can be used to retry
-    private Collection<Rows>   failedWrites;
+    private WriteRows       rowsFailed;
     // other successful server results are merged here
-    private WriteOk            subOk;
+    private WriteOk         subOk;
     // the QL failed to query
-    private String             failedQl;
-    // the metrics of failed to query
-    private Collection<String> failedMetrics;
+    private String          failedQl;
     // child err merged here
-    private Collection<Err>    children;
+    private Collection<Err> children;
 
     public int getCode() {
         return code;
@@ -62,8 +56,8 @@ public class Err implements Streamable<Err> {
         return errTo;
     }
 
-    public Collection<Rows> getFailedWrites() {
-        return failedWrites;
+    public WriteRows getRowsFailed() {
+        return rowsFailed;
     }
 
     public WriteOk getSubOk() {
@@ -72,10 +66,6 @@ public class Err implements Streamable<Err> {
 
     public String getFailedQl() {
         return failedQl;
-    }
-
-    public Collection<String> getFailedMetrics() {
-        return failedMetrics;
     }
 
     public Err combine(Err err) {
@@ -109,13 +99,9 @@ public class Err implements Streamable<Err> {
         }
     }
 
-    private int failedWriteRowsNum() {
-        return this.failedWrites == null ? 0 : this.failedWrites.size();
-    }
-
-    private List<String> failedWriteMetrics() {
-        return this.failedWrites == null ? Collections.emptyList() //
-                : this.failedWrites.stream().map(Rows::tableName).collect(Collectors.toList());
+    private String tableNameFailed() {
+        return this.rowsFailed == null ? "" //
+            : this.rowsFailed.tableName();
     }
 
     @Override
@@ -124,11 +110,9 @@ public class Err implements Streamable<Err> {
                "code=" + code + //
                ", error='" + error + '\'' + //
                ", errTo=" + errTo + //
-               ", failedWriteRowsNum=" + failedWriteRowsNum() + //
-               ", failedWriteMetrics=" + failedWriteMetrics() + //
+               ", tableNameFailed=" + tableNameFailed() + //
                ", subOk=" + subOk + //
                ", failedQl=" + failedQl + //
-               ", failedMetrics=" + failedMetrics + //
                ", children=" + children + //
                '}';
     }
@@ -136,26 +120,24 @@ public class Err implements Streamable<Err> {
     public static Err writeErr(int code, //
                                String error, //
                                Endpoint errTo, //
-                               Collection<Rows> failedWrites) {
+                               WriteRows rowsFailed) {
         Err err = new Err();
         err.code = code;
         err.error = error;
         err.errTo = errTo;
-        err.failedWrites = failedWrites;
+        err.rowsFailed = rowsFailed;
         return err;
     }
 
     public static Err queryErr(int code, //
                                String error, //
                                Endpoint errTo, //
-                               String failedQl, //
-                               Collection<String> failedMetrics) {
+                               String failedQl) {
         Err err = new Err();
         err.code = code;
         err.error = error;
         err.errTo = errTo;
         err.failedQl = failedQl;
-        err.failedMetrics = failedMetrics;
         return err;
     }
 }

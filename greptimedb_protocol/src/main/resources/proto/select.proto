@@ -1,0 +1,12 @@
+syntax = "proto3";
+package greptime.v1.codec;
+
+option java_package="org.greptimedb.v1.codec";
+option java_outer_classname = "Select";
+
+import "column.proto";
+
+message SelectResult {
+  repeated Column columns = 1;
+  uint32 row_count = 2;
+}

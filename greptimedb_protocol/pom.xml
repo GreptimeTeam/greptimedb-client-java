@@ -20,6 +20,17 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>greptimedb_rpc</artifactId>
         </dependency>
-    </dependencies>
 
+        <!-- test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit-dep</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

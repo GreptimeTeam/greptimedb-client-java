@@ -16,9 +16,18 @@
  */
 package org.greptimedb.models;
 
-public class Rows {
+import org.greptimedb.v1.Columns.Column.SemanticType;
 
-    public String tableName() {
-        return null; // TODO(jiachun)
+public interface Value {
+    enum Type {
+        Int32, Int64, UInt32, UInt64, Float, Double, Bool, Bytes, String,
     }
+
+    String name();
+
+    SemanticType semanticType();
+
+    Type valueType();
+
+    Object value();
 }

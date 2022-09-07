@@ -25,7 +25,6 @@ import java.util.function.Function;
  *
  * @author jiachun.fjc
  */
-@SuppressWarnings("unused")
 public final class Result<Ok, Err> {
 
     public static final int SUCCESS      = 200;
