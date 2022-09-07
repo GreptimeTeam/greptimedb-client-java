@@ -1,7 +1,7 @@
 syntax = "proto3";
 package greptime.v1.codec;
 
-option java_package="org.greptimedb.v1.codec";
+option java_package="io.greptime.v1.codec";
 option java_outer_classname = "Select";
 
 import "column.proto";
