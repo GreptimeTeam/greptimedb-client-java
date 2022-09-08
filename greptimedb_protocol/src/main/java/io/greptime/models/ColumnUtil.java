@@ -66,12 +66,14 @@ public final class ColumnUtil {
     }
 
     public static Value.Type getValueType(Columns.Column column) {
-        int index = column.getValueIndex();
-        Ensures.ensure(index < COLUMN_VALUE_TYPE_INDEX.length, "value_index overflow: %d", index);
-        return COLUMN_VALUE_TYPE_INDEX[index];
+        Ensures.ensure(column.hasValueIndex(), "`value_index` is required");
+        int valueIndex = column.getValueIndex();
+        Ensures.ensure(valueIndex < COLUMN_VALUE_TYPE_INDEX.length, "value_index overflow: %d", valueIndex);
+        return COLUMN_VALUE_TYPE_INDEX[valueIndex];
     }
 
     public static Object getValue(Columns.Column column, int index, BitSet nullMask) {
+        Ensures.ensure(column.hasValueIndex(), "`value_index` is required");
         int valueIndex = column.getValueIndex();
         Ensures.ensure(valueIndex < COLUMN_VALUE_NAME_INDEX.length, "value_index overflow: %d", index);
         String fieldName = COLUMN_VALUE_NAME_INDEX[valueIndex];

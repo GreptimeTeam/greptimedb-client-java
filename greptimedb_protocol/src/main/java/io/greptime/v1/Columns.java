@@ -312,7 +312,20 @@ public final class Columns {
     io.greptime.v1.Columns.Column.ValuesOrBuilder getValuesOrBuilder();
 
     /**
-     * <code>int32 value_index = 4;</code>
+     * <pre>
+     * Required by select
+     * </pre>
+     *
+     * <code>optional int32 value_index = 4;</code>
+     * @return Whether the valueIndex field is set.
+     */
+    boolean hasValueIndex();
+    /**
+     * <pre>
+     * Required by select
+     * </pre>
+     *
+     * <code>optional int32 value_index = 4;</code>
      * @return The valueIndex.
      */
     int getValueIndex();
@@ -366,6 +379,7 @@ public final class Columns {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -402,7 +416,7 @@ public final class Columns {
               break;
             }
             case 32: {
-
+              bitField0_ |= 0x00000001;
               valueIndex_ = input.readInt32();
               break;
             }
@@ -3489,6 +3503,7 @@ public final class Columns {
 
     }
 
+    private int bitField0_;
     public static final int COLUMN_NAME_FIELD_NUMBER = 1;
     private volatile java.lang.Object columnName_;
     /**
@@ -3605,7 +3620,23 @@ public final class Columns {
     public static final int VALUE_INDEX_FIELD_NUMBER = 4;
     private int valueIndex_;
     /**
-     * <code>int32 value_index = 4;</code>
+     * <pre>
+     * Required by select
+     * </pre>
+     *
+     * <code>optional int32 value_index = 4;</code>
+     * @return Whether the valueIndex field is set.
+     */
+    @java.lang.Override
+    public boolean hasValueIndex() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <pre>
+     * Required by select
+     * </pre>
+     *
+     * <code>optional int32 value_index = 4;</code>
      * @return The valueIndex.
      */
     @java.lang.Override
@@ -3652,7 +3683,7 @@ public final class Columns {
       if (values_ != null) {
         output.writeMessage(3, getValues());
       }
-      if (valueIndex_ != 0) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeInt32(4, valueIndex_);
       }
       if (!nullMask_.isEmpty()) {
@@ -3678,7 +3709,7 @@ public final class Columns {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, getValues());
       }
-      if (valueIndex_ != 0) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, valueIndex_);
       }
@@ -3709,8 +3740,11 @@ public final class Columns {
         if (!getValues()
             .equals(other.getValues())) return false;
       }
-      if (getValueIndex()
-          != other.getValueIndex()) return false;
+      if (hasValueIndex() != other.hasValueIndex()) return false;
+      if (hasValueIndex()) {
+        if (getValueIndex()
+            != other.getValueIndex()) return false;
+      }
       if (!getNullMask()
           .equals(other.getNullMask())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -3732,8 +3766,10 @@ public final class Columns {
         hash = (37 * hash) + VALUES_FIELD_NUMBER;
         hash = (53 * hash) + getValues().hashCode();
       }
-      hash = (37 * hash) + VALUE_INDEX_FIELD_NUMBER;
-      hash = (53 * hash) + getValueIndex();
+      if (hasValueIndex()) {
+        hash = (37 * hash) + VALUE_INDEX_FIELD_NUMBER;
+        hash = (53 * hash) + getValueIndex();
+      }
       hash = (37 * hash) + NULL_MASK_FIELD_NUMBER;
       hash = (53 * hash) + getNullMask().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -3880,7 +3916,7 @@ public final class Columns {
           valuesBuilder_ = null;
         }
         valueIndex_ = 0;
-
+        bitField0_ = (bitField0_ & ~0x00000001);
         nullMask_ = com.google.protobuf.ByteString.EMPTY;
 
         return this;
@@ -3909,6 +3945,8 @@ public final class Columns {
       @java.lang.Override
       public io.greptime.v1.Columns.Column buildPartial() {
         io.greptime.v1.Columns.Column result = new io.greptime.v1.Columns.Column(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         result.columnName_ = columnName_;
         result.semanticType_ = semanticType_;
         if (valuesBuilder_ == null) {
@@ -3916,8 +3954,12 @@ public final class Columns {
         } else {
           result.values_ = valuesBuilder_.build();
         }
-        result.valueIndex_ = valueIndex_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.valueIndex_ = valueIndex_;
+          to_bitField0_ |= 0x00000001;
+        }
         result.nullMask_ = nullMask_;
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -3976,7 +4018,7 @@ public final class Columns {
         if (other.hasValues()) {
           mergeValues(other.getValues());
         }
-        if (other.getValueIndex() != 0) {
+        if (other.hasValueIndex()) {
           setValueIndex(other.getValueIndex());
         }
         if (other.getNullMask() != com.google.protobuf.ByteString.EMPTY) {
@@ -4010,6 +4052,7 @@ public final class Columns {
         }
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object columnName_ = "";
       /**
@@ -4352,7 +4395,23 @@ public final class Columns {
 
       private int valueIndex_ ;
       /**
-       * <code>int32 value_index = 4;</code>
+       * <pre>
+       * Required by select
+       * </pre>
+       *
+       * <code>optional int32 value_index = 4;</code>
+       * @return Whether the valueIndex field is set.
+       */
+      @java.lang.Override
+      public boolean hasValueIndex() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <pre>
+       * Required by select
+       * </pre>
+       *
+       * <code>optional int32 value_index = 4;</code>
        * @return The valueIndex.
        */
       @java.lang.Override
@@ -4360,22 +4419,30 @@ public final class Columns {
         return valueIndex_;
       }
       /**
-       * <code>int32 value_index = 4;</code>
+       * <pre>
+       * Required by select
+       * </pre>
+       *
+       * <code>optional int32 value_index = 4;</code>
        * @param value The valueIndex to set.
        * @return This builder for chaining.
        */
       public Builder setValueIndex(int value) {
-        
+        bitField0_ |= 0x00000001;
         valueIndex_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 value_index = 4;</code>
+       * <pre>
+       * Required by select
+       * </pre>
+       *
+       * <code>optional int32 value_index = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearValueIndex() {
-        
+        bitField0_ = (bitField0_ & ~0x00000001);
         valueIndex_ = 0;
         onChanged();
         return this;
@@ -5252,28 +5319,28 @@ public final class Columns {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014column.proto\022\013greptime.v1\"\361\003\n\006Column\022\023" +
+      "\n\014column.proto\022\013greptime.v1\"\206\004\n\006Column\022\023" +
       "\n\013column_name\030\001 \001(\t\0227\n\rsemantic_type\030\002 \001" +
       "(\0162 .greptime.v1.Column.SemanticType\022*\n\006" +
       "values\030\003 \001(\0132\032.greptime.v1.Column.Values" +
-      "\022\023\n\013value_index\030\004 \001(\005\022\021\n\tnull_mask\030\005 \001(\014" +
-      "\032\221\002\n\006Values\022\021\n\ti8_values\030\001 \003(\005\022\022\n\ni16_va" +
-      "lues\030\002 \003(\005\022\022\n\ni32_values\030\003 \003(\005\022\022\n\ni64_va" +
-      "lues\030\004 \003(\003\022\021\n\tu8_values\030\005 \003(\r\022\022\n\nu16_val" +
-      "ues\030\006 \003(\r\022\022\n\nu32_values\030\007 \003(\r\022\022\n\nu64_val" +
-      "ues\030\010 \003(\004\022\022\n\nf32_values\030\t \003(\002\022\022\n\nf64_val" +
-      "ues\030\n \003(\001\022\023\n\013bool_values\030\013 \003(\010\022\025\n\rbinary" +
-      "_values\030\014 \003(\014\022\025\n\rstring_values\030\r \003(\t\"1\n\014" +
-      "SemanticType\022\007\n\003TAG\020\000\022\t\n\005FIELD\020\001\022\r\n\tTIME" +
-      "STAMP\020\002\"^\n\tColumnDef\022\014\n\004name\030\001 \001(\t\022.\n\tda" +
-      "ta_type\030\002 \001(\0162\033.greptime.v1.ColumnDataTy" +
-      "pe\022\023\n\013is_nullable\030\003 \001(\010*\301\001\n\016ColumnDataTy" +
-      "pe\022\013\n\007BOOLEAN\020\000\022\010\n\004INT8\020\001\022\t\n\005INT16\020\002\022\t\n\005" +
-      "INT32\020\003\022\t\n\005INT64\020\004\022\t\n\005UINT8\020\005\022\n\n\006UINT16\020" +
-      "\006\022\n\n\006UINT32\020\007\022\n\n\006UINT64\020\010\022\013\n\007FLOAT32\020\t\022\013" +
-      "\n\007FLOAT64\020\n\022\n\n\006BINARY\020\013\022\n\n\006STRING\020\014\022\010\n\004D" +
-      "ATE\020\r\022\014\n\010DATETIME\020\016B\031\n\016io.greptime.v1B\007C" +
-      "olumnsb\006proto3"
+      "\022\030\n\013value_index\030\004 \001(\005H\000\210\001\001\022\021\n\tnull_mask\030" +
+      "\005 \001(\014\032\221\002\n\006Values\022\021\n\ti8_values\030\001 \003(\005\022\022\n\ni" +
+      "16_values\030\002 \003(\005\022\022\n\ni32_values\030\003 \003(\005\022\022\n\ni" +
+      "64_values\030\004 \003(\003\022\021\n\tu8_values\030\005 \003(\r\022\022\n\nu1" +
+      "6_values\030\006 \003(\r\022\022\n\nu32_values\030\007 \003(\r\022\022\n\nu6" +
+      "4_values\030\010 \003(\004\022\022\n\nf32_values\030\t \003(\002\022\022\n\nf6" +
+      "4_values\030\n \003(\001\022\023\n\013bool_values\030\013 \003(\010\022\025\n\rb" +
+      "inary_values\030\014 \003(\014\022\025\n\rstring_values\030\r \003(" +
+      "\t\"1\n\014SemanticType\022\007\n\003TAG\020\000\022\t\n\005FIELD\020\001\022\r\n" +
+      "\tTIMESTAMP\020\002B\016\n\014_value_index\"^\n\tColumnDe" +
+      "f\022\014\n\004name\030\001 \001(\t\022.\n\tdata_type\030\002 \001(\0162\033.gre" +
+      "ptime.v1.ColumnDataType\022\023\n\013is_nullable\030\003" +
+      " \001(\010*\301\001\n\016ColumnDataType\022\013\n\007BOOLEAN\020\000\022\010\n\004" +
+      "INT8\020\001\022\t\n\005INT16\020\002\022\t\n\005INT32\020\003\022\t\n\005INT64\020\004\022" +
+      "\t\n\005UINT8\020\005\022\n\n\006UINT16\020\006\022\n\n\006UINT32\020\007\022\n\n\006UI" +
+      "NT64\020\010\022\013\n\007FLOAT32\020\t\022\013\n\007FLOAT64\020\n\022\n\n\006BINA" +
+      "RY\020\013\022\n\n\006STRING\020\014\022\010\n\004DATE\020\r\022\014\n\010DATETIME\020\016" +
+      "B\031\n\016io.greptime.v1B\007Columnsb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5284,7 +5351,7 @@ public final class Columns {
     internal_static_greptime_v1_Column_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_Column_descriptor,
-        new java.lang.String[] { "ColumnName", "SemanticType", "Values", "ValueIndex", "NullMask", });
+        new java.lang.String[] { "ColumnName", "SemanticType", "Values", "ValueIndex", "NullMask", "ValueIndex", });
     internal_static_greptime_v1_Column_Values_descriptor =
       internal_static_greptime_v1_Column_descriptor.getNestedTypes().get(0);
     internal_static_greptime_v1_Column_Values_fieldAccessorTable = new
