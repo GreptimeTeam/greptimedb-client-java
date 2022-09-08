@@ -16,16 +16,37 @@
  */
 package io.greptime.models;
 
+import io.greptime.v1.Columns;
+
 /**
- *
  * @author jiachun.fjc
  */
-public interface Value {
-    String name();
+public enum SemanticType {
+    Tag, Field, Timestamp;
 
-    SemanticType semanticType();
+    public Columns.Column.SemanticType toProtoValue() {
+        switch (this) {
+            case Tag:
+                return Columns.Column.SemanticType.TAG;
+            case Field:
+                return Columns.Column.SemanticType.FIELD;
+            case Timestamp:
+                return Columns.Column.SemanticType.TIMESTAMP;
+            default:
+                return null;
+        }
+    }
 
-    ColumnDataType dataType();
-
-    Object value();
+    public static SemanticType fromProtoValue(Columns.Column.SemanticType v) {
+        switch (v) {
+            case TAG:
+                return Tag;
+            case FIELD:
+                return Field;
+            case TIMESTAMP:
+                return Timestamp;
+            default:
+                return null;
+        }
+    }
 }

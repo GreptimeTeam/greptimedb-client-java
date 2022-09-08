@@ -16,6 +16,7 @@
  */
 package io.greptime.options;
 
+import io.greptime.RouterClient;
 import io.greptime.common.Copiable;
 
 import java.util.concurrent.Executor;
@@ -27,8 +28,9 @@ import java.util.concurrent.Executor;
  */
 public class WriteOptions implements Copiable<WriteOptions> {
 
-    private Executor asyncPool;
-    private int      maxRetries = 1;
+    private Executor     asyncPool;
+    private RouterClient routerClient;
+    private int          maxRetries = 1;
 
     public Executor getAsyncPool() {
         return asyncPool;
@@ -36,6 +38,14 @@ public class WriteOptions implements Copiable<WriteOptions> {
 
     public void setAsyncPool(Executor asyncPool) {
         this.asyncPool = asyncPool;
+    }
+
+    public RouterClient getRouterClient() {
+        return routerClient;
+    }
+
+    public void setRouterClient(RouterClient routerClient) {
+        this.routerClient = routerClient;
     }
 
     public int getMaxRetries() {
@@ -48,8 +58,9 @@ public class WriteOptions implements Copiable<WriteOptions> {
 
     @Override
     public WriteOptions copy() {
-        final WriteOptions opts = new WriteOptions();
+        WriteOptions opts = new WriteOptions();
         opts.asyncPool = this.asyncPool;
+        opts.routerClient = this.routerClient;
         opts.maxRetries = this.maxRetries;
         return opts;
     }
@@ -57,7 +68,8 @@ public class WriteOptions implements Copiable<WriteOptions> {
     @Override
     public String toString() {
         return "WriteOptions{" + //
-               ", globalAsyncPool=" + asyncPool + //
+               ", asyncPool=" + asyncPool + //
+               ", routerClient=" + routerClient + //
                ", maxRetries=" + maxRetries + //
                '}';
     }

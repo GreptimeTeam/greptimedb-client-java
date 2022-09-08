@@ -40,7 +40,8 @@ public class SelectRowsTest {
                 .addI32Values(1) //
                 .addI32Values(3) //
                 .addI32Values(5) //
-                .build()).setValueIndex(2) //
+                .build()) //
+            .setDataType(Columns.ColumnDataType.INT32) //
             .setNullMask(ByteStringHelper.wrap(nullMask.toByteArray())) //
             .build();
 
@@ -52,7 +53,8 @@ public class SelectRowsTest {
                 .addI32Values(3) //
                 .addI32Values(4) //
                 .addI32Values(5) //
-                .build()).setValueIndex(2) //
+                .build()) //
+            .setDataType(Columns.ColumnDataType.INT32) //
             .build();
 
         Select.SelectResult selectResult = Select.SelectResult.newBuilder().addColumns(column1) //
@@ -66,11 +68,11 @@ public class SelectRowsTest {
         Row r = rows.next();
         Assert.assertEquals("test_column1", r.values().get(0).name());
         Assert.assertEquals(Columns.Column.SemanticType.FIELD, r.values().get(0).semanticType());
-        Assert.assertEquals(Value.Type.Int32, r.values().get(0).valueType());
+        Assert.assertEquals(Columns.ColumnDataType.INT32, r.values().get(0).dataType());
         Assert.assertEquals(1, r.values().get(0).value());
         Assert.assertEquals("test_column2", r.values().get(1).name());
         Assert.assertEquals(Columns.Column.SemanticType.FIELD, r.values().get(1).semanticType());
-        Assert.assertEquals(Value.Type.Int32, r.values().get(1).valueType());
+        Assert.assertEquals(Columns.ColumnDataType.INT32, r.values().get(1).dataType());
         Assert.assertEquals(1, r.values().get(1).value());
 
         Assert.assertTrue(rows.hasNext());

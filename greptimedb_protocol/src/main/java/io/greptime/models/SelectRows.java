@@ -17,7 +17,6 @@
 package io.greptime.models;
 
 import io.greptime.v1.Columns.Column;
-import io.greptime.v1.Columns.Column.SemanticType;
 import io.greptime.v1.codec.Select;
 
 import java.util.BitSet;
@@ -76,12 +75,12 @@ public class SelectRows implements Iterator<Row> {
 
                 @Override
                 public SemanticType semanticType() {
-                    return column.getSemanticType();
+                    return SemanticType.fromProtoValue(column.getSemanticType());
                 }
 
                 @Override
-                public Type valueType() {
-                    return ColumnUtil.getValueType(column);
+                public ColumnDataType dataType() {
+                    return ColumnDataType.fromProtoValue(ColumnHelper.getValueType(column));
                 }
 
                 @Override
@@ -95,8 +94,8 @@ public class SelectRows implements Iterator<Row> {
     }
 
     private Object getColumnValue(Column column, int index) {
-        Function<String, BitSet> func = k -> ColumnUtil.getNullMaskBits(column);
+        Function<String, BitSet> func = k -> ColumnHelper.getNullMaskBits(column);
         BitSet nullMask = this.nullMaskCache.computeIfAbsent(column.getColumnName(), func);
-        return ColumnUtil.getValue(column, index, nullMask);
+        return ColumnHelper.getValue(column, index, nullMask);
     }
 }

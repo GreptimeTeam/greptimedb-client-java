@@ -20,27 +20,33 @@ import io.greptime.common.Display;
 import io.greptime.common.Keys;
 import io.greptime.common.util.ExecutorServiceHelper;
 import io.greptime.common.util.NamedThreadFactory;
+import io.greptime.common.util.ObjectPool;
+import io.greptime.common.util.SharedScheduledPool;
 import io.greptime.common.util.SystemPropertyUtil;
 import io.greptime.common.util.ThreadPoolUtil;
+import io.greptime.models.Err;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Util for GreptimeDB Client.
  *
  * @author jiachun
  */
-public class Util {
-
-    private static final String                       VERSION_KEY = "client.version";
+public final class Util {
+    private static final AtomicBoolean            RW_LOGGING;
     private static final int                      REPORT_PERIOD_MIN;
     private static final ScheduledExecutorService DISPLAY;
 
     static {
+        RW_LOGGING = new AtomicBoolean(SystemPropertyUtil.getBool(Keys.RW_LOGGING, false));
         REPORT_PERIOD_MIN = SystemPropertyUtil.getInt(Keys.REPORT_PERIOD, 30);
         DISPLAY = ThreadPoolUtil.newScheduledBuilder()
                 .poolName("display_self") //
@@ -51,6 +57,26 @@ public class Util {
                 .build();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> ExecutorServiceHelper.shutdownAndAwaitTermination(DISPLAY)));
+    }
+
+    /**
+     * Whether to output concise read/write logs.
+     *
+     * @return true or false
+     */
+    public static boolean isRwLogging() {
+        return RW_LOGGING.get();
+    }
+
+    /**
+     * See {@link #isRwLogging()}
+     *
+     * Reset `rwLogging`, set to the opposite of the old value.
+     *
+     * @return old value
+     */
+    public static boolean resetRwLogging() {
+        return RW_LOGGING.getAndSet(!RW_LOGGING.get());
     }
 
     /**
@@ -73,6 +99,77 @@ public class Util {
     }
 
     /**
+     * Create a shared scheduler pool with the given name.
+     *
+     * @param name    scheduled pool's name
+     * @param workers the num of workers
+     * @return new scheduler poll instance
+     */
+    public static SharedScheduledPool getSharedScheduledPool(String name, int workers) {
+        return new SharedScheduledPool(new ObjectPool.Resource<ScheduledExecutorService>() {
+
+            @Override
+            public ScheduledExecutorService create() {
+                return ThreadPoolUtil.newScheduledBuilder() //
+                        .poolName(name) //
+                        .coreThreads(workers) //
+                        .enableMetric(true) //
+                        .threadFactory(new NamedThreadFactory(name, true)) //
+                        .rejectedHandler(new ThreadPoolExecutor.DiscardOldestPolicy()) //
+                        .build();
+            }
+
+            @Override
+            public void close(ScheduledExecutorService instance) {
+                ExecutorServiceHelper.shutdownAndAwaitTermination(instance);
+            }
+        });
+    }
+
+    /**
+     * Returns a new CompletableFuture that is already completed with the given
+     * value. Same as {@link CompletableFuture#completedFuture(Object)}, only
+     * rename the method.
+     *
+     * @param value the given value
+     * @param <U> the type of the value
+     * @return the completed {@link CompletableFuture}
+     */
+    public static <U> CompletableFuture<U> completedCf(U value) {
+        return CompletableFuture.completedFuture(value);
+    }
+
+    /**
+     * Returns a new CompletableFuture that is already exceptionally with the given
+     * error.
+     *
+     * @param t   the given exception
+     * @param <U> the type of the value
+     * @return the exceptionally {@link CompletableFuture}
+     */
+    public static <U> CompletableFuture<U> errorCf(Throwable t) {
+        final CompletableFuture<U> err = new CompletableFuture<>();
+        err.completeExceptionally(t);
+        return err;
+    }
+
+    public static long randomInitialDelay(long delay) {
+        return ThreadLocalRandom.current().nextLong(delay, delay << 1);
+    }
+
+    public static boolean shouldNotRetry(Err err) {
+        return !shouldRetry(err);
+    }
+
+    public static boolean shouldRetry(Err err) {
+        if (err == null) {
+            return false;
+        }
+        Status status = Status.parse(err.getCode());
+        return status != null && status.isShouldRetry();
+    }
+
+    /**
      * Returns the version of this client.
      *
      * @return version
@@ -80,7 +177,7 @@ public class Util {
     public static String clientVersion() {
         try {
             return loadProps(Util.class.getClassLoader(), "client_version.properties") //
-                    .getProperty(VERSION_KEY, "Unknown version");
+                    .getProperty(Keys.VERSION_KEY, "Unknown version");
         } catch (Exception ignored) {
             return "Unknown version(err)";
         }

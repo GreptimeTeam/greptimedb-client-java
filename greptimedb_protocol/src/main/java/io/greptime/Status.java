@@ -26,66 +26,82 @@ import java.util.Map;
  */
 public enum Status {
     // ====== Begin of common status code ==============
-    /// Success.
+    // Success.
     Success(0),
-    /// Unknown error.
-    Unknown(1),
-    /// Unsupported operation.
-    Unsupported(2),
-    /// Unexpected error, maybe there is a BUG.
-    Unexpected(3),
-    /// Internal server error.
-    Internal(4),
-    /// Invalid arguments.
-    InvalidArguments(5),
+
+    // Unknown error.
+    Unknown(1000),
+    // Unsupported operation.
+    Unsupported(1001),
+    // Unexpected error, maybe there is a BUG.
+    Unexpected(1002),
+    // Internal server error.
+    Internal(1003),
+    // Invalid arguments.
+    InvalidArguments(1004),
     // ====== End of common status code ================
 
     // ====== Begin of SQL related status code =========
-    /// SQL Syntax error.
-    InvalidSyntax(6),
+    // SQL Syntax error.
+    InvalidSyntax(2000),
     // ====== End of SQL related status code ===========
 
     // ====== Begin of query related status code =======
-    /// Fail to create a plan for the query.
-    PlanQuery(7),
-    /// The query engine fail to execute query.
-    EngineExecuteQuery(8),
+    // Fail to create a plan for the query.
+    PlanQuery(3000),
+    // The query engine fail to execute query.
+    EngineExecuteQuery(3001),
     // ====== End of query related status code =========
 
     // ====== Begin of catalog related status code =====
-    /// Table already exists.
-    TableAlreadyExists(9), TableNotFound(10), TableColumnNotFound(11),
+    // Table already exists.
+    TableAlreadyExists(4000),
+    //
+    TableNotFound(4001),
+    //
+    TableColumnNotFound(4002),
     // ====== End of catalog related status code =======
 
     // ====== Begin of storage related status code =====
-    /// Storage is temporarily unable to handle the request
-    StorageUnavailable(12),
+    // Storage is temporarily unable to handle the request
+    StorageUnavailable(5000),
     // ====== End of storage related status code =======
 
     // ====== Begin of server related status code =====
-    /// Runtime resources exhausted, like creating threads failed.
-    RuntimeResourcesExhausted(13), ;
+    // Runtime resources exhausted, like creating threads failed.
+    RuntimeResourcesExhausted(6000),
     // ====== End of server related status code =======
+    ;
 
-    private static final Map<Integer, Status> STATUS = new HashMap<>();
+    private static final Map<Integer, Status> DICT = new HashMap<>();
 
     static {
         for (Status s : Status.values()) {
-            STATUS.put(s.getStatusCode(), s);
+            DICT.put(s.getStatusCode(), s);
         }
     }
 
     private final int                         statusCode;
+    private final boolean                     shouldRetry;
 
     Status(int statusCode) {
+        this(statusCode, false);
+    }
+
+    Status(int statusCode, boolean shouldRetry) {
         this.statusCode = statusCode;
+        this.shouldRetry = shouldRetry;
     }
 
     public int getStatusCode() {
         return statusCode;
     }
 
+    public boolean isShouldRetry() {
+        return shouldRetry;
+    }
+
     public static Status parse(int statusCode) {
-        return STATUS.get(statusCode);
+        return DICT.get(statusCode);
     }
 }

@@ -14,18 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime.models;
+package io.greptime;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
+ * A RPC router for GreptimeDB.
  *
  * @author jiachun.fjc
  */
-public interface Value {
-    String name();
+public interface Router<Req, Resp> {
 
-    SemanticType semanticType();
-
-    ColumnDataType dataType();
-
-    Object value();
+    /**
+     * For a given request return the routing decision for the call.
+     *
+     * @param request request
+     * @return a endpoint for the call
+     */
+    CompletableFuture<Resp> routeFor(Req request);
 }
