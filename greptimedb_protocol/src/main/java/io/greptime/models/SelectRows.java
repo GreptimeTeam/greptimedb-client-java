@@ -27,75 +27,94 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Data in row format obtained from a query from the DB.
  *
  * @author jiachun.fjc
  */
-public class SelectRows implements Iterator<Row> {
+public interface SelectRows extends Iterator<Row> {
+    int rowCount();
 
-    private static final SelectRows EMPTY = new SelectRows(null);
-
-    public static SelectRows empty() {
-        return EMPTY;
+    default List<Row> collect() {
+        Iterable<Row> iterable = () -> this;
+        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
     }
 
-    private final int                 rowCount;
-    private final List<Column>        columns;
-    private final Map<String, BitSet> nullMaskCache;
-    private int                       cursor = 0;
+    static SelectRows empty() {
+        return DefaultSelectRows.EMPTY;
+    }
 
-    public SelectRows(Select.SelectResult result) {
-        if (result == null) {
-            this.rowCount = 0;
-            this.columns = null;
-            this.nullMaskCache = Collections.emptyMap();
-        } else {
-            this.rowCount = result.getRowCount();
-            this.columns = result.getColumnsList();
-            this.nullMaskCache = new HashMap<>(this.columns.size());
+    static SelectRows from(Select.SelectResult res) {
+        return new DefaultSelectRows(res);
+    }
+
+    class DefaultSelectRows implements SelectRows {
+
+        private static final DefaultSelectRows EMPTY  = new DefaultSelectRows(null);
+
+        private final int                      rowCount;
+        private final List<Column>             columns;
+        private final Map<String, BitSet>      nullMaskCache;
+        private int                            cursor = 0;
+
+        DefaultSelectRows(Select.SelectResult res) {
+            if (res == null) {
+                this.rowCount = 0;
+                this.columns = null;
+                this.nullMaskCache = Collections.emptyMap();
+            } else {
+                this.rowCount = res.getRowCount();
+                this.columns = res.getColumnsList();
+                this.nullMaskCache = new HashMap<>(this.columns.size());
+            }
         }
-    }
 
-    @Override
-    public boolean hasNext() {
-        return this.cursor < rowCount;
-    }
+        @Override
+        public int rowCount() {
+            return rowCount;
+        }
 
-    @Override
-    public Row next() {
-        int index = this.cursor++;
-        List<Value> values = this.columns.stream() //
-            .map(column -> new Value() {
-                @Override
-                public String name() {
-                    return column.getColumnName();
-                }
+        @Override
+        public boolean hasNext() {
+            return this.cursor < rowCount;
+        }
 
-                @Override
-                public SemanticType semanticType() {
-                    return SemanticType.fromProtoValue(column.getSemanticType());
-                }
+        @Override
+        public Row next() {
+            int index = this.cursor++;
+            List<Value> values = this.columns.stream() //
+                .map(column -> new Value() {
+                    @Override
+                    public String name() {
+                        return column.getColumnName();
+                    }
 
-                @Override
-                public ColumnDataType dataType() {
-                    return ColumnDataType.fromProtoValue(ColumnHelper.getValueType(column));
-                }
+                    @Override
+                    public SemanticType semanticType() {
+                        return SemanticType.fromProtoValue(column.getSemanticType());
+                    }
 
-                @Override
-                public Object value() {
-                    return getColumnValue(column, index);
-                }
-            })
-            .collect(Collectors.toList());
+                    @Override
+                    public ColumnDataType dataType() {
+                        return ColumnDataType.fromProtoValue(ColumnHelper.getValueType(column));
+                    }
 
-        return () -> values;
-    }
+                    @Override
+                    public Object value() {
+                        return getColumnValue(column, index);
+                    }
+                })
+                .collect(Collectors.toList());
 
-    private Object getColumnValue(Column column, int index) {
-        Function<String, BitSet> func = k -> ColumnHelper.getNullMaskBits(column);
-        BitSet nullMask = this.nullMaskCache.computeIfAbsent(column.getColumnName(), func);
-        return ColumnHelper.getValue(column, index, nullMask);
+            return () -> values;
+        }
+
+        private Object getColumnValue(Column column, int index) {
+            Function<String, BitSet> func = k -> ColumnHelper.getNullMaskBits(column);
+            BitSet nullMask = this.nullMaskCache.computeIfAbsent(column.getColumnName(), func);
+            return ColumnHelper.getValue(column, index, nullMask);
+        }
     }
 }

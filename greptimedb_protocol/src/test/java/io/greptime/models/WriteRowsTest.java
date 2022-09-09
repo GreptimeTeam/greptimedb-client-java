@@ -41,10 +41,10 @@ public class WriteRowsTest {
             .insert("3", "33", 333) //
             .finish();
 
-        Assert.assertEquals(3, rows.getRowCount());
-        Assert.assertEquals(111, rows.getColumns().get(2).getValues().getI32Values(0));
-        Assert.assertEquals(222, rows.getColumns().get(2).getValues().getI32Values(1));
-        Assert.assertEquals(333, rows.getColumns().get(2).getValues().getI32Values(2));
+        Assert.assertEquals(3, rows.rowCount());
+        Assert.assertEquals(111, rows.columns().get(2).getValues().getI32Values(0));
+        Assert.assertEquals(222, rows.columns().get(2).getValues().getI32Values(1));
+        Assert.assertEquals(333, rows.columns().get(2).getValues().getI32Values(2));
     }
 
     @Test
@@ -60,13 +60,13 @@ public class WriteRowsTest {
             .insert("3", "33", null) //
             .finish();
 
-        Assert.assertEquals(3, rows.getRowCount());
-        Assert.assertEquals(111, rows.getColumns().get(2).getValues().getI32Values(0));
-        Assert.assertEquals(222, rows.getColumns().get(2).getValues().getI32Values(1));
-        Assert.assertEquals("33", rows.getColumns().get(1).getValues().getStringValues(1));
-        Assert.assertTrue(rows.getColumns().get(0).getNullMask().isEmpty());
-        Assert.assertTrue(bitSet(rows.getColumns().get(1).getNullMask()).get(1));
-        Assert.assertTrue(bitSet(rows.getColumns().get(2).getNullMask()).get(2));
+        Assert.assertEquals(3, rows.rowCount());
+        Assert.assertEquals(111, rows.columns().get(2).getValues().getI32Values(0));
+        Assert.assertEquals(222, rows.columns().get(2).getValues().getI32Values(1));
+        Assert.assertEquals("33", rows.columns().get(1).getValues().getStringValues(1));
+        Assert.assertTrue(rows.columns().get(0).getNullMask().isEmpty());
+        Assert.assertTrue(bitSet(rows.columns().get(1).getNullMask()).get(1));
+        Assert.assertTrue(bitSet(rows.columns().get(2).getNullMask()).get(2));
     }
 
     private BitSet bitSet(ByteString byteString) {

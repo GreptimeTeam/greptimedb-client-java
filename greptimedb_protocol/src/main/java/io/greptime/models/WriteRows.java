@@ -32,71 +32,22 @@ import java.util.stream.Collectors;
  *
  * @author jiachun.fjc
  */
-public class WriteRows {
-    private String                       tableName;
-    private int                          columnCount;
-    private List<Columns.Column.Builder> builders;
-    private BitSet[]                     nullMasks;
-    private List<Columns.Column>         columns;
-    private int                          rowCount;
+public interface WriteRows {
+    String tableName();
 
-    public String tableName() {
-        return tableName;
-    }
+    List<Columns.Column> columns();
 
-    public List<Columns.Column> getColumns() {
-        return columns;
-    }
+    int rowCount();
 
-    public int getRowCount() {
-        return rowCount;
-    }
+    WriteRows insert(Object... values);
 
-    public WriteRows insert(Object... values) {
-        Ensures.ensure(this.columnCount == values.length, "Expected values num: %d, actual: %d", this.columnCount,
-            values.length);
+    void finish();
 
-        for (int i = 0; i < columnCount; i++) {
-            Columns.Column.Builder builder = this.builders.get(i);
-            Object value = values[i];
-            if (value == null) {
-                if (this.nullMasks[i] == null) {
-                    this.nullMasks[i] = new BitSet(rowCount);
-                }
-                this.nullMasks[i].set(i);
-                continue;
-            }
-            ColumnHelper.addToColumnValuesBuilder(builder, value);
-        }
-
-        this.rowCount++;
-        return this;
-    }
-
-    public void finish() {
-        if (this.columns != null) {
-            return;
-        }
-
-        for (int i = 0; i < columnCount; i++) {
-            BitSet bits = this.nullMasks[i];
-            if (bits == null) {
-                continue;
-            }
-            this.builders.get(i).setNullMask(ByteStringHelper.wrap(bits.toByteArray()));
-        }
-
-        this.columns = this.builders //
-            .stream() //
-            .map(Columns.Column.Builder::build) //
-            .collect(Collectors.toList());
-    }
-
-    public static WriteRows.Builder newBuilder(String tableName) {
+    static WriteRows.Builder newBuilder(String tableName) {
         return new Builder(tableName);
     }
 
-    public static class Builder {
+    class Builder {
         private final String                      tableName;
         private List<String>                      columnNames;
         private List<Columns.Column.SemanticType> semanticTypes;
@@ -134,7 +85,7 @@ public class WriteRows {
             Ensures.ensure(columnCount == this.semanticTypes.size(), "Invalid semantic types");
             Ensures.ensure(columnCount == this.dataTypes.size(), "Invalid data types");
 
-            WriteRows rows = new WriteRows();
+            DefaultWriteRows rows = new DefaultWriteRows();
             rows.tableName = this.tableName;
             rows.columnCount = columnCount;
             rows.builders = new ArrayList<>();
@@ -147,6 +98,73 @@ public class WriteRows {
             }
             rows.nullMasks = new BitSet[columnCount];
             return rows;
+        }
+    }
+
+    class DefaultWriteRows implements WriteRows {
+        private String                       tableName;
+        private int                          columnCount;
+        private List<Columns.Column.Builder> builders;
+        private BitSet[]                     nullMasks;
+        private List<Columns.Column>         columns;
+        private int                          rowCount;
+
+        public String tableName() {
+            return tableName;
+        }
+
+        public List<Columns.Column> columns() {
+            return columns;
+        }
+
+        @Override
+        public int rowCount() {
+            return rowCount;
+        }
+
+        @Override
+        public WriteRows insert(Object... values) {
+            checkValuesNum(values.length);
+
+            for (int i = 0; i < columnCount; i++) {
+                Columns.Column.Builder builder = this.builders.get(i);
+                Object value = values[i];
+                if (value == null) {
+                    if (this.nullMasks[i] == null) {
+                        this.nullMasks[i] = new BitSet(rowCount);
+                    }
+                    this.nullMasks[i].set(i);
+                    continue;
+                }
+                ColumnHelper.addToColumnValuesBuilder(builder, value);
+            }
+
+            this.rowCount++;
+            return this;
+        }
+
+        @Override
+        public void finish() {
+            if (this.columns != null) {
+                return;
+            }
+
+            for (int i = 0; i < columnCount; i++) {
+                BitSet bits = this.nullMasks[i];
+                if (bits == null) {
+                    continue;
+                }
+                this.builders.get(i).setNullMask(ByteStringHelper.wrap(bits.toByteArray()));
+            }
+
+            this.columns = this.builders //
+                    .stream() //
+                    .map(Columns.Column.Builder::build) //
+                    .collect(Collectors.toList());
+        }
+
+        private void checkValuesNum(int len) {
+            Ensures.ensure(this.columnCount == len, "Expected values num: %d, actual: %d", this.columnCount, len);
         }
     }
 }

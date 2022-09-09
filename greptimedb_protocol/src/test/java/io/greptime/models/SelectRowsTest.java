@@ -23,6 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.BitSet;
+import java.util.List;
 
 /**
  * @author jiachun.fjc
@@ -30,7 +31,54 @@ import java.util.BitSet;
 public class SelectRowsTest {
 
     @Test
+    public void testSelectRowsCollect() {
+        SelectRows rows = SelectRows.from(genSelectResult());
+        List<Row> res = rows.collect();
+        Assert.assertEquals(5, res.size());
+        for (Row r : res) {
+            Assert.assertEquals(2, r.values().size());
+        }
+    }
+
+    @Test
     public void testSelectRowsIterator() {
+        SelectRows rows = SelectRows.from(genSelectResult());
+        Assert.assertEquals(5, rows.rowCount());
+        Assert.assertTrue(rows.hasNext());
+        Row r = rows.next();
+        Assert.assertEquals("test_column1", r.values().get(0).name());
+        Assert.assertEquals(SemanticType.Field, r.values().get(0).semanticType());
+        Assert.assertEquals(ColumnDataType.Int32, r.values().get(0).dataType());
+        Assert.assertEquals(1, r.values().get(0).value());
+        Assert.assertEquals("test_column2", r.values().get(1).name());
+        Assert.assertEquals(SemanticType.Field, r.values().get(1).semanticType());
+        Assert.assertEquals(ColumnDataType.Int32, r.values().get(1).dataType());
+        Assert.assertEquals(1, r.values().get(1).value());
+
+        Assert.assertTrue(rows.hasNext());
+        r = rows.next();
+        Assert.assertNull(r.values().get(0).value());
+        Assert.assertEquals(2, r.values().get(1).value());
+
+        Assert.assertTrue(rows.hasNext());
+        r = rows.next();
+        Assert.assertEquals(3, r.values().get(0).value());
+        Assert.assertEquals(3, r.values().get(1).value());
+
+        Assert.assertTrue(rows.hasNext());
+        r = rows.next();
+        Assert.assertNull(r.values().get(0).value());
+        Assert.assertEquals(4, r.values().get(1).value());
+
+        Assert.assertTrue(rows.hasNext());
+        r = rows.next();
+        Assert.assertEquals(5, r.values().get(0).value());
+        Assert.assertEquals(5, r.values().get(1).value());
+
+        Assert.assertFalse(rows.hasNext());
+    }
+
+    private Select.SelectResult genSelectResult() {
         BitSet nullMask = new BitSet(5);
         nullMask.set(1, true);
         nullMask.set(3, true);
@@ -57,44 +105,9 @@ public class SelectRowsTest {
             .setDataType(Columns.ColumnDataType.INT32) //
             .build();
 
-        Select.SelectResult selectResult = Select.SelectResult.newBuilder().addColumns(column1) //
+        return Select.SelectResult.newBuilder().addColumns(column1) //
             .addColumns(column2) //
             .setRowCount(5) //
             .build();
-
-        SelectRows rows = new SelectRows(selectResult);
-
-        Assert.assertTrue(rows.hasNext());
-        Row r = rows.next();
-        Assert.assertEquals("test_column1", r.values().get(0).name());
-        Assert.assertEquals(Columns.Column.SemanticType.FIELD, r.values().get(0).semanticType());
-        Assert.assertEquals(Columns.ColumnDataType.INT32, r.values().get(0).dataType());
-        Assert.assertEquals(1, r.values().get(0).value());
-        Assert.assertEquals("test_column2", r.values().get(1).name());
-        Assert.assertEquals(Columns.Column.SemanticType.FIELD, r.values().get(1).semanticType());
-        Assert.assertEquals(Columns.ColumnDataType.INT32, r.values().get(1).dataType());
-        Assert.assertEquals(1, r.values().get(1).value());
-
-        Assert.assertTrue(rows.hasNext());
-        r = rows.next();
-        Assert.assertNull(r.values().get(0).value());
-        Assert.assertEquals(2, r.values().get(1).value());
-
-        Assert.assertTrue(rows.hasNext());
-        r = rows.next();
-        Assert.assertEquals(3, r.values().get(0).value());
-        Assert.assertEquals(3, r.values().get(1).value());
-
-        Assert.assertTrue(rows.hasNext());
-        r = rows.next();
-        Assert.assertNull(r.values().get(0).value());
-        Assert.assertEquals(4, r.values().get(1).value());
-
-        Assert.assertTrue(rows.hasNext());
-        r = rows.next();
-        Assert.assertEquals(5, r.values().get(0).value());
-        Assert.assertEquals(5, r.values().get(1).value());
-
-        Assert.assertFalse(rows.hasNext());
     }
 }

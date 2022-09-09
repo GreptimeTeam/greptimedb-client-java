@@ -30,8 +30,8 @@ public final class InsertHelper {
 
     public static GreptimeDB.BatchRequest toWriteRequest(WriteRows rows) {
         Insert.InsertBatch batch = Insert.InsertBatch.newBuilder() //
-            .addAllColumns(rows.getColumns()) //
-            .setRowCount(rows.getRowCount()) //
+            .addAllColumns(rows.columns()) //
+            .setRowCount(rows.rowCount()) //
             .build();
 
         Common.ExprHeader header = Common.ExprHeader.newBuilder() //
@@ -61,6 +61,7 @@ public final class InsertHelper {
     public static Result<WriteOk, Err> toWriteResult(GreptimeDB.BatchResponse res, //
                                                      Endpoint endpoint, //
                                                      WriteRows rows) {
+        // TODO
         return null;
     }
 
