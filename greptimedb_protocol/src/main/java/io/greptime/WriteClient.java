@@ -127,7 +127,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                                                             int retries) {
         CompletableFuture<GreptimeDB.BatchResponse> f = this.routerClient.invoke(
                 endpoint, //
-                InsertHelper.toWriteRequest(rows), //
+                rows.into(), //
                 ctx.with("retries", retries) // server can use this in metrics
         );
 

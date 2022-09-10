@@ -14,23 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime.models;
-
-import io.greptime.common.Endpoint;
-import io.greptime.v1.GreptimeDB;
+package io.greptime.common;
 
 /**
+ * A value-to-value conversion.
  *
  * @author jiachun.fjc
  */
-public final class InsertHelper {
-    public static Result<WriteOk, Err> toWriteResult(GreptimeDB.BatchResponse res, //
-                                                     Endpoint endpoint, //
-                                                     WriteRows rows) {
-        // TODO
-        return null;
-    }
-
-    private InsertHelper() {
-    }
+public interface Into<Output> {
+    Output into();
 }

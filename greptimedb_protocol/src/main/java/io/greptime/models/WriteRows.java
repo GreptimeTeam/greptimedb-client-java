@@ -17,9 +17,14 @@
 package io.greptime.models;
 
 import com.google.protobuf.ByteStringHelper;
+import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
 import io.greptime.common.util.Strings;
 import io.greptime.v1.Columns;
+import io.greptime.v1.Common;
+import io.greptime.v1.Database;
+import io.greptime.v1.GreptimeDB;
+import io.greptime.v1.codec.Insert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +37,7 @@ import java.util.stream.Collectors;
  *
  * @author jiachun.fjc
  */
-public interface WriteRows {
+public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
     String tableName();
 
     List<Columns.Column> columns();
@@ -165,6 +170,37 @@ public interface WriteRows {
 
         private void checkValuesNum(int len) {
             Ensures.ensure(this.columnCount == len, "Expected values num: %d, actual: %d", this.columnCount, len);
+        }
+
+        @Override
+        public GreptimeDB.BatchRequest into() {
+            Insert.InsertBatch batch = Insert.InsertBatch.newBuilder() //
+                .addAllColumns(columns()) //
+                .setRowCount(rowCount()) //
+                .build();
+
+            Common.ExprHeader header = Common.ExprHeader.newBuilder() //
+                .setVersion(0) // TODO version
+                .build();
+
+            Database.InsertExpr insert = Database.InsertExpr.newBuilder() //
+                .setTableName(tableName()) //
+                .addValues(batch.toByteString()) //
+                .build();
+
+            Database.ObjectExpr obj = Database.ObjectExpr.newBuilder() //
+                .setHeader(header) //
+                .setInsert(insert) //
+                .build();
+
+            Database.DatabaseRequest databaseReq = Database.DatabaseRequest.newBuilder() //
+                .setName("") // TODO db name
+                .addExprs(obj) //
+                .build();
+
+            return GreptimeDB.BatchRequest.newBuilder() //
+                .addDatabases(databaseReq) //
+                .build();
         }
     }
 }
