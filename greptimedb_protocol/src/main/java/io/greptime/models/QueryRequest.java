@@ -16,12 +16,17 @@
  */
 package io.greptime.models;
 
+import io.greptime.common.Into;
+import io.greptime.v1.Common;
+import io.greptime.v1.Database;
+import io.greptime.v1.GreptimeDB;
+
 /**
  * The query request condition.
  *
  * @author jiachun.fjc
  */
-public class QueryRequest {
+public class QueryRequest implements Into<GreptimeDB.BatchRequest> {
     private SelectExpr expr;
     private String     ql;
 
@@ -43,6 +48,37 @@ public class QueryRequest {
 
     public static Builder newBuilder() {
         return new Builder();
+    }
+
+    @Override
+    public GreptimeDB.BatchRequest into() {
+        Common.ExprHeader header = Common.ExprHeader.newBuilder() //
+            .setVersion(0) // TODO version
+            .build();
+
+        Database.SelectExpr.Builder selectB = Database.SelectExpr.newBuilder();
+        switch (getExpr()) {
+            case Sql:
+                selectB.setSql(getQl());
+                break;
+            case Promql:
+                throw new UnsupportedOperationException("Promql unsupported yet!");
+        }
+        Database.SelectExpr select = selectB.build();
+
+        Database.ObjectExpr obj = Database.ObjectExpr.newBuilder() //
+            .setHeader(header) //
+            .setSelect(select) //
+            .build();
+
+        Database.DatabaseRequest databaseReq = Database.DatabaseRequest.newBuilder() //
+            .setName("") // TODO db name
+            .addExprs(obj) //
+            .build();
+
+        return GreptimeDB.BatchRequest.newBuilder() //
+            .addDatabases(databaseReq) //
+            .build();
     }
 
     public static class Builder {

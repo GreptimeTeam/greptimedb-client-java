@@ -22,11 +22,9 @@ import io.greptime.common.Copiable;
 import java.util.concurrent.Executor;
 
 /**
- * Write options.
- *
  * @author jiachun.fjc
  */
-public class WriteOptions implements Copiable<WriteOptions> {
+public class QueryOptions implements Copiable<QueryOptions> {
     private RouterClient routerClient;
     private Executor     asyncPool;
     private int          maxRetries = 1;
@@ -56,8 +54,8 @@ public class WriteOptions implements Copiable<WriteOptions> {
     }
 
     @Override
-    public WriteOptions copy() {
-        WriteOptions opts = new WriteOptions();
+    public QueryOptions copy() {
+        QueryOptions opts = new QueryOptions();
         opts.routerClient = this.routerClient;
         opts.asyncPool = this.asyncPool;
         opts.maxRetries = this.maxRetries;
@@ -66,8 +64,8 @@ public class WriteOptions implements Copiable<WriteOptions> {
 
     @Override
     public String toString() {
-        return "WriteOptions{" + //
-               ", routerClient=" + routerClient + //
+        return "QueryOptions{" + //
+               "routerClient=" + routerClient + //
                ", asyncPool=" + asyncPool + //
                ", maxRetries=" + maxRetries + //
                '}';

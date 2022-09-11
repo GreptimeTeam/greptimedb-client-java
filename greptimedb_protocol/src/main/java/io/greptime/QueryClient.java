@@ -27,11 +27,11 @@ import io.greptime.common.util.Ensures;
 import io.greptime.common.util.MetricsUtil;
 import io.greptime.common.util.SerializingExecutor;
 import io.greptime.models.Err;
-import io.greptime.models.WriteResultHelper;
+import io.greptime.models.QueryOk;
+import io.greptime.models.QueryRequest;
+import io.greptime.models.QueryResultHelper;
 import io.greptime.models.Result;
-import io.greptime.models.WriteOk;
-import io.greptime.models.WriteRows;
-import io.greptime.options.WriteOptions;
+import io.greptime.options.QueryOptions;
 import io.greptime.rpc.Context;
 import io.greptime.v1.GreptimeDB;
 import org.slf4j.Logger;
@@ -41,24 +41,24 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 /**
- * Default Write API impl.
+ * Default Query API impl.
  *
  * @author jiachun.fjc
  */
-public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
+public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WriteClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(QueryClient.class);
 
-    private WriteOptions        opts;
+    private QueryOptions        opts;
     private RouterClient        routerClient;
     private Executor            asyncPool;
 
     @Override
-    public boolean init(WriteOptions opts) {
-        this.opts = Ensures.ensureNonNull(opts, "Null WriteClient.opts");
+    public boolean init(QueryOptions opts) {
+        this.opts = Ensures.ensureNonNull(opts, "Null QueryClient.opts");
         this.routerClient = this.opts.getRouterClient();
         Executor pool = this.opts.getAsyncPool();
-        this.asyncPool = pool != null ? pool : new SerializingExecutor("write_client");
+        this.asyncPool = pool != null ? pool : new SerializingExecutor("query_client");
         return true;
     }
 
@@ -68,47 +68,43 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     }
 
     @Override
-    public CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx) {
-        Ensures.ensureNonNull(rows, "Null WriteClient.rows");
+    public CompletableFuture<Result<QueryOk, Err>> query(QueryRequest req, Context ctx) {
+        Ensures.ensureNonNull(req, "Null QueryClient.request");
         long startCall = Clock.defaultClock().getTick();
-        return write0(rows, ctx, 0).whenCompleteAsync((r, e) -> {
-            InnerMetricHelper.writeQps().mark();
-
+        return query0(req, ctx, 0).whenCompleteAsync((r, e) -> {
+            InnerMetricHelper.readQps().mark();
             if (r != null) {
+                int rowCount = r.mapOr(0, QueryOk::getRowCount);
+                InnerMetricHelper.readRowsNum().update(rowCount);
                 if (Util.isRwLogging()) {
-                    LOG.info("Write to {}, duration={} ms, result={}.",
+                    LOG.info("Read from {}, duration={} ms, rowCount={}.",
                             Keys.DB_NAME,
                             Clock.defaultClock().duration(startCall),
-                            r
+                            rowCount
                     );
                 }
                 if (r.isOk()) {
-                    WriteOk ok = r.getOk();
-                    InnerMetricHelper.writeRowsSuccessNum().update(ok.getSuccess());
-                    InnerMetricHelper.writeRowsFailureNum().update(ok.getFailure());
                     return;
                 }
             }
-
-            InnerMetricHelper.writeFailureNum().mark();
-
+            InnerMetricHelper.readFailureNum().mark();
         }, this.asyncPool);
     }
 
-    private CompletableFuture<Result<WriteOk, Err>> write0(WriteRows rows, Context ctx, int retries) {
-        InnerMetricHelper.writeByRetries(retries).mark();
+    private CompletableFuture<Result<QueryOk, Err>> query0(QueryRequest req,Context ctx, int retries) {
+        InnerMetricHelper.readByRetries(retries).mark();;
 
         return this.routerClient.route()
-            .thenComposeAsync(endpoint -> writeTo(endpoint, rows, ctx, retries), this.asyncPool)
+            .thenComposeAsync(endpoint -> queryFrom(endpoint, req, ctx, retries), this.asyncPool)
             .thenComposeAsync(r -> {
                 if (r.isOk()) {
-                    LOG.debug("Success to write to {}, ok={}.", Keys.DB_NAME, r.getOk());
+                    LOG.debug("Success to read from {}, ok={}.", Keys.DB_NAME, r.getOk());
                     return Util.completedCf(r);
                 }
 
                 Err err = r.getErr();
-                LOG.warn("Failed to write to {}, retries={}, err={}.", Keys.DB_NAME, retries, err);
-                if (retries + 1 > this.opts.getMaxRetries()) {
+                LOG.warn("Failed to read from {}, retries={}, err={}.", Keys.DB_NAME, retries, err);
+                if (retries > this.opts.getMaxRetries()) {
                     LOG.error("Retried {} times still failed.", retries);
                     return Util.completedCf(r);
                 }
@@ -117,26 +113,43 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                     return Util.completedCf(r);
                 }
 
-                return write0(rows, ctx, retries + 1);
+                return query0(req, ctx, retries + 1);
             }, this.asyncPool);
     }
 
-    private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, //
-                                                            WriteRows rows, //
-                                                            Context ctx, //
-                                                            int retries) {
+    private CompletableFuture<Result<QueryOk, Err>> queryFrom(Endpoint endpoint, //
+                                                              QueryRequest req, //
+                                                              Context ctx, //
+                                                              int retries) {
         CompletableFuture<GreptimeDB.BatchResponse> f = this.routerClient.invoke(
                 endpoint, //
-                rows.into(), //
+                req.into(), //
                 ctx.with("retries", retries) // server can use this in metrics
         );
 
-        return f.thenApplyAsync(res -> WriteResultHelper.from(res, endpoint, rows), this.asyncPool);
+        return f.thenApplyAsync(
+                res -> QueryResultHelper.from(res, req.getQl(), endpoint, new ErrHandler(req)),
+                this.asyncPool
+        );
+    }
+
+    private static final class ErrHandler implements Runnable {
+
+        private final QueryRequest req;
+
+        private ErrHandler(QueryRequest req) {
+            this.req = req;
+        }
+
+        @Override
+        public void run() {
+            LOG.error("Fail to query by request: {}.", this.req);
+        }
     }
 
     @Override
     public void display(Printer out) {
-        out.println("--- WriteClient ---") //
+        out.println("--- QueryClient ---") //
             .print("maxRetries=") //
             .println(this.opts.getMaxRetries()) //
             .print("asyncPool=") //
@@ -145,7 +158,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
     @Override
     public String toString() {
-        return "WriteClient{" + //
+        return "QueryClient{" + //
                "opts=" + opts + //
                ", routerClient=" + routerClient + //
                ", asyncPool=" + asyncPool + //
@@ -153,30 +166,25 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     }
 
     static final class InnerMetricHelper {
-        static final Histogram WRITE_ROWS_SUCCESS_NUM = MetricsUtil.histogram("write_rows_success_num");
-        static final Histogram WRITE_ROWS_FAILURE_NUM = MetricsUtil.histogram("write_rows_failure_num");
-        static final Meter     WRITE_FAILURE_NUM      = MetricsUtil.meter("write_failure_num");
-        static final Meter     WRITE_QPS              = MetricsUtil.meter("write_qps");
+        static final Histogram READ_ROWS_NUM    = MetricsUtil.histogram("read_rows_num");
+        static final Meter     READ_FAILURE_NUM = MetricsUtil.meter("read_failure_num");
+        static final Meter     READ_QPS         = MetricsUtil.meter("read_qps");
 
-        static Histogram writeRowsSuccessNum() {
-            return WRITE_ROWS_SUCCESS_NUM;
+        static Histogram readRowsNum() {
+            return READ_ROWS_NUM;
         }
 
-        static Histogram writeRowsFailureNum() {
-            return WRITE_ROWS_FAILURE_NUM;
+        static Meter readFailureNum() {
+            return READ_FAILURE_NUM;
         }
 
-        static Meter writeFailureNum() {
-            return WRITE_FAILURE_NUM;
+        static Meter readQps() {
+            return READ_QPS;
         }
 
-        static Meter writeQps() {
-            return WRITE_QPS;
-        }
-
-        static Meter writeByRetries(int retries) {
+        static Meter readByRetries(int retries) {
             // more than 3 retries are classified as the same metric
-            return MetricsUtil.meter("write_by_retries", Math.min(3, retries));
+            return MetricsUtil.meter("read_by_retries", Math.min(3, retries));
         }
     }
 }

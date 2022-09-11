@@ -97,6 +97,10 @@ public enum Status {
         return statusCode;
     }
 
+    public static boolean isSuccess(int statusCode) {
+        return statusCode == Success.getStatusCode();
+    }
+
     public boolean isShouldRetry() {
         return shouldRetry;
     }

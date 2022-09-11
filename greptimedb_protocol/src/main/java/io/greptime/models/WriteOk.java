@@ -24,15 +24,15 @@ package io.greptime.models;
 public class WriteOk {
 
     private int    success;
-    private int    failed;
+    private int    failure;
     private String tableName;
 
     public int getSuccess() {
         return success;
     }
 
-    public int getFailed() {
-        return failed;
+    public int getFailure() {
+        return failure;
     }
 
     public String getTableName() {
@@ -47,7 +47,7 @@ public class WriteOk {
     public String toString() {
         return "WriteOk{" + //
                "success=" + success + //
-               ", failed=" + failed + //
+               ", failure=" + failure + //
                ", tableName=" + tableName + //
                '}';
     }
@@ -56,10 +56,10 @@ public class WriteOk {
         return ok(0, 0, null);
     }
 
-    public static WriteOk ok(int success, int failed, String tableName) {
+    public static WriteOk ok(int success, int failure, String tableName) {
         WriteOk ok = new WriteOk();
         ok.success = success;
-        ok.failed = failed;
+        ok.failure = failure;
         ok.tableName = tableName;
         return ok;
     }
