@@ -55,7 +55,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
     @Override
     public boolean init(WriteOptions opts) {
-        this.opts = Ensures.ensureNonNull(opts, "Null WriteClient.opts");
+        this.opts = Ensures.ensureNonNull(opts, "opts");
         this.routerClient = this.opts.getRouterClient();
         Executor pool = this.opts.getAsyncPool();
         this.asyncPool = pool != null ? pool : new SerializingExecutor("write_client");
@@ -69,7 +69,8 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
     @Override
     public CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx) {
-        Ensures.ensureNonNull(rows, "Null WriteClient.rows");
+        Ensures.ensureNonNull(rows, "rows");
+
         long startCall = Clock.defaultClock().getTick();
         return write0(rows, ctx, 0).whenCompleteAsync((r, e) -> {
             InnerMetricHelper.writeQps().mark();

@@ -38,7 +38,7 @@ public class WriteOkTest {
         WriteOk empty = WriteOk.emptyOk();
 
         Assert.assertEquals(0, empty.getSuccess());
-        Assert.assertEquals(0, empty.getFailed());
+        Assert.assertEquals(0, empty.getFailure());
         Assert.assertTrue(empty.mapToResult().isOk());
         Assert.assertTrue(Strings.isNullOrEmpty(empty.getTableName()));
     }

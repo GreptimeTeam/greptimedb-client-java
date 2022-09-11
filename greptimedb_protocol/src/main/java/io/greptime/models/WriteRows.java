@@ -16,6 +16,7 @@
  */
 package io.greptime.models;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.ByteStringHelper;
 import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
@@ -159,13 +160,14 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
                 if (bits == null) {
                     continue;
                 }
-                this.builders.get(i).setNullMask(ByteStringHelper.wrap(bits.toByteArray()));
+                ByteString bs = ByteStringHelper.wrap(bits.toByteArray());
+                this.builders.get(i).setNullMask(bs);
             }
 
             this.columns = this.builders //
-                    .stream() //
-                    .map(Columns.Column.Builder::build) //
-                    .collect(Collectors.toList());
+                .stream() //
+                .map(Columns.Column.Builder::build) //
+                .collect(Collectors.toList());
         }
 
         private void checkValuesNum(int len) {

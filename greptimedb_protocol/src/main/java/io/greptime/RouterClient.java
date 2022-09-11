@@ -181,8 +181,8 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
      * dynamically switch addresses.
      * <p>
      * 2. The client configures some addresses (the address list of the frontend server),
-     * the client send request using a rr or random strategy, and frontend server needs to
-     * be able to return  the member list for the purpose of frontend server members change.
+     * the client send request using a rr or random policy, and frontend server needs to
+     * be able to return the member list for the purpose of frontend server members change.
      */
     private static class InnerRouter implements Router<Void, Endpoint> {
 

@@ -55,7 +55,7 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
 
     @Override
     public boolean init(QueryOptions opts) {
-        this.opts = Ensures.ensureNonNull(opts, "Null QueryClient.opts");
+        this.opts = Ensures.ensureNonNull(opts, "opts");
         this.routerClient = this.opts.getRouterClient();
         Executor pool = this.opts.getAsyncPool();
         this.asyncPool = pool != null ? pool : new SerializingExecutor("query_client");
@@ -69,7 +69,8 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
 
     @Override
     public CompletableFuture<Result<QueryOk, Err>> query(QueryRequest req, Context ctx) {
-        Ensures.ensureNonNull(req, "Null QueryClient.request");
+        Ensures.ensureNonNull(req, "req");
+
         long startCall = Clock.defaultClock().getTick();
         return query0(req, ctx, 0).whenCompleteAsync((r, e) -> {
             InnerMetricHelper.readQps().mark();
