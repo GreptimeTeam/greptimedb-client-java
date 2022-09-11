@@ -26,6 +26,7 @@ import io.greptime.rpc.errors.RemotingException;
  *
  * @author jiachun.fjc
  */
+@SuppressWarnings("unused")
 public interface RpcClient extends Lifecycle<RpcOptions>, Display {
 
     /**
@@ -154,7 +155,7 @@ public interface RpcClient extends Lifecycle<RpcOptions>, Display {
 
     /**
      * Executes a server-streaming call with a response {@link Observer}.
-     *
+     * <p>
      * One request message followed by zero or more response messages.
      *
      * @param endpoint target address

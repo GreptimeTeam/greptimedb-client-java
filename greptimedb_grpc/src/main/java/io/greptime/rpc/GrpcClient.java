@@ -208,6 +208,7 @@ public class GrpcClient implements RpcClient {
                                         Observer<Resp> observer, //
                                         long timeoutMs) {
         checkArgs(endpoint, request, ctx, observer);
+        ContextToHeadersInterceptor.setCurrentCtx(ctx);
 
         MethodDescriptor<Message, Message> method = getCallMethod(request,
             MethodDescriptor.MethodType.UNARY);
@@ -274,6 +275,7 @@ public class GrpcClient implements RpcClient {
                                                   Context ctx, //
                                                   Observer<Resp> observer) {
         checkArgs(endpoint, request, ctx, observer);
+        ContextToHeadersInterceptor.setCurrentCtx(ctx);
 
         MethodDescriptor<Message, Message> method = getCallMethod(request,
             MethodDescriptor.MethodType.SERVER_STREAMING);
@@ -322,6 +324,7 @@ public class GrpcClient implements RpcClient {
                                                            Context ctx, //
                                                            Observer<Resp> respObserver) {
         checkArgs(endpoint, defaultReqIns, ctx, respObserver);
+        ContextToHeadersInterceptor.setCurrentCtx(ctx);
 
         MethodDescriptor<Message, Message> method = getCallMethod(defaultReqIns,
             MethodDescriptor.MethodType.CLIENT_STREAMING);

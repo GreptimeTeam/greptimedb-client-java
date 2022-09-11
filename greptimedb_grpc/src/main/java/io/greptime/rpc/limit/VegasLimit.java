@@ -33,15 +33,16 @@ import java.util.function.Function;
 /**
  * Limiter based on TCP Vegas where the limit increases by alpha if the queue_use is small ({@literal <} alpha)
  * and decreases by alpha if the queue_use is large ({@literal >} beta).
- * 
+ * <p>
  * Queue size is calculated using the formula, 
  *  queue_use = limit − BWE×RTTnoLoad = limit × (1 − RTTnoLoad/RTTactual)
- *
+ * <p>
  * For traditional TCP Vegas alpha is typically 2-3 and beta is typically 4-6.  To allow for better growth and 
  * stability at higher limits we set alpha=Max(3, 10% of the current limit) and beta=Max(6, 20% of the current limit)
- *
+ * <p>
  * Refer to {@link com.netflix.concurrency.limits.limit.VegasLimit}
  */
+@SuppressWarnings("unused")
 public class VegasLimit extends AbstractLimit {
 
     private static final Logger LOG = LoggerFactory.getLogger(VegasLimit.class);

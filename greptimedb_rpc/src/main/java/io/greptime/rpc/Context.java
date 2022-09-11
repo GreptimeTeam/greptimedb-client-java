@@ -27,7 +27,7 @@ import java.util.Set;
  *
  * @author jiachun.fjc
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "unused" })
 public class Context implements Copiable<Context> {
 
     private final Map<String, Object> ctx = new HashMap<>();

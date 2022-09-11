@@ -14,32 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime.rpc.errors;
+package io.greptime;
+
+import io.greptime.common.Display;
+
+import java.util.List;
 
 /**
  * @author jiachun.fjc
  */
-@SuppressWarnings("unused")
-public class InvokeTimeoutException extends RemotingException {
+public class GreptimeDB implements Display {
 
-    private static final long serialVersionUID = -4710810309766380565L;
-
-    public InvokeTimeoutException() {
+    public static List<GreptimeDB> instances() {
+        return null;
     }
 
-    public InvokeTimeoutException(String message) {
-        super(message);
-    }
+    @Override
+    public void display(Printer out) {
 
-    public InvokeTimeoutException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public InvokeTimeoutException(Throwable cause) {
-        super(cause);
-    }
-
-    public InvokeTimeoutException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

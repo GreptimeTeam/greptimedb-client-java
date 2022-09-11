@@ -37,42 +37,43 @@ import java.util.function.Function;
  * in an bias towards an impractically low base RTT resulting in excessive load shedding.  An exponential decay is
  * applied to the base RTT so that the value is kept stable yet is allowed to adapt to long term changes in latency
  * characteristics.
- *
+ * <p>
  * The core algorithm re-calculates the limit every sampling window (ex. 1 second) using the formula
- *
+ * <p>
  *      // Calculate the gradient limiting to the range [0.5, 1.0] to filter outliers
  *      gradient = max(0.5, min(1.0, longtermRtt / currentRtt));
- *
+ * <p>
  *      // Calculate the new limit by applying the gradient and allowing for some queuing
  *      newLimit = gradient * currentLimit + queueSize;
- *
+ * <p>
  *      // Update the limit using a smoothing factor (default 0.2)
  *      newLimit = currentLimit * (1-smoothing) + newLimit * smoothing
- *
+ * <p>
  * The limit can be in one of three main states
- *
+ * <p>
  * 1.  Steady state
- *
+ * <p>
  * In this state the average RTT is very stable and the current measurement whipsaws around this value, sometimes reducing
  * the limit, sometimes increasing it.
- *
+ * <p>
  * 2.  Transition from steady state to load
- *
+ * <p>
  * In this state either the RPS to latency has spiked. The gradient is {@literal <} 1.0 due to a growing request queue that
  * cannot be handled by the system. Excessive requests and rejected due to the low limit. The baseline RTT grows using
  * exponential decay but lags the current measurement, which keeps the gradient {@literal <} 1.0 and limit low.
- *
+ * <p>
  * 3.  Transition from load to steady state
- *
+ * <p>
  * In this state the system goes back to steady state after a prolonged period of excessive load.  Requests aren't rejected
  * and the sample RTT remains low. During this state the long term RTT may take some time to go back to normal and could
  * potentially be several multiples higher than the current RTT.
- * 
+ * <p>
  * Refer to {@link com.netflix.concurrency.limits.limit.Gradient2Limit}
  */
+@SuppressWarnings("unused")
 public class Gradient2Limit extends AbstractLimit {
 
-    private static Logger LOG = LoggerFactory.getLogger(Gradient2Limit.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Gradient2Limit.class);
 
     public static class Builder {
         private int initialLimit = 20;
