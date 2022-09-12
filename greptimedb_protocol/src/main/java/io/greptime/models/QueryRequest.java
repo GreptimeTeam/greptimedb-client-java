@@ -17,6 +17,7 @@
 package io.greptime.models;
 
 import io.greptime.common.Into;
+import io.greptime.common.util.Ensures;
 import io.greptime.v1.Common;
 import io.greptime.v1.Database;
 import io.greptime.v1.GreptimeDB;
@@ -124,8 +125,8 @@ public class QueryRequest implements Into<GreptimeDB.BatchRequest> {
 
         public QueryRequest build() {
             QueryRequest req = new QueryRequest();
-            req.expr = this.expr;
-            req.ql = this.ql;
+            req.expr = Ensures.ensureNonNull(this.expr, "expr");
+            req.ql = Ensures.ensureNonNull(this.ql, "ql");
             return req;
         }
     }

@@ -74,7 +74,6 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
         long startCall = Clock.defaultClock().getTick();
         return write0(rows, ctx, 0).whenCompleteAsync((r, e) -> {
             InnerMetricHelper.writeQps().mark();
-
             if (r != null) {
                 if (Util.isRwLogging()) {
                     LOG.info("Write to {}, duration={} ms, result={}.",
@@ -90,9 +89,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                     return;
                 }
             }
-
             InnerMetricHelper.writeFailureNum().mark();
-
         }, this.asyncPool);
     }
 
