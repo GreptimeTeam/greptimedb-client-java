@@ -105,6 +105,16 @@ public interface SelectRows extends Iterator<Row> {
                     public Object value() {
                         return getColumnValue(column, index);
                     }
+
+                    @Override
+                    public String toString() {
+                        return "Value{" + //
+                                "name='" + name() + '\'' + //
+                                ", semanticType=" + semanticType() + //
+                                ", dataType=" + dataType() + //
+                                ", value=" + value() + //
+                                '}';
+                    }
                 })
                 .collect(Collectors.toList());
 

@@ -21,7 +21,7 @@ import io.greptime.models.Err;
 import io.greptime.models.QueryOk;
 import io.greptime.models.QueryRequest;
 import io.greptime.models.Result;
-import io.greptime.models.SelectExpr;
+import io.greptime.models.SelectExprType;
 import io.greptime.options.QueryOptions;
 import io.greptime.v1.Columns;
 import io.greptime.v1.Common;
@@ -103,7 +103,7 @@ public class QueryClientTest {
             .thenReturn(Util.completedCf(response));
 
         QueryRequest req = QueryRequest.newBuilder() //
-            .expr(SelectExpr.Sql) //
+            .exprType(SelectExprType.Sql) //
             .ql("select * from test") //
             .build();
         Result<QueryOk, Err> res = this.queryClient.query(req).get();

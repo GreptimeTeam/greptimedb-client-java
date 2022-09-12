@@ -40,6 +40,10 @@ public class QueryOk implements Streamable<Row> {
         return rowCount;
     }
 
+    public SelectRows getRows() {
+        return rows;
+    }
+
     public Result<QueryOk, Err> mapToResult() {
         return Result.ok(this);
     }

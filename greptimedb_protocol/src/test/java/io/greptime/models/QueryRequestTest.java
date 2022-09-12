@@ -34,10 +34,11 @@ public class QueryRequestTest {
     @Test
     public void testBuildRequestWithArgsQl() {
         QueryRequest req = QueryRequest.newBuilder() //
-            .expr(SelectExpr.Sql) //
+            .exprType(SelectExprType.Sql) //
             .ql("select %s from %s", "a", "test_table") //
             .build();
 
+        Assert.assertEquals(SelectExprType.Sql, req.getExprType());
         Assert.assertEquals("select a from test_table", req.getQl());
     }
 }

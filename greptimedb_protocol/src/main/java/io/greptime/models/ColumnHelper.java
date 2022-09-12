@@ -52,13 +52,13 @@ public final class ColumnHelper {
     }
 
     public static Columns.ColumnDataType getValueType(Columns.Column column) {
-        Ensures.ensure(column.hasDataType(), "`data_type` is required");
+        Ensures.ensure(column.hasDatatype(), "`data_type` is required");
 
-        return column.getDataType();
+        return column.getDatatype();
     }
 
     public static void addToColumnValuesBuilder(Columns.Column.Builder builder, Object value) {
-        Columns.ColumnDataType dataType = builder.getDataType();
+        Columns.ColumnDataType dataType = builder.getDatatype();
         String fieldName = COLUMN_TYPES_DICT.get(dataType);
 
         Ensures.ensureNonNull(fieldName, "Unsupported `data_type`: %s", dataType);
@@ -69,7 +69,7 @@ public final class ColumnHelper {
     }
 
     public static Object getValue(Columns.Column column, int index, BitSet nullMask) {
-        Ensures.ensure(column.hasDataType(), "`data_type` is required");
+        Ensures.ensure(column.hasDatatype(), "`data_type` is required");
 
         Columns.Column.Values values = column.getValues();
         Descriptors.FieldDescriptor fd = getValueFd(column);
@@ -92,7 +92,7 @@ public final class ColumnHelper {
     }
 
     private static Descriptors.FieldDescriptor getValueFd(Columns.Column column) {
-        Columns.ColumnDataType dataType = column.getDataType();
+        Columns.ColumnDataType dataType = column.getDatatype();
         String fieldName = COLUMN_TYPES_DICT.get(dataType);
 
         Ensures.ensureNonNull(fieldName, "Unsupported `data_type`: %s", dataType);

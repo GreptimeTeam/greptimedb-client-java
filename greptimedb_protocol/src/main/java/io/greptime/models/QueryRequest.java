@@ -28,11 +28,11 @@ import io.greptime.v1.GreptimeDB;
  * @author jiachun.fjc
  */
 public class QueryRequest implements Into<GreptimeDB.BatchRequest> {
-    private SelectExpr expr;
-    private String     ql;
+    private SelectExprType exprType;
+    private String         ql;
 
-    public SelectExpr getExpr() {
-        return expr;
+    public SelectExprType getExprType() {
+        return exprType;
     }
 
     public String getQl() {
@@ -42,7 +42,7 @@ public class QueryRequest implements Into<GreptimeDB.BatchRequest> {
     @Override
     public String toString() {
         return "QueryRequest{" + //
-               "expr=" + expr + //
+               "exprType=" + exprType + //
                ", ql='" + ql + '\'' + //
                '}';
     }
@@ -58,7 +58,7 @@ public class QueryRequest implements Into<GreptimeDB.BatchRequest> {
             .build();
 
         Database.SelectExpr.Builder selectB = Database.SelectExpr.newBuilder();
-        switch (getExpr()) {
+        switch (getExprType()) {
             case Sql:
                 selectB.setSql(getQl());
                 break;
@@ -83,17 +83,17 @@ public class QueryRequest implements Into<GreptimeDB.BatchRequest> {
     }
 
     public static class Builder {
-        private SelectExpr expr;
-        private String     ql;
+        private SelectExprType exprType;
+        private String         ql;
 
         /**
          * Sets select expression type, such as sql, promql, etc.
          *
-         * @param expr expr type
+         * @param exprType expr type
          * @return this builder
          */
-        public Builder expr(SelectExpr expr) {
-            this.expr = expr;
+        public Builder exprType(SelectExprType exprType) {
+            this.exprType = exprType;
             return this;
         }
 
@@ -125,7 +125,7 @@ public class QueryRequest implements Into<GreptimeDB.BatchRequest> {
 
         public QueryRequest build() {
             QueryRequest req = new QueryRequest();
-            req.expr = Ensures.ensureNonNull(this.expr, "expr");
+            req.exprType = Ensures.ensureNonNull(this.exprType, "exprType");
             req.ql = Ensures.ensureNonNull(this.ql, "ql");
             return req;
         }

@@ -16,7 +16,6 @@
  */
 package io.greptime.models;
 
-import com.google.protobuf.ByteString;
 import com.google.protobuf.ByteStringHelper;
 import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
@@ -99,7 +98,7 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
                 Columns.Column.Builder builder = Columns.Column.newBuilder();
                 builder.setColumnName(this.columnNames.get(i)) //
                     .setSemanticType(this.semanticTypes.get(i)) //
-                    .setDataType(this.dataTypes.get(i));
+                    .setDatatype(this.dataTypes.get(i));
                 rows.builders.add(builder);
             }
             rows.nullMasks = new BitSet[columnCount];
@@ -137,15 +136,15 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
                 Object value = values[i];
                 if (value == null) {
                     if (this.nullMasks[i] == null) {
-                        this.nullMasks[i] = new BitSet(rowCount);
+                        this.nullMasks[i] = new BitSet();
                     }
-                    this.nullMasks[i].set(i);
+                    this.nullMasks[i].set(this.rowCount);
                     continue;
                 }
                 ColumnHelper.addToColumnValuesBuilder(builder, value);
             }
-
             this.rowCount++;
+
             return this;
         }
 
@@ -160,8 +159,8 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
                 if (bits == null) {
                     continue;
                 }
-                ByteString bs = ByteStringHelper.wrap(bits.toByteArray());
-                this.builders.get(i).setNullMask(bs);
+                byte[] bytes = bits.toByteArray();
+                this.builders.get(i).setNullMask(ByteStringHelper.wrap(bytes));
             }
 
             this.columns = this.builders //

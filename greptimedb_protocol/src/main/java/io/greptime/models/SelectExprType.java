@@ -21,6 +21,6 @@ package io.greptime.models;
  *
  * @author jiachun.fjc
  */
-public enum SelectExpr {
+public enum SelectExprType {
     Sql, Promql
 }
