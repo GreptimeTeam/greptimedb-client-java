@@ -89,7 +89,7 @@ public class SelectRowsTest {
                 .addI32Values(3) //
                 .addI32Values(5) //
                 .build()) //
-            .setDataType(Columns.ColumnDataType.INT32) //
+            .setDatatype(Columns.ColumnDataType.INT32) //
             .setNullMask(ByteStringHelper.wrap(nullMask.toByteArray())) //
             .build();
 
@@ -102,7 +102,7 @@ public class SelectRowsTest {
                 .addI32Values(4) //
                 .addI32Values(5) //
                 .build()) //
-            .setDataType(Columns.ColumnDataType.INT32) //
+            .setDatatype(Columns.ColumnDataType.INT32) //
             .build();
 
         return Select.SelectResult.newBuilder().addColumns(column1) //
