@@ -22,6 +22,7 @@ import java.util.Optional;
  * @author jiachun.fjc
  */
 public enum FileSignal {
+    RwLogging("rw_logging.sig", "How to open or close read/write log(The second execution means close)"), //
     RpcLimit("rpc_limit.sig", "How to open or close rpc limiter(The second execution means close)"), //
     ;
 

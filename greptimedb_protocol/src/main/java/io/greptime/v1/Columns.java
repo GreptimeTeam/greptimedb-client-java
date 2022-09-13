@@ -312,21 +312,43 @@ public final class Columns {
     io.greptime.v1.Columns.Column.ValuesOrBuilder getValuesOrBuilder();
 
     /**
-     * <code>int32 value_index = 4;</code>
-     * @return The valueIndex.
-     */
-    int getValueIndex();
-
-    /**
      * <pre>
      * Mask maps the positions of null values.
      * If a bit in null_mask is 1, it indicates that the column value at that position is null.
      * </pre>
      *
-     * <code>bytes null_mask = 5;</code>
+     * <code>bytes null_mask = 4;</code>
      * @return The nullMask.
      */
     com.google.protobuf.ByteString getNullMask();
+
+    /**
+     * <pre>
+     * Helpful in creating vector from column.
+     * </pre>
+     *
+     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+     * @return Whether the datatype field is set.
+     */
+    boolean hasDatatype();
+    /**
+     * <pre>
+     * Helpful in creating vector from column.
+     * </pre>
+     *
+     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+     * @return The enum numeric value on the wire for datatype.
+     */
+    int getDatatypeValue();
+    /**
+     * <pre>
+     * Helpful in creating vector from column.
+     * </pre>
+     *
+     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+     * @return The datatype.
+     */
+    io.greptime.v1.Columns.ColumnDataType getDatatype();
   }
   /**
    * Protobuf type {@code greptime.v1.Column}
@@ -344,6 +366,7 @@ public final class Columns {
       columnName_ = "";
       semanticType_ = 0;
       nullMask_ = com.google.protobuf.ByteString.EMPTY;
+      datatype_ = 0;
     }
 
     @java.lang.Override
@@ -366,6 +389,7 @@ public final class Columns {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -401,14 +425,15 @@ public final class Columns {
 
               break;
             }
-            case 32: {
-
-              valueIndex_ = input.readInt32();
-              break;
-            }
-            case 42: {
+            case 34: {
 
               nullMask_ = input.readBytes();
+              break;
+            }
+            case 40: {
+              int rawValue = input.readEnum();
+              bitField0_ |= 0x00000001;
+              datatype_ = rawValue;
               break;
             }
             default: {
@@ -3489,6 +3514,7 @@ public final class Columns {
 
     }
 
+    private int bitField0_;
     public static final int COLUMN_NAME_FIELD_NUMBER = 1;
     private volatile java.lang.Object columnName_;
     /**
@@ -3602,18 +3628,7 @@ public final class Columns {
       return getValues();
     }
 
-    public static final int VALUE_INDEX_FIELD_NUMBER = 4;
-    private int valueIndex_;
-    /**
-     * <code>int32 value_index = 4;</code>
-     * @return The valueIndex.
-     */
-    @java.lang.Override
-    public int getValueIndex() {
-      return valueIndex_;
-    }
-
-    public static final int NULL_MASK_FIELD_NUMBER = 5;
+    public static final int NULL_MASK_FIELD_NUMBER = 4;
     private com.google.protobuf.ByteString nullMask_;
     /**
      * <pre>
@@ -3621,12 +3636,50 @@ public final class Columns {
      * If a bit in null_mask is 1, it indicates that the column value at that position is null.
      * </pre>
      *
-     * <code>bytes null_mask = 5;</code>
+     * <code>bytes null_mask = 4;</code>
      * @return The nullMask.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString getNullMask() {
       return nullMask_;
+    }
+
+    public static final int DATATYPE_FIELD_NUMBER = 5;
+    private int datatype_;
+    /**
+     * <pre>
+     * Helpful in creating vector from column.
+     * </pre>
+     *
+     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+     * @return Whether the datatype field is set.
+     */
+    @java.lang.Override public boolean hasDatatype() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <pre>
+     * Helpful in creating vector from column.
+     * </pre>
+     *
+     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+     * @return The enum numeric value on the wire for datatype.
+     */
+    @java.lang.Override public int getDatatypeValue() {
+      return datatype_;
+    }
+    /**
+     * <pre>
+     * Helpful in creating vector from column.
+     * </pre>
+     *
+     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+     * @return The datatype.
+     */
+    @java.lang.Override public io.greptime.v1.Columns.ColumnDataType getDatatype() {
+      @SuppressWarnings("deprecation")
+      io.greptime.v1.Columns.ColumnDataType result = io.greptime.v1.Columns.ColumnDataType.valueOf(datatype_);
+      return result == null ? io.greptime.v1.Columns.ColumnDataType.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -3652,11 +3705,11 @@ public final class Columns {
       if (values_ != null) {
         output.writeMessage(3, getValues());
       }
-      if (valueIndex_ != 0) {
-        output.writeInt32(4, valueIndex_);
-      }
       if (!nullMask_.isEmpty()) {
-        output.writeBytes(5, nullMask_);
+        output.writeBytes(4, nullMask_);
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        output.writeEnum(5, datatype_);
       }
       unknownFields.writeTo(output);
     }
@@ -3678,13 +3731,13 @@ public final class Columns {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, getValues());
       }
-      if (valueIndex_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, valueIndex_);
-      }
       if (!nullMask_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, nullMask_);
+          .computeBytesSize(4, nullMask_);
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(5, datatype_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3709,10 +3762,12 @@ public final class Columns {
         if (!getValues()
             .equals(other.getValues())) return false;
       }
-      if (getValueIndex()
-          != other.getValueIndex()) return false;
       if (!getNullMask()
           .equals(other.getNullMask())) return false;
+      if (hasDatatype() != other.hasDatatype()) return false;
+      if (hasDatatype()) {
+        if (datatype_ != other.datatype_) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -3732,10 +3787,12 @@ public final class Columns {
         hash = (37 * hash) + VALUES_FIELD_NUMBER;
         hash = (53 * hash) + getValues().hashCode();
       }
-      hash = (37 * hash) + VALUE_INDEX_FIELD_NUMBER;
-      hash = (53 * hash) + getValueIndex();
       hash = (37 * hash) + NULL_MASK_FIELD_NUMBER;
       hash = (53 * hash) + getNullMask().hashCode();
+      if (hasDatatype()) {
+        hash = (37 * hash) + DATATYPE_FIELD_NUMBER;
+        hash = (53 * hash) + datatype_;
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3879,10 +3936,10 @@ public final class Columns {
           values_ = null;
           valuesBuilder_ = null;
         }
-        valueIndex_ = 0;
-
         nullMask_ = com.google.protobuf.ByteString.EMPTY;
 
+        datatype_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
 
@@ -3909,6 +3966,8 @@ public final class Columns {
       @java.lang.Override
       public io.greptime.v1.Columns.Column buildPartial() {
         io.greptime.v1.Columns.Column result = new io.greptime.v1.Columns.Column(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         result.columnName_ = columnName_;
         result.semanticType_ = semanticType_;
         if (valuesBuilder_ == null) {
@@ -3916,8 +3975,12 @@ public final class Columns {
         } else {
           result.values_ = valuesBuilder_.build();
         }
-        result.valueIndex_ = valueIndex_;
         result.nullMask_ = nullMask_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.datatype_ = datatype_;
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -3976,11 +4039,11 @@ public final class Columns {
         if (other.hasValues()) {
           mergeValues(other.getValues());
         }
-        if (other.getValueIndex() != 0) {
-          setValueIndex(other.getValueIndex());
-        }
         if (other.getNullMask() != com.google.protobuf.ByteString.EMPTY) {
           setNullMask(other.getNullMask());
+        }
+        if (other.hasDatatype()) {
+          setDatatype(other.getDatatype());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -4010,6 +4073,7 @@ public final class Columns {
         }
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object columnName_ = "";
       /**
@@ -4350,37 +4414,6 @@ public final class Columns {
         return valuesBuilder_;
       }
 
-      private int valueIndex_ ;
-      /**
-       * <code>int32 value_index = 4;</code>
-       * @return The valueIndex.
-       */
-      @java.lang.Override
-      public int getValueIndex() {
-        return valueIndex_;
-      }
-      /**
-       * <code>int32 value_index = 4;</code>
-       * @param value The valueIndex to set.
-       * @return This builder for chaining.
-       */
-      public Builder setValueIndex(int value) {
-        
-        valueIndex_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int32 value_index = 4;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearValueIndex() {
-        
-        valueIndex_ = 0;
-        onChanged();
-        return this;
-      }
-
       private com.google.protobuf.ByteString nullMask_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
@@ -4388,7 +4421,7 @@ public final class Columns {
        * If a bit in null_mask is 1, it indicates that the column value at that position is null.
        * </pre>
        *
-       * <code>bytes null_mask = 5;</code>
+       * <code>bytes null_mask = 4;</code>
        * @return The nullMask.
        */
       @java.lang.Override
@@ -4401,7 +4434,7 @@ public final class Columns {
        * If a bit in null_mask is 1, it indicates that the column value at that position is null.
        * </pre>
        *
-       * <code>bytes null_mask = 5;</code>
+       * <code>bytes null_mask = 4;</code>
        * @param value The nullMask to set.
        * @return This builder for chaining.
        */
@@ -4420,12 +4453,97 @@ public final class Columns {
        * If a bit in null_mask is 1, it indicates that the column value at that position is null.
        * </pre>
        *
-       * <code>bytes null_mask = 5;</code>
+       * <code>bytes null_mask = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearNullMask() {
         
         nullMask_ = getDefaultInstance().getNullMask();
+        onChanged();
+        return this;
+      }
+
+      private int datatype_ = 0;
+      /**
+       * <pre>
+       * Helpful in creating vector from column.
+       * </pre>
+       *
+       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+       * @return Whether the datatype field is set.
+       */
+      @java.lang.Override public boolean hasDatatype() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <pre>
+       * Helpful in creating vector from column.
+       * </pre>
+       *
+       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+       * @return The enum numeric value on the wire for datatype.
+       */
+      @java.lang.Override public int getDatatypeValue() {
+        return datatype_;
+      }
+      /**
+       * <pre>
+       * Helpful in creating vector from column.
+       * </pre>
+       *
+       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+       * @param value The enum numeric value on the wire for datatype to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatatypeValue(int value) {
+        bitField0_ |= 0x00000001;
+        datatype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Helpful in creating vector from column.
+       * </pre>
+       *
+       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+       * @return The datatype.
+       */
+      @java.lang.Override
+      public io.greptime.v1.Columns.ColumnDataType getDatatype() {
+        @SuppressWarnings("deprecation")
+        io.greptime.v1.Columns.ColumnDataType result = io.greptime.v1.Columns.ColumnDataType.valueOf(datatype_);
+        return result == null ? io.greptime.v1.Columns.ColumnDataType.UNRECOGNIZED : result;
+      }
+      /**
+       * <pre>
+       * Helpful in creating vector from column.
+       * </pre>
+       *
+       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+       * @param value The datatype to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatatype(io.greptime.v1.Columns.ColumnDataType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        datatype_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Helpful in creating vector from column.
+       * </pre>
+       *
+       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDatatype() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        datatype_ = 0;
         onChanged();
         return this;
       }
@@ -4482,752 +4600,6 @@ public final class Columns {
 
   }
 
-  public interface ColumnDefOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:greptime.v1.ColumnDef)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>string name = 1;</code>
-     * @return The name.
-     */
-    java.lang.String getName();
-    /**
-     * <code>string name = 1;</code>
-     * @return The bytes for name.
-     */
-    com.google.protobuf.ByteString
-        getNameBytes();
-
-    /**
-     * <code>.greptime.v1.ColumnDataType data_type = 2;</code>
-     * @return The enum numeric value on the wire for dataType.
-     */
-    int getDataTypeValue();
-    /**
-     * <code>.greptime.v1.ColumnDataType data_type = 2;</code>
-     * @return The dataType.
-     */
-    io.greptime.v1.Columns.ColumnDataType getDataType();
-
-    /**
-     * <code>bool is_nullable = 3;</code>
-     * @return The isNullable.
-     */
-    boolean getIsNullable();
-  }
-  /**
-   * Protobuf type {@code greptime.v1.ColumnDef}
-   */
-  public static final class ColumnDef extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:greptime.v1.ColumnDef)
-      ColumnDefOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use ColumnDef.newBuilder() to construct.
-    private ColumnDef(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private ColumnDef() {
-      name_ = "";
-      dataType_ = 0;
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new ColumnDef();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ColumnDef(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              name_ = s;
-              break;
-            }
-            case 16: {
-              int rawValue = input.readEnum();
-
-              dataType_ = rawValue;
-              break;
-            }
-            case 24: {
-
-              isNullable_ = input.readBool();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return io.greptime.v1.Columns.internal_static_greptime_v1_ColumnDef_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return io.greptime.v1.Columns.internal_static_greptime_v1_ColumnDef_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              io.greptime.v1.Columns.ColumnDef.class, io.greptime.v1.Columns.ColumnDef.Builder.class);
-    }
-
-    public static final int NAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object name_;
-    /**
-     * <code>string name = 1;</code>
-     * @return The name.
-     */
-    @java.lang.Override
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        name_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string name = 1;</code>
-     * @return The bytes for name.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        name_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int DATA_TYPE_FIELD_NUMBER = 2;
-    private int dataType_;
-    /**
-     * <code>.greptime.v1.ColumnDataType data_type = 2;</code>
-     * @return The enum numeric value on the wire for dataType.
-     */
-    @java.lang.Override public int getDataTypeValue() {
-      return dataType_;
-    }
-    /**
-     * <code>.greptime.v1.ColumnDataType data_type = 2;</code>
-     * @return The dataType.
-     */
-    @java.lang.Override public io.greptime.v1.Columns.ColumnDataType getDataType() {
-      @SuppressWarnings("deprecation")
-      io.greptime.v1.Columns.ColumnDataType result = io.greptime.v1.Columns.ColumnDataType.valueOf(dataType_);
-      return result == null ? io.greptime.v1.Columns.ColumnDataType.UNRECOGNIZED : result;
-    }
-
-    public static final int IS_NULLABLE_FIELD_NUMBER = 3;
-    private boolean isNullable_;
-    /**
-     * <code>bool is_nullable = 3;</code>
-     * @return The isNullable.
-     */
-    @java.lang.Override
-    public boolean getIsNullable() {
-      return isNullable_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
-      }
-      if (dataType_ != io.greptime.v1.Columns.ColumnDataType.BOOLEAN.getNumber()) {
-        output.writeEnum(2, dataType_);
-      }
-      if (isNullable_ != false) {
-        output.writeBool(3, isNullable_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
-      }
-      if (dataType_ != io.greptime.v1.Columns.ColumnDataType.BOOLEAN.getNumber()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, dataType_);
-      }
-      if (isNullable_ != false) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, isNullable_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof io.greptime.v1.Columns.ColumnDef)) {
-        return super.equals(obj);
-      }
-      io.greptime.v1.Columns.ColumnDef other = (io.greptime.v1.Columns.ColumnDef) obj;
-
-      if (!getName()
-          .equals(other.getName())) return false;
-      if (dataType_ != other.dataType_) return false;
-      if (getIsNullable()
-          != other.getIsNullable()) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + NAME_FIELD_NUMBER;
-      hash = (53 * hash) + getName().hashCode();
-      hash = (37 * hash) + DATA_TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + dataType_;
-      hash = (37 * hash) + IS_NULLABLE_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-          getIsNullable());
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static io.greptime.v1.Columns.ColumnDef parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static io.greptime.v1.Columns.ColumnDef parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static io.greptime.v1.Columns.ColumnDef parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static io.greptime.v1.Columns.ColumnDef parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static io.greptime.v1.Columns.ColumnDef parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static io.greptime.v1.Columns.ColumnDef parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static io.greptime.v1.Columns.ColumnDef parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static io.greptime.v1.Columns.ColumnDef parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static io.greptime.v1.Columns.ColumnDef parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static io.greptime.v1.Columns.ColumnDef parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static io.greptime.v1.Columns.ColumnDef parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static io.greptime.v1.Columns.ColumnDef parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(io.greptime.v1.Columns.ColumnDef prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code greptime.v1.ColumnDef}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:greptime.v1.ColumnDef)
-        io.greptime.v1.Columns.ColumnDefOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return io.greptime.v1.Columns.internal_static_greptime_v1_ColumnDef_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return io.greptime.v1.Columns.internal_static_greptime_v1_ColumnDef_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                io.greptime.v1.Columns.ColumnDef.class, io.greptime.v1.Columns.ColumnDef.Builder.class);
-      }
-
-      // Construct using io.greptime.v1.Columns.ColumnDef.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        name_ = "";
-
-        dataType_ = 0;
-
-        isNullable_ = false;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return io.greptime.v1.Columns.internal_static_greptime_v1_ColumnDef_descriptor;
-      }
-
-      @java.lang.Override
-      public io.greptime.v1.Columns.ColumnDef getDefaultInstanceForType() {
-        return io.greptime.v1.Columns.ColumnDef.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public io.greptime.v1.Columns.ColumnDef build() {
-        io.greptime.v1.Columns.ColumnDef result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public io.greptime.v1.Columns.ColumnDef buildPartial() {
-        io.greptime.v1.Columns.ColumnDef result = new io.greptime.v1.Columns.ColumnDef(this);
-        result.name_ = name_;
-        result.dataType_ = dataType_;
-        result.isNullable_ = isNullable_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof io.greptime.v1.Columns.ColumnDef) {
-          return mergeFrom((io.greptime.v1.Columns.ColumnDef)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(io.greptime.v1.Columns.ColumnDef other) {
-        if (other == io.greptime.v1.Columns.ColumnDef.getDefaultInstance()) return this;
-        if (!other.getName().isEmpty()) {
-          name_ = other.name_;
-          onChanged();
-        }
-        if (other.dataType_ != 0) {
-          setDataTypeValue(other.getDataTypeValue());
-        }
-        if (other.getIsNullable() != false) {
-          setIsNullable(other.getIsNullable());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        io.greptime.v1.Columns.ColumnDef parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (io.greptime.v1.Columns.ColumnDef) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private java.lang.Object name_ = "";
-      /**
-       * <code>string name = 1;</code>
-       * @return The name.
-       */
-      public java.lang.String getName() {
-        java.lang.Object ref = name_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          name_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string name = 1;</code>
-       * @return The bytes for name.
-       */
-      public com.google.protobuf.ByteString
-          getNameBytes() {
-        java.lang.Object ref = name_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          name_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string name = 1;</code>
-       * @param value The name to set.
-       * @return This builder for chaining.
-       */
-      public Builder setName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        name_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string name = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearName() {
-        
-        name_ = getDefaultInstance().getName();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string name = 1;</code>
-       * @param value The bytes for name to set.
-       * @return This builder for chaining.
-       */
-      public Builder setNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        name_ = value;
-        onChanged();
-        return this;
-      }
-
-      private int dataType_ = 0;
-      /**
-       * <code>.greptime.v1.ColumnDataType data_type = 2;</code>
-       * @return The enum numeric value on the wire for dataType.
-       */
-      @java.lang.Override public int getDataTypeValue() {
-        return dataType_;
-      }
-      /**
-       * <code>.greptime.v1.ColumnDataType data_type = 2;</code>
-       * @param value The enum numeric value on the wire for dataType to set.
-       * @return This builder for chaining.
-       */
-      public Builder setDataTypeValue(int value) {
-        
-        dataType_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.greptime.v1.ColumnDataType data_type = 2;</code>
-       * @return The dataType.
-       */
-      @java.lang.Override
-      public io.greptime.v1.Columns.ColumnDataType getDataType() {
-        @SuppressWarnings("deprecation")
-        io.greptime.v1.Columns.ColumnDataType result = io.greptime.v1.Columns.ColumnDataType.valueOf(dataType_);
-        return result == null ? io.greptime.v1.Columns.ColumnDataType.UNRECOGNIZED : result;
-      }
-      /**
-       * <code>.greptime.v1.ColumnDataType data_type = 2;</code>
-       * @param value The dataType to set.
-       * @return This builder for chaining.
-       */
-      public Builder setDataType(io.greptime.v1.Columns.ColumnDataType value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        
-        dataType_ = value.getNumber();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.greptime.v1.ColumnDataType data_type = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearDataType() {
-        
-        dataType_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private boolean isNullable_ ;
-      /**
-       * <code>bool is_nullable = 3;</code>
-       * @return The isNullable.
-       */
-      @java.lang.Override
-      public boolean getIsNullable() {
-        return isNullable_;
-      }
-      /**
-       * <code>bool is_nullable = 3;</code>
-       * @param value The isNullable to set.
-       * @return This builder for chaining.
-       */
-      public Builder setIsNullable(boolean value) {
-        
-        isNullable_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bool is_nullable = 3;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearIsNullable() {
-        
-        isNullable_ = false;
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:greptime.v1.ColumnDef)
-    }
-
-    // @@protoc_insertion_point(class_scope:greptime.v1.ColumnDef)
-    private static final io.greptime.v1.Columns.ColumnDef DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new io.greptime.v1.Columns.ColumnDef();
-    }
-
-    public static io.greptime.v1.Columns.ColumnDef getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<ColumnDef>
-        PARSER = new com.google.protobuf.AbstractParser<ColumnDef>() {
-      @java.lang.Override
-      public ColumnDef parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ColumnDef(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<ColumnDef> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<ColumnDef> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public io.greptime.v1.Columns.ColumnDef getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_greptime_v1_Column_descriptor;
   private static final 
@@ -5238,11 +4610,6 @@ public final class Columns {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_greptime_v1_Column_Values_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_greptime_v1_ColumnDef_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_greptime_v1_ColumnDef_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -5252,28 +4619,27 @@ public final class Columns {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014column.proto\022\013greptime.v1\"\361\003\n\006Column\022\023" +
+      "\n\014column.proto\022\013greptime.v1\"\235\004\n\006Column\022\023" +
       "\n\013column_name\030\001 \001(\t\0227\n\rsemantic_type\030\002 \001" +
       "(\0162 .greptime.v1.Column.SemanticType\022*\n\006" +
       "values\030\003 \001(\0132\032.greptime.v1.Column.Values" +
-      "\022\023\n\013value_index\030\004 \001(\005\022\021\n\tnull_mask\030\005 \001(\014" +
-      "\032\221\002\n\006Values\022\021\n\ti8_values\030\001 \003(\005\022\022\n\ni16_va" +
-      "lues\030\002 \003(\005\022\022\n\ni32_values\030\003 \003(\005\022\022\n\ni64_va" +
-      "lues\030\004 \003(\003\022\021\n\tu8_values\030\005 \003(\r\022\022\n\nu16_val" +
-      "ues\030\006 \003(\r\022\022\n\nu32_values\030\007 \003(\r\022\022\n\nu64_val" +
-      "ues\030\010 \003(\004\022\022\n\nf32_values\030\t \003(\002\022\022\n\nf64_val" +
-      "ues\030\n \003(\001\022\023\n\013bool_values\030\013 \003(\010\022\025\n\rbinary" +
-      "_values\030\014 \003(\014\022\025\n\rstring_values\030\r \003(\t\"1\n\014" +
-      "SemanticType\022\007\n\003TAG\020\000\022\t\n\005FIELD\020\001\022\r\n\tTIME" +
-      "STAMP\020\002\"^\n\tColumnDef\022\014\n\004name\030\001 \001(\t\022.\n\tda" +
-      "ta_type\030\002 \001(\0162\033.greptime.v1.ColumnDataTy" +
-      "pe\022\023\n\013is_nullable\030\003 \001(\010*\301\001\n\016ColumnDataTy" +
-      "pe\022\013\n\007BOOLEAN\020\000\022\010\n\004INT8\020\001\022\t\n\005INT16\020\002\022\t\n\005" +
-      "INT32\020\003\022\t\n\005INT64\020\004\022\t\n\005UINT8\020\005\022\n\n\006UINT16\020" +
-      "\006\022\n\n\006UINT32\020\007\022\n\n\006UINT64\020\010\022\013\n\007FLOAT32\020\t\022\013" +
-      "\n\007FLOAT64\020\n\022\n\n\006BINARY\020\013\022\n\n\006STRING\020\014\022\010\n\004D" +
-      "ATE\020\r\022\014\n\010DATETIME\020\016B\031\n\016io.greptime.v1B\007C" +
-      "olumnsb\006proto3"
+      "\022\021\n\tnull_mask\030\004 \001(\014\0222\n\010datatype\030\005 \001(\0162\033." +
+      "greptime.v1.ColumnDataTypeH\000\210\001\001\032\221\002\n\006Valu" +
+      "es\022\021\n\ti8_values\030\001 \003(\005\022\022\n\ni16_values\030\002 \003(" +
+      "\005\022\022\n\ni32_values\030\003 \003(\005\022\022\n\ni64_values\030\004 \003(" +
+      "\003\022\021\n\tu8_values\030\005 \003(\r\022\022\n\nu16_values\030\006 \003(\r" +
+      "\022\022\n\nu32_values\030\007 \003(\r\022\022\n\nu64_values\030\010 \003(\004" +
+      "\022\022\n\nf32_values\030\t \003(\002\022\022\n\nf64_values\030\n \003(\001" +
+      "\022\023\n\013bool_values\030\013 \003(\010\022\025\n\rbinary_values\030\014" +
+      " \003(\014\022\025\n\rstring_values\030\r \003(\t\"1\n\014SemanticT" +
+      "ype\022\007\n\003TAG\020\000\022\t\n\005FIELD\020\001\022\r\n\tTIMESTAMP\020\002B\013" +
+      "\n\t_datatype*\301\001\n\016ColumnDataType\022\013\n\007BOOLEA" +
+      "N\020\000\022\010\n\004INT8\020\001\022\t\n\005INT16\020\002\022\t\n\005INT32\020\003\022\t\n\005I" +
+      "NT64\020\004\022\t\n\005UINT8\020\005\022\n\n\006UINT16\020\006\022\n\n\006UINT32\020" +
+      "\007\022\n\n\006UINT64\020\010\022\013\n\007FLOAT32\020\t\022\013\n\007FLOAT64\020\n\022" +
+      "\n\n\006BINARY\020\013\022\n\n\006STRING\020\014\022\010\n\004DATE\020\r\022\014\n\010DAT" +
+      "ETIME\020\016B\031\n\016io.greptime.v1B\007Columnsb\006prot" +
+      "o3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5284,19 +4650,13 @@ public final class Columns {
     internal_static_greptime_v1_Column_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_Column_descriptor,
-        new java.lang.String[] { "ColumnName", "SemanticType", "Values", "ValueIndex", "NullMask", });
+        new java.lang.String[] { "ColumnName", "SemanticType", "Values", "NullMask", "Datatype", "Datatype", });
     internal_static_greptime_v1_Column_Values_descriptor =
       internal_static_greptime_v1_Column_descriptor.getNestedTypes().get(0);
     internal_static_greptime_v1_Column_Values_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_Column_Values_descriptor,
         new java.lang.String[] { "I8Values", "I16Values", "I32Values", "I64Values", "U8Values", "U16Values", "U32Values", "U64Values", "F32Values", "F64Values", "BoolValues", "BinaryValues", "StringValues", });
-    internal_static_greptime_v1_ColumnDef_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_greptime_v1_ColumnDef_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_greptime_v1_ColumnDef_descriptor,
-        new java.lang.String[] { "Name", "DataType", "IsNullable", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

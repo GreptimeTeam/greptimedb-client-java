@@ -19,17 +19,6 @@ package io.greptime.rpc;
 import com.google.protobuf.Message;
 import com.netflix.concurrency.limits.Limit;
 import com.netflix.concurrency.limits.MetricRegistry;
-import io.grpc.CallOptions;
-import io.grpc.Channel;
-import io.grpc.ClientInterceptor;
-import io.grpc.ConnectivityState;
-import io.grpc.ManagedChannel;
-import io.grpc.MethodDescriptor;
-import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
-import io.grpc.netty.shaded.io.netty.channel.ChannelOption;
-import io.grpc.protobuf.ProtoUtils;
-import io.grpc.stub.ClientCalls;
-import io.grpc.stub.StreamObserver;
 import io.greptime.common.Endpoint;
 import io.greptime.common.Keys;
 import io.greptime.common.util.Clock;
@@ -55,21 +44,29 @@ import io.greptime.rpc.limit.Gradient2Limit;
 import io.greptime.rpc.limit.LimitMetricRegistry;
 import io.greptime.rpc.limit.RequestLimiterBuilder;
 import io.greptime.rpc.limit.VegasLimit;
+import io.grpc.CallOptions;
+import io.grpc.Channel;
+import io.grpc.ClientInterceptor;
+import io.grpc.ConnectivityState;
+import io.grpc.ManagedChannel;
+import io.grpc.MethodDescriptor;
+import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
+import io.grpc.netty.shaded.io.netty.channel.ChannelOption;
+import io.grpc.protobuf.ProtoUtils;
+import io.grpc.stub.ClientCalls;
+import io.grpc.stub.StreamObserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -91,7 +88,7 @@ public class GrpcClient implements RpcClient {
 
                                                                              @Override
                                                                              public ExecutorService create() {
-                                                                                 return createDefaultRpcExecutor();
+                                                                                 return newSharedPool();
                                                                              }
 
                                                                              @Override
@@ -103,9 +100,7 @@ public class GrpcClient implements RpcClient {
 
     private static final int                   CONN_RESET_THRESHOLD  = SystemPropertyUtil.getInt(
                                                                          Keys.GRPC_CONN_RESET_THRESHOLD, 3);
-    private static final int                   MAX_SIZE_TO_USE_ARRAY = 8192;
     private static final String                LIMITER_NAME          = "grpc_call";
-    private static final String                EXECUTOR_NAME         = "grpc_executor";
     private static final String                REQ_RT                = "req_rt";
     private static final String                REQ_FAILED            = "req_failed";
     private static final String                UNARY_CALL            = "unary-call";
@@ -121,7 +116,6 @@ public class GrpcClient implements RpcClient {
 
     private RpcOptions                         opts;
     private ExecutorService                    asyncPool;
-    private boolean                            useSharedAsyncPool;
 
     public GrpcClient(MarshallerRegistry marshallerRegistry) {
         this.marshallerRegistry = marshallerRegistry;
@@ -130,18 +124,11 @@ public class GrpcClient implements RpcClient {
     @Override
     public boolean init(RpcOptions opts) {
         if (!this.started.compareAndSet(false, true)) {
-            throw new IllegalStateException("GRPC client has started");
+            throw new IllegalStateException("Grpc client has started");
         }
 
         this.opts = Ensures.ensureNonNull(opts, "GrpcClient.opts").copy();
-
-        if (this.opts.getRpcThreadPoolSize() > 0) {
-            this.asyncPool = createRpcExecutor(this.opts);
-            this.useSharedAsyncPool = false;
-        } else {
-            this.asyncPool = SHARED_ASYNC_POOL.getObject();
-            this.useSharedAsyncPool = true;
-        }
+        this.asyncPool = SHARED_ASYNC_POOL.getObject();
 
         initInterceptors();
 
@@ -154,11 +141,7 @@ public class GrpcClient implements RpcClient {
             return;
         }
 
-        if (this.useSharedAsyncPool) {
-            SHARED_ASYNC_POOL.returnObject(this.asyncPool);
-        } else {
-            ExecutorServiceHelper.shutdownAndAwaitTermination(this.asyncPool);
-        }
+        ExecutorServiceHelper.shutdownAndAwaitTermination(this.asyncPool);
         this.asyncPool = null;
 
         closeAllChannels();
@@ -225,6 +208,7 @@ public class GrpcClient implements RpcClient {
                                         Observer<Resp> observer, //
                                         long timeoutMs) {
         checkArgs(endpoint, request, ctx, observer);
+        ContextToHeadersInterceptor.setCurrentCtx(ctx);
 
         MethodDescriptor<Message, Message> method = getCallMethod(request,
             MethodDescriptor.MethodType.UNARY);
@@ -291,6 +275,7 @@ public class GrpcClient implements RpcClient {
                                                   Context ctx, //
                                                   Observer<Resp> observer) {
         checkArgs(endpoint, request, ctx, observer);
+        ContextToHeadersInterceptor.setCurrentCtx(ctx);
 
         MethodDescriptor<Message, Message> method = getCallMethod(request,
             MethodDescriptor.MethodType.SERVER_STREAMING);
@@ -339,6 +324,7 @@ public class GrpcClient implements RpcClient {
                                                            Context ctx, //
                                                            Observer<Resp> respObserver) {
         checkArgs(endpoint, defaultReqIns, ctx, respObserver);
+        ContextToHeadersInterceptor.setCurrentCtx(ctx);
 
         MethodDescriptor<Message, Message> method = getCallMethod(defaultReqIns,
             MethodDescriptor.MethodType.CLIENT_STREAMING);
@@ -478,7 +464,7 @@ public class GrpcClient implements RpcClient {
                               long duration, //
                               Context ctx) {
         StringBuilder buf = StringBuilderHelper.get() //
-            .append("GRPC ") //
+            .append("Grpc ") //
             .append(callType) //
             .append(" got an error,") //
             .append(" method=") //
@@ -578,8 +564,7 @@ public class GrpcClient implements RpcClient {
         this.transientFailures.remove(endpoint);
     }
 
-    private MethodDescriptor<Message, Message> getCallMethod(Object request, //
-                                                             MethodDescriptor.MethodType methodType) {
+    private MethodDescriptor<Message, Message> getCallMethod(Object request, MethodDescriptor.MethodType methodType) {
         Ensures.ensure(request instanceof Message, "gRPC impl only support protobuf");
         Class<? extends Message> reqCls = ((Message) request).getClass();
         Message defaultReqIns = this.marshallerRegistry.getDefaultRequestInstance(reqCls);
@@ -737,36 +722,16 @@ public class GrpcClient implements RpcClient {
         Ensures.ensureNonNull(observer, "observer");
     }
 
-    private static ExecutorService createRpcExecutor(RpcOptions opts) {
-        int workQueueSize = opts.getRpcThreadPoolQueueSize();
-        BlockingQueue<Runnable> workQueue;
-        if (workQueueSize <= 0) {
-            workQueue = new SynchronousQueue<>();
-        } else if (workQueueSize <= MAX_SIZE_TO_USE_ARRAY) {
-            workQueue = new ArrayBlockingQueue<>(workQueueSize);
-        } else {
-            workQueue = new LinkedBlockingQueue<>(workQueueSize);
-        }
+    private static ExecutorService newSharedPool() {
+        String name = "rpc_shared_pool";
+        int coreWorks = SystemPropertyUtil.getInt(Keys.GRPC_POOL_CORE_WORKERS, Cpus.cpus());
+        int maximumWorks = SystemPropertyUtil.getInt(Keys.GRPC_POOL_MAXIMUM_WORKERS, Cpus.cpus() << 2);
 
-        return ThreadPoolUtil.newBuilder() //
-            .poolName(EXECUTOR_NAME) //
-            .enableMetric(true) //
-            .coreThreads(Math.min(Cpus.cpus(), opts.getRpcThreadPoolSize())) //
-            .maximumThreads(opts.getRpcThreadPoolSize()) //
-            .keepAliveSeconds(60L) //
-            .workQueue(workQueue) //
-            .threadFactory(new NamedThreadFactory(EXECUTOR_NAME, true)) //
-            .rejectedHandler(new AsyncPoolRejectedHandler(EXECUTOR_NAME)) //
-            .build();
-    }
-
-    private static ExecutorService createDefaultRpcExecutor() {
-        String name = "default_shared_" + EXECUTOR_NAME;
         return ThreadPoolUtil.newBuilder() //
             .poolName(name) //
             .enableMetric(true) //
-            .coreThreads(Cpus.cpus()) //
-            .maximumThreads(Cpus.cpus() << 2) //
+            .coreThreads(coreWorks) //
+            .maximumThreads(maximumWorks) //
             .keepAliveSeconds(60L) //
             .workQueue(new ArrayBlockingQueue<>(512)) //
             .threadFactory(new NamedThreadFactory(name, true)) //

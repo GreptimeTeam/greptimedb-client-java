@@ -23,6 +23,5 @@ import java.util.List;
  * @author jiachun.fjc
  */
 public interface Row {
-
     List<Value> values();
 }

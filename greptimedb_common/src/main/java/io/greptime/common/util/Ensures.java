@@ -58,6 +58,25 @@ public final class Ensures {
     }
 
     /**
+     * Checks that the specified object reference is not {@code null} and
+     * throws a customized {@link NullPointerException} if it is.
+     *
+     * @param obj  the object reference to check for nullity
+     * @param fmt  the exception message with format string
+     * @param args arguments referenced by the format specifiers in the format
+     *             string
+     * @param <T>  the type of the reference
+     * @return {@code obj} if not {@code null}
+     * @throws NullPointerException if {@code obj} is {@code null}
+     */
+    public static <T> T ensureNonNull(T obj, String fmt, Object... args) {
+        if (obj == null) {
+            throw new NullPointerException(String.format(fmt, args));
+        }
+        return obj;
+    }
+
+    /**
      * Ensures the truth of an expression involving one or more parameters
      * to the calling method.
      *

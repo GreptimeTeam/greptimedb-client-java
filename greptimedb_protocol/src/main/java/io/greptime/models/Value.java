@@ -16,18 +16,16 @@
  */
 package io.greptime.models;
 
-import io.greptime.v1.Columns.Column.SemanticType;
-
+/**
+ *
+ * @author jiachun.fjc
+ */
 public interface Value {
-    enum Type {
-        Int32, Int64, UInt32, UInt64, Float, Double, Bool, Bytes, String,
-    }
-
     String name();
 
     SemanticType semanticType();
 
-    Type valueType();
+    ColumnDataType dataType();
 
     Object value();
 }

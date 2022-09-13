@@ -20,41 +20,28 @@ import io.greptime.common.Endpoint;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * @author jiachun.fjc
  */
 public class ErrTest {
 
     @Test
-    public void testCombineWriteOk() {
-        WriteOk subOK1 = WriteOk.ok(2, 0, "test_table");
+    public void testWriteErr() {
         Err err = Err.writeErr(300, "test_err", Endpoint.of("127.0.0.1", 8081), null);
 
+        Assert.assertFalse(err.mapToResult().isOk());
+        Assert.assertEquals("test_err", err.getError());
         Assert.assertEquals("127.0.0.1:8081", err.getErrTo().toString());
         Assert.assertNull(err.getRowsFailed());
-
-        err = err.combine(subOK1);
-
-        Assert.assertEquals(2, err.getSubOk().getSuccess());
-
-        WriteOk subOK2 = WriteOk.ok(3, 0, "test_table");
-        err = err.combine(subOK2);
-
-        Assert.assertEquals(5, err.getSubOk().getSuccess());
     }
 
     @Test
-    public void testCombineErr() {
-        Err err = Err.writeErr(300, "test_err", Endpoint.of("127.0.0.1", 8081), null);
-        err.combine(Err.writeErr(300, "test_err2", Endpoint.of("127.0.0.1", 8081), null));
+    public void testQueryErr() {
+        Err err = Err.queryErr(300, "test_err", Endpoint.of("127.0.0.1", 8081), "select * from test");
 
-        List<Err> list = err.stream().collect(Collectors.toList());
-
-        Assert.assertEquals(2, list.size());
-        Assert.assertEquals("test_err", list.get(0).getError());
-        Assert.assertEquals("test_err2", list.get(1).getError());
+        Assert.assertFalse(err.mapToResult().isOk());
+        Assert.assertEquals("test_err", err.getError());
+        Assert.assertEquals("127.0.0.1:8081", err.getErrTo().toString());
+        Assert.assertEquals(err.getFailedQl(), "select * from test");
     }
 }

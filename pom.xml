@@ -13,6 +13,7 @@
         <module>greptimedb_grpc</module>
         <module>greptimedb_protocol</module>
         <module>greptimedb_rpc</module>
+        <module>greptimedb_example</module>
     </modules>
 
     <properties>

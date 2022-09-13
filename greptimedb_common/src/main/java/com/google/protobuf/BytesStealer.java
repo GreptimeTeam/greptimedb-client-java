@@ -19,7 +19,7 @@ package com.google.protobuf;
 import java.nio.ByteBuffer;
 
 /**
- * Try to gets the bytes form ByteString with no copy.
+ * Try to get the bytes form ByteString with no copy.
  * 
  * @author jiachun.fjc
  */

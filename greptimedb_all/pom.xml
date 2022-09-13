@@ -28,5 +28,9 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>greptimedb_rpc</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>greptimedb_protocol</artifactId>
+        </dependency>
     </dependencies>
 </project>

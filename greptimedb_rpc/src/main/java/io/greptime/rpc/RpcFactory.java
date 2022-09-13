@@ -21,6 +21,7 @@ package io.greptime.rpc;
  *
  * @author jiachun.fjc
  */
+@SuppressWarnings("unused")
 public interface RpcFactory {
 
     /**
@@ -46,14 +47,14 @@ public interface RpcFactory {
     }
 
     /**
-     * Creates a RPC client.
+     * Creates RPC client.
      *
      * @param helper config helper for RPC client impl
      * @return a new RPC client instance
      */
     RpcClient createRpcClient(ConfigHelper<RpcClient> helper);
 
-    default ConfigHelper<RpcClient> defaultClientConfigHelper(@SuppressWarnings("unused") RpcOptions opts) {
+    default ConfigHelper<RpcClient> defaultClientConfigHelper(RpcOptions opts) {
         return null;
     }
 

@@ -16,10 +16,6 @@
  */
 package io.greptime.models;
 
-import io.greptime.common.util.Ensures;
-
-import java.util.Objects;
-
 /**
  * Contains the success value of write.
  *
@@ -28,28 +24,19 @@ import java.util.Objects;
 public class WriteOk {
 
     private int    success;
-    private int    failed;
-
+    private int    failure;
     private String tableName;
 
     public int getSuccess() {
         return success;
     }
 
-    public int getFailed() {
-        return failed;
+    public int getFailure() {
+        return failure;
     }
 
     public String getTableName() {
         return tableName;
-    }
-
-    public WriteOk combine(WriteOk other) {
-        Ensures.ensure(Objects.equals(this.tableName, other.tableName), "Not the same table: %s <--> %s",
-            this.tableName, other.tableName);
-        this.success += other.success;
-        this.failed += other.failed;
-        return this;
     }
 
     public Result<WriteOk, Err> mapToResult() {
@@ -60,7 +47,7 @@ public class WriteOk {
     public String toString() {
         return "WriteOk{" + //
                "success=" + success + //
-               ", failed=" + failed + //
+               ", failure=" + failure + //
                ", tableName=" + tableName + //
                '}';
     }
@@ -69,10 +56,10 @@ public class WriteOk {
         return ok(0, 0, null);
     }
 
-    public static WriteOk ok(int success, int failed, String tableName) {
+    public static WriteOk ok(int success, int failure, String tableName) {
         WriteOk ok = new WriteOk();
         ok.success = success;
-        ok.failed = failed;
+        ok.failure = failure;
         ok.tableName = tableName;
         return ok;
     }

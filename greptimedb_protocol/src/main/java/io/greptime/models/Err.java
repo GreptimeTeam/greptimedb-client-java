@@ -17,32 +17,23 @@
 package io.greptime.models;
 
 import io.greptime.common.Endpoint;
-import io.greptime.common.Streamable;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.stream.Stream;
 
 /**
  * Contains the write/query error value.
  *
  * @author jiachun.fjc
  */
-public class Err implements Streamable<Err> {
+public class Err {
     // error code from server
-    private int             code;
+    private int       code;
     // error message
-    private String          error;
+    private String    error;
     // the server address where the error occurred
-    private Endpoint        errTo;
+    private Endpoint  errTo;
     // the data of wrote failed, can be used to retry
-    private WriteRows       rowsFailed;
-    // other successful server results are merged here
-    private WriteOk         subOk;
+    private WriteRows rowsFailed;
     // the QL failed to query
-    private String          failedQl;
-    // child err merged here
-    private Collection<Err> children;
+    private String    failedQl;
 
     public int getCode() {
         return code;
@@ -60,43 +51,12 @@ public class Err implements Streamable<Err> {
         return rowsFailed;
     }
 
-    public WriteOk getSubOk() {
-        return subOk;
-    }
-
     public String getFailedQl() {
         return failedQl;
     }
 
-    public Err combine(Err err) {
-        if (this.children == null) {
-            this.children = new ArrayList<>();
-        }
-        this.children.add(err);
-        return this;
-    }
-
-    public Err combine(WriteOk subOk) {
-        if (this.subOk == null) {
-            this.subOk = subOk;
-        } else {
-            this.subOk.combine(subOk);
-        }
-        return this;
-    }
-
     public <T> Result<T, Err> mapToResult() {
         return Result.err(this);
-    }
-
-    @Override
-    public Stream<Err> stream() {
-        Stream<Err> first = Stream.of(this);
-        if (this.children == null || this.children.isEmpty()) {
-            return first;
-        } else {
-            return Stream.concat(first, this.children.stream());
-        }
     }
 
     private String tableNameFailed() {
@@ -111,9 +71,7 @@ public class Err implements Streamable<Err> {
                ", error='" + error + '\'' + //
                ", errTo=" + errTo + //
                ", tableNameFailed=" + tableNameFailed() + //
-               ", subOk=" + subOk + //
                ", failedQl=" + failedQl + //
-               ", children=" + children + //
                '}';
     }
 

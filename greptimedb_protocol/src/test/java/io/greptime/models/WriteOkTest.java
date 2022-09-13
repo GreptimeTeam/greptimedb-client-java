@@ -16,6 +16,7 @@
  */
 package io.greptime.models;
 
+import io.greptime.common.util.Strings;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,38 +24,6 @@ import org.junit.Test;
  * @author jiachun.fjc
  */
 public class WriteOkTest {
-
-    @Test
-    public void testCombine() {
-        WriteOk writeOk = WriteOk.ok(200, 2, "test1");
-        writeOk = writeOk.combine(WriteOk.ok(100, 0, "test1"));
-
-        Assert.assertEquals(300, writeOk.getSuccess());
-        Assert.assertEquals(2, writeOk.getFailed());
-        Assert.assertEquals("test1", writeOk.getTableName());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCombineMultiTable() {
-        WriteOk writeOk = WriteOk.ok(200, 2, "test1");
-        writeOk.combine(WriteOk.ok(100, 0, "test2"));
-    }
-
-    @Test
-    public void testCombineWithEmptyTableName() {
-        WriteOk writeOk = WriteOk.ok(200, 2, null);
-        writeOk = writeOk.combine(WriteOk.ok(100, 0, null));
-
-        Assert.assertEquals(300, writeOk.getSuccess());
-        Assert.assertEquals(2, writeOk.getFailed());
-        Assert.assertNull(writeOk.getTableName());
-
-        writeOk.combine(WriteOk.ok(100, 0, null));
-
-        Assert.assertEquals(400, writeOk.getSuccess());
-        Assert.assertEquals(2, writeOk.getFailed());
-        Assert.assertNull(writeOk.getTableName());
-    }
 
     @Test
     public void testMapToResult() {
@@ -69,7 +38,8 @@ public class WriteOkTest {
         WriteOk empty = WriteOk.emptyOk();
 
         Assert.assertEquals(0, empty.getSuccess());
-        Assert.assertEquals(0, empty.getFailed());
+        Assert.assertEquals(0, empty.getFailure());
         Assert.assertTrue(empty.mapToResult().isOk());
+        Assert.assertTrue(Strings.isNullOrEmpty(empty.getTableName()));
     }
 }
