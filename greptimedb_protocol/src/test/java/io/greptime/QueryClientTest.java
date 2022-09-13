@@ -71,7 +71,7 @@ public class QueryClientTest {
         Select.SelectResult select = Select.SelectResult.newBuilder() //
             .addColumns(Columns.Column.newBuilder() //
                 .setSemanticType(Columns.Column.SemanticType.TAG) //
-                .setDataType(Columns.ColumnDataType.STRING) //
+                .setDatatype(Columns.ColumnDataType.STRING) //
                 .setValues(Columns.Column.Values.newBuilder() //
                     .addStringValues("tag1") //
                     .addStringValues("tag2") //
@@ -80,7 +80,7 @@ public class QueryClientTest {
             ) //
             .addColumns(Columns.Column.newBuilder() //
                 .setSemanticType(Columns.Column.SemanticType.FIELD) //
-                .setDataType(Columns.ColumnDataType.INT32) //
+                .setDatatype(Columns.ColumnDataType.INT32) //
                 .setValues(Columns.Column.Values.newBuilder() //
                     .addI32Values(1) //
                     .addI32Values(2) //

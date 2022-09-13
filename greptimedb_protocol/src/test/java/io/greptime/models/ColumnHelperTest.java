@@ -41,7 +41,7 @@ public class ColumnHelperTest {
                 .addI32Values(3) //
                 .addI32Values(5) //
                 .build()) //
-            .setDataType(Columns.ColumnDataType.INT32) //
+            .setDatatype(Columns.ColumnDataType.INT32) //
             .setNullMask(ByteStringHelper.wrap(nullMask.toByteArray())) //
             .build();
 
@@ -66,7 +66,7 @@ public class ColumnHelperTest {
                 .addI32Values(2) //
                 .addI32Values(3) //
                 .build()) //
-            .setDataType(Columns.ColumnDataType.INT32) //
+            .setDatatype(Columns.ColumnDataType.INT32) //
             .build();
 
         Object v = ColumnHelper.getValue(column, 0, ColumnHelper.getNullMaskBits(column));
