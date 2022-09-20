@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>greptimedb_client</artifactId>
+        <artifactId>greptimedb-client</artifactId>
         <groupId>io.greptime</groupId>
         <version>0.1.0</version>
     </parent>
 
-    <artifactId>greptimedb_rpc</artifactId>
+    <artifactId>greptimedb-rpc</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>greptimedb_common</artifactId>
+            <artifactId>greptimedb-common</artifactId>
         </dependency>
     </dependencies>
 </project>
