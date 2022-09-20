@@ -602,7 +602,8 @@ public class GrpcClient implements RpcClient {
     }
 
     private IdChannel newChannel(Endpoint endpoint) {
-        ManagedChannel innerChannel = NettyChannelBuilder.forAddress(endpoint.getIp(), endpoint.getPort()) //
+        ManagedChannel innerChannel = NettyChannelBuilder //
+            .forAddress(endpoint.getAddr(), endpoint.getPort()) //
             .usePlaintext() //
             .executor(this.asyncPool) //
             .intercept(this.interceptors) //

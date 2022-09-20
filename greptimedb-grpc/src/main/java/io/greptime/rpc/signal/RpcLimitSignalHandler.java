@@ -18,7 +18,7 @@ package io.greptime.rpc.signal;
 
 import io.greptime.common.SPI;
 import io.greptime.common.signal.FileSignal;
-import io.greptime.common.signal.FileSignals;
+import io.greptime.common.signal.FileSignalHelper;
 import io.greptime.common.signal.SignalHandler;
 import io.greptime.rpc.interceptors.ClientRequestLimitInterceptor;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ public class RpcLimitSignalHandler implements SignalHandler {
 
     @Override
     public void handle(String signalName) {
-        if (FileSignals.ignoreSignal(FileSignal.RpcLimit)) {
+        if (FileSignalHelper.ignoreSignal(FileSignal.RpcLimit)) {
             LOG.info("`LIMIT_SWITCH`={}.", ClientRequestLimitInterceptor.isLimitSwitchOpen());
             return;
         }

@@ -19,7 +19,7 @@ package io.greptime;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * A RPC router for GreptimeDB.
+ * RPC router for GreptimeDB.
  *
  * @author jiachun.fjc
  */

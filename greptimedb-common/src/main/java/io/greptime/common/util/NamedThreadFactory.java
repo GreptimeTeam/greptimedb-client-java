@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author jiachun.fjc
  */
+@SuppressWarnings("unused")
 public class NamedThreadFactory implements ThreadFactory {
 
     private static final Logger        LOG        = LoggerFactory.getLogger(NamedThreadFactory.class);

@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author jiachun
  */
+@SuppressWarnings("unused")
 public final class Util {
     private static final AtomicBoolean            RW_LOGGING;
     private static final int                      REPORT_PERIOD_MIN;

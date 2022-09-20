@@ -27,6 +27,7 @@ import java.security.PrivilegedAction;
  * parse the values of the Java system properties.
  *
  */
+@SuppressWarnings("unused")
 public final class SystemPropertyUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(SystemPropertyUtil.class);
@@ -56,7 +57,7 @@ public final class SystemPropertyUtil {
      * default value if the property access fails.
      *
      * @return the property value.
-     * {@code def} if there's no such property or if an access to
+     * {@code def} if there's no such property or if access to
      * the specified property is not allowed.
      */
     public static String get(String key, String def) {
@@ -93,7 +94,7 @@ public final class SystemPropertyUtil {
      * default value if the property access fails.
      *
      * @return the property value.
-     * {@code def} if there's no such property or if an access to
+     * {@code def} if there's no such property or if access to
      * the specified property is not allowed.
      */
     public static boolean getBool(String key, boolean def) {
@@ -126,7 +127,7 @@ public final class SystemPropertyUtil {
      * default value if the property access fails.
      *
      * @return the property value.
-     * {@code def} if there's no such property or if an access
+     * {@code def} if there's no such property or if access
      * to the specified property is not allowed.
      */
     public static int getInt(String key, int def) {
@@ -153,7 +154,7 @@ public final class SystemPropertyUtil {
      * default value if the property access fails.
      *
      * @return the property value.
-     * {@code def} if there's no such property or if an access to
+     * {@code def} if there's no such property or if access to
      * the specified property is not allowed.
      */
     public static long getLong(String key, long def) {

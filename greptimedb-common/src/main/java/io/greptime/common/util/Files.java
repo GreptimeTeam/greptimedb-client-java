@@ -36,7 +36,7 @@ public class Files {
      */
     public static void fsync(File file) throws IOException {
         boolean isDir = file.isDirectory();
-        // Can't fsync on windows.
+        // Can't fsync on Windows.
         if (isDir && Platform.isWindows()) {
             return;
         }

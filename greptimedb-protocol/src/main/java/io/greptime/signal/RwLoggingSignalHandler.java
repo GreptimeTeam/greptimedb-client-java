@@ -19,7 +19,7 @@ package io.greptime.signal;
 import io.greptime.Util;
 import io.greptime.common.SPI;
 import io.greptime.common.signal.FileSignal;
-import io.greptime.common.signal.FileSignals;
+import io.greptime.common.signal.FileSignalHelper;
 import io.greptime.common.signal.SignalHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ public class RwLoggingSignalHandler implements SignalHandler {
 
     @Override
     public void handle(String signalName) {
-        if (FileSignals.ignoreSignal(FileSignal.RwLogging)) {
+        if (FileSignalHelper.ignoreSignal(FileSignal.RwLogging)) {
             LOG.info("`RW_LOGGING`={}.", Util.isRwLogging());
             return;
         }

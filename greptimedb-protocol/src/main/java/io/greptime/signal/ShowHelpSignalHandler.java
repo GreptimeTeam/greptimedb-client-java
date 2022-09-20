@@ -19,7 +19,7 @@ package io.greptime.signal;
 import io.greptime.common.SPI;
 import io.greptime.common.signal.FileOutputHelper;
 import io.greptime.common.signal.FileSignal;
-import io.greptime.common.signal.FileSignals;
+import io.greptime.common.signal.FileSignalHelper;
 import io.greptime.common.signal.SignalHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class ShowHelpSignalHandler implements SignalHandler {
         LOG.info("      [3] `kill -s SIGUSR2 $pid`");
         LOG.info("");
         LOG.info("    The file signals that is currently open:");
-        for (String f : FileSignals.list()) {
+        for (String f : FileSignalHelper.list()) {
             LOG.info("      {}", f);
         }
         LOG.info("");

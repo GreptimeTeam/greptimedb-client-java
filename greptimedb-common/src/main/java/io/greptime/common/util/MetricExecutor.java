@@ -39,7 +39,7 @@ public class MetricExecutor implements Executor {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public void execute(final Runnable cmd) {
+    public void execute(Runnable cmd) {
         this.pool.execute(() -> this.executeTimer.time(cmd));
     }
 
