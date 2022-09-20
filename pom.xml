@@ -3,17 +3,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.greptime</groupId>
-    <artifactId>greptimedb_client</artifactId>
+    <artifactId>greptimedb-client</artifactId>
     <version>0.1.0</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>greptimedb_all</module>
-        <module>greptimedb_common</module>
-        <module>greptimedb_grpc</module>
-        <module>greptimedb_protocol</module>
-        <module>greptimedb_rpc</module>
-        <module>greptimedb_example</module>
+        <module>greptimedb-all</module>
+        <module>greptimedb-common</module>
+        <module>greptimedb-grpc</module>
+        <module>greptimedb-protocol</module>
+        <module>greptimedb-rpc</module>
+        <module>greptimedb-example</module>
     </modules>
 
     <properties>
@@ -34,22 +34,22 @@
         <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>greptimedb_common</artifactId>
+                <artifactId>greptimedb-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>greptimedb_grpc</artifactId>
+                <artifactId>greptimedb-grpc</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>greptimedb_protocol</artifactId>
+                <artifactId>greptimedb-protocol</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>greptimedb_rpc</artifactId>
+                <artifactId>greptimedb-rpc</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

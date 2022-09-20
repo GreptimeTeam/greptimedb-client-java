@@ -1,2 +1,2 @@
-# greptimedb_client
+# greptimedb-client-java
 GreptimeDB Java Client

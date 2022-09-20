@@ -30,9 +30,9 @@ jobs:
           java-version: 1.8
       - name: Maven Test
         run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && (mvn --projects greptimedb_common test
-            || mvn --projects greptimedb_common test
-            || mvn --projects greptimedb_common test)
+          && (mvn --projects greptimedb-common test
+            || mvn --projects greptimedb-common test
+            || mvn --projects greptimedb-common test)
 
   test_greptimedb_grpc:
     needs: check_format
@@ -45,9 +45,9 @@ jobs:
           java-version: 1.8
       - name: Maven Test
         run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && (mvn --projects greptimedb_grpc test
-            || mvn --projects greptimedb_grpc test
-            || mvn --projects greptimedb_grpc test)
+          && (mvn --projects greptimedb-grpc test
+            || mvn --projects greptimedb-grpc test
+            || mvn --projects greptimedb-grpc test)
 
   test_greptimedb_protocol:
     needs: check_format
@@ -60,6 +60,6 @@ jobs:
           java-version: 1.8
       - name: Maven Test
         run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && (mvn --projects greptimedb_protocol test
-            || mvn --projects greptimedb_protocol test
-            || mvn --projects greptimedb_protocol test)
+          && (mvn --projects greptimedb-protocol test
+            || mvn --projects greptimedb-protocol test
+            || mvn --projects greptimedb-protocol test)
