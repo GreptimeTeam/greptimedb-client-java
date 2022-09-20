@@ -29,11 +29,11 @@ public class Endpoint implements Serializable {
 
     private static final long serialVersionUID = -7329681263115546100L;
 
-    private String            ip;
-    private int               port;
+    private final String      addr;
+    private final int         port;
 
-    public static Endpoint of(String ip, int port) {
-        return new Endpoint(ip, port);
+    public static Endpoint of(String addr, int port) {
+        return new Endpoint(addr, port);
     }
 
     public static Endpoint parse(String s) {
@@ -55,30 +55,30 @@ public class Endpoint implements Serializable {
         }
     }
 
-    public Endpoint(String address, int port) {
+    public Endpoint(String addr, int port) {
         super();
-        this.ip = address;
+        this.addr = addr;
         this.port = port;
     }
 
-    public String getIp() {
-        return this.ip;
+    public String getAddr() {
+        return addr;
     }
 
     public int getPort() {
-        return this.port;
+        return port;
     }
 
     @Override
     public String toString() {
-        return this.ip + ":" + this.port;
+        return this.addr + ":" + this.port;
     }
 
     @Override
     public int hashCode() {
         int prime = 31;
         int result = 1;
-        result = prime * result + (this.ip == null ? 0 : this.ip.hashCode());
+        result = prime * result + (this.addr == null ? 0 : this.addr.hashCode());
         result = prime * result + this.port;
         return result;
     }
@@ -95,11 +95,11 @@ public class Endpoint implements Serializable {
             return false;
         }
         Endpoint other = (Endpoint) obj;
-        if (this.ip == null) {
-            if (other.ip != null) {
+        if (this.addr == null) {
+            if (other.addr != null) {
                 return false;
             }
-        } else if (!this.ip.equals(other.ip)) {
+        } else if (!this.addr.equals(other.addr)) {
             return false;
         }
         return this.port == other.port;

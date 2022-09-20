@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A reporter which outputs metrics to a {@link PrintStream}, like {@code System.out}.
- *
+ * <p>
  * Fork form {@link com.codahale.metrics.ConsoleReporter}
  */
 public class MetricReporter {
@@ -73,6 +73,7 @@ public class MetricReporter {
      * time zone, writing to {@code System.out}, converting rates to events/second, converting
      * durations to milliseconds, and not filtering metrics.
      */
+    @SuppressWarnings("unused")
     public static class Builder {
 
         private final MetricRegistry registry;

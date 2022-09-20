@@ -46,6 +46,7 @@ public class Platform {
     /**
      * Return {@code true} if the JVM is running on Mac OSX
      */
+    @SuppressWarnings("unused")
     public static boolean isMac() {
         return IS_MAC;
     }

@@ -41,6 +41,7 @@ import java.util.function.Supplier;
  *
  * @author jiachun.fjc
  */
+@SuppressWarnings("unused")
 public final class ServiceLoader<S> implements Iterable<S> {
 
     private static final Logger            LOG       = LoggerFactory.getLogger(ServiceLoader.class);
@@ -228,7 +229,7 @@ public final class ServiceLoader<S> implements Iterable<S> {
     public Iterator<S> iterator() {
         return new Iterator<S>() {
 
-            Iterator<Map.Entry<String, S>> knownProviders = ServiceLoader.this.providers.entrySet().iterator();
+            final Iterator<Map.Entry<String, S>> knownProviders = ServiceLoader.this.providers.entrySet().iterator();
 
             @Override
             public boolean hasNext() {
@@ -254,7 +255,7 @@ public final class ServiceLoader<S> implements Iterable<S> {
     public Iterator<Class<S>> classIterator() {
         return new Iterator<Class<S>>() {
 
-            Iterator<Map.Entry<String, S>> knownProviders = ServiceLoader.this.providers.entrySet().iterator();
+            final Iterator<Map.Entry<String, S>> knownProviders = ServiceLoader.this.providers.entrySet().iterator();
 
             @Override
             public boolean hasNext() {

@@ -36,35 +36,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class LogThreadPoolExecutor extends ThreadPoolExecutor {
 
-    private static Logger LOG = LoggerFactory.getLogger(LogThreadPoolExecutor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LogThreadPoolExecutor.class);
 
-    private final int     corePoolSize;
-    private final int     maximumPoolSize;
-    private final String  name;
-
-    public LogThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
-                                 BlockingQueue<Runnable> workQueue, String name) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
-        this.corePoolSize = corePoolSize;
-        this.maximumPoolSize = maximumPoolSize;
-        this.name = name;
-    }
-
-    public LogThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
-                                 BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, String name) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory);
-        this.corePoolSize = corePoolSize;
-        this.maximumPoolSize = maximumPoolSize;
-        this.name = name;
-    }
-
-    public LogThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
-                                 BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler, String name) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, handler);
-        this.corePoolSize = corePoolSize;
-        this.maximumPoolSize = maximumPoolSize;
-        this.name = name;
-    }
+    private final int           corePoolSize;
+    private final int           maximumPoolSize;
+    private final String        name;
 
     public LogThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
                                  BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory,

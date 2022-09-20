@@ -29,7 +29,7 @@ import java.util.Map;
 
 /**
  * A tool class for loading and registering all signals.
- *
+ * <p>
  * Do not support windows.
  *
  * @author jiachun.fjc

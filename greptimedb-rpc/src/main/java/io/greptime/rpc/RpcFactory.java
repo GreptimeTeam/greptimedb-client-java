@@ -38,7 +38,7 @@ public interface RpcFactory {
                   Object defaultRespIns);
 
     /**
-     * Creates a RPC client.
+     * Creates RPC client.
      *
      * @return a new RPC client instance
      */

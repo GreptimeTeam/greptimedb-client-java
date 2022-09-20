@@ -76,8 +76,7 @@ public final class SignalHelper {
 
         public void addSignal(String signalName, List<SignalHandler> handlers) {
             sun.misc.Signal signal = new sun.misc.Signal(signalName);
-            SignalHandlerAdapter adapter = new SignalHandlerAdapter(signal, handlers);
-            sun.misc.Signal.handle(signal, adapter);
+            SignalHandlerAdapter.addSignal(new SignalHandlerAdapter(signal, handlers));
         }
     }
 

@@ -18,11 +18,12 @@ package io.greptime.common.util;
 
 /**
  * Reuse {@link StringBuilder} based on {@link ThreadLocal}.
- *
+ * <p>
  * Be careful that do not to nest in the same thread.
  *
  * @author jiachun.fjc
  */
+@SuppressWarnings("unused")
 public class StringBuilderHelper {
 
     private static final int                              MAX_BUF_SIZE;

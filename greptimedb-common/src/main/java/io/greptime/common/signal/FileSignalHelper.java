@@ -22,8 +22,7 @@ import java.nio.file.Paths;
 /**
  * @author jiachun.fjc
  */
-public class FileSignals {
-
+public class FileSignalHelper {
     private static final String[] EMPTY_ARRAY = new String[0];
 
     public static boolean ignoreSignal(FileSignal fileSignal) {

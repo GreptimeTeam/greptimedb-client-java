@@ -20,7 +20,7 @@ import io.greptime.GreptimeDB;
 import io.greptime.common.Display;
 import io.greptime.common.SPI;
 import io.greptime.common.signal.FileOutputHelper;
-import io.greptime.common.signal.FileSignals;
+import io.greptime.common.signal.FileSignalHelper;
 import io.greptime.common.signal.SignalHandler;
 import io.greptime.common.util.Files;
 import org.slf4j.Logger;
@@ -48,7 +48,7 @@ public class DisplaySignalHandler implements SignalHandler {
 
     @Override
     public void handle(String signalName) {
-        if (FileSignals.ignoreFileOutputSignal()) {
+        if (FileSignalHelper.ignoreFileOutputSignal()) {
             return;
         }
 
