@@ -25,6 +25,7 @@ import io.greptime.models.Result;
 import io.greptime.models.SelectExprType;
 import io.greptime.models.SelectRows;
 import io.greptime.models.SemanticType;
+import io.greptime.models.TableName;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
 import io.greptime.options.GreptimeOptions;
@@ -66,7 +67,7 @@ public class Example {
                 cpu DOUBLE DEFAULT 0,
                 memory DOUBLE NULL,
                 TIME INDEX (ts),
-                PRIMARY KEY(ts,host)) ENGINE=mito WITH(regions=1);
+                PRIMARY KEY(host)) ENGINE=mito WITH(regions=1);
             ```
          */
 
@@ -94,7 +95,7 @@ public class Example {
     }
 
     private static Result<WriteOk, Err> runInsert(GreptimeDB greptimeDB) throws Exception {
-        WriteRows rows = WriteRows.newBuilder("monitor") //
+        WriteRows rows = WriteRows.newBuilder(TableName.with("", "monitor")) //
             .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field) //
             .dataTypes(ColumnDataType.String, ColumnDataType.Int64, ColumnDataType.Float64, ColumnDataType.Float64) //
             .columnNames("host", "ts", "cpu", "memory") //

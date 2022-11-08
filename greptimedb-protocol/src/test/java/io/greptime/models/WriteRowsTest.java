@@ -30,7 +30,7 @@ public class WriteRowsTest {
 
     @Test
     public void testWriteRowsNonNull() {
-        WriteRows rows = WriteRows.newBuilder("test_table") //
+        WriteRows rows = WriteRows.newBuilder(TableName.with("", "test_table")) //
             .columnNames("col1", "col2", "col3") //
             .semanticTypes(SemanticType.Tag, SemanticType.Tag, SemanticType.Field) //
             .dataTypes(ColumnDataType.String, ColumnDataType.String, ColumnDataType.Int32) //
@@ -49,7 +49,7 @@ public class WriteRowsTest {
 
     @Test
     public void testWriteRowsSomeNull() {
-        WriteRows rows = WriteRows.newBuilder("test_table") //
+        WriteRows rows = WriteRows.newBuilder(TableName.with("", "test_table")) //
             .columnNames("col1", "col2", "col3") //
             .semanticTypes(SemanticType.Tag, SemanticType.Tag, SemanticType.Field) //
             .dataTypes(ColumnDataType.String, ColumnDataType.String, ColumnDataType.Int32) //

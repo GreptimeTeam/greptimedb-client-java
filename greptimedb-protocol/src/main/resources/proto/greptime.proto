@@ -5,6 +5,7 @@ option java_package="io.greptime.v1";
 option java_outer_classname = "GreptimeDB";
 
 import "admin.proto";
+import "common.proto";
 import "database.proto";
 
 service Greptime {
@@ -12,8 +13,9 @@ service Greptime {
 }
 
 message BatchRequest {
-  repeated AdminRequest admins = 1;
-  repeated DatabaseRequest databases = 2;
+  RequestHeader header = 1;
+  repeated AdminRequest admins = 2;
+  repeated DatabaseRequest databases = 3;
 }
 
 message BatchResponse {

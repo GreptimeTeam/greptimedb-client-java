@@ -4,6 +4,10 @@ package greptime.v1;
 option java_package="io.greptime.v1";
 option java_outer_classname = "Common";
 
+message RequestHeader {
+  string tenant = 1;
+}
+
 message ExprHeader {
   uint32 version = 1;
 }

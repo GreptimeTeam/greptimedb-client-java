@@ -27,6 +27,13 @@ import java.util.List;
  */
 public final class Strings {
 
+    public static String toString(Object obj) {
+        if (obj == null) {
+            return "null";
+        }
+        return obj.toString();
+    }
+
     /**
      * Returns the given string if it is non-null; the empty string otherwise.
      */

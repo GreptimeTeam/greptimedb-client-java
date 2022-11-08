@@ -19,49 +19,64 @@ public final class GreptimeDB {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+     * <code>.greptime.v1.RequestHeader header = 1;</code>
+     * @return Whether the header field is set.
+     */
+    boolean hasHeader();
+    /**
+     * <code>.greptime.v1.RequestHeader header = 1;</code>
+     * @return The header.
+     */
+    io.greptime.v1.Common.RequestHeader getHeader();
+    /**
+     * <code>.greptime.v1.RequestHeader header = 1;</code>
+     */
+    io.greptime.v1.Common.RequestHeaderOrBuilder getHeaderOrBuilder();
+
+    /**
+     * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
      */
     java.util.List<io.greptime.v1.Admin.AdminRequest> 
         getAdminsList();
     /**
-     * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+     * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
      */
     io.greptime.v1.Admin.AdminRequest getAdmins(int index);
     /**
-     * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+     * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
      */
     int getAdminsCount();
     /**
-     * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+     * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
      */
     java.util.List<? extends io.greptime.v1.Admin.AdminRequestOrBuilder> 
         getAdminsOrBuilderList();
     /**
-     * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+     * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
      */
     io.greptime.v1.Admin.AdminRequestOrBuilder getAdminsOrBuilder(
         int index);
 
     /**
-     * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+     * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
      */
     java.util.List<io.greptime.v1.Database.DatabaseRequest> 
         getDatabasesList();
     /**
-     * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+     * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
      */
     io.greptime.v1.Database.DatabaseRequest getDatabases(int index);
     /**
-     * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+     * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
      */
     int getDatabasesCount();
     /**
-     * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+     * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
      */
     java.util.List<? extends io.greptime.v1.Database.DatabaseRequestOrBuilder> 
         getDatabasesOrBuilderList();
     /**
-     * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+     * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
      */
     io.greptime.v1.Database.DatabaseRequestOrBuilder getDatabasesOrBuilder(
         int index);
@@ -115,6 +130,19 @@ public final class GreptimeDB {
               done = true;
               break;
             case 10: {
+              io.greptime.v1.Common.RequestHeader.Builder subBuilder = null;
+              if (header_ != null) {
+                subBuilder = header_.toBuilder();
+              }
+              header_ = input.readMessage(io.greptime.v1.Common.RequestHeader.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(header_);
+                header_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 18: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
                 admins_ = new java.util.ArrayList<io.greptime.v1.Admin.AdminRequest>();
                 mutable_bitField0_ |= 0x00000001;
@@ -123,7 +151,7 @@ public final class GreptimeDB {
                   input.readMessage(io.greptime.v1.Admin.AdminRequest.parser(), extensionRegistry));
               break;
             }
-            case 18: {
+            case 26: {
               if (!((mutable_bitField0_ & 0x00000002) != 0)) {
                 databases_ = new java.util.ArrayList<io.greptime.v1.Database.DatabaseRequest>();
                 mutable_bitField0_ |= 0x00000002;
@@ -170,17 +198,43 @@ public final class GreptimeDB {
               io.greptime.v1.GreptimeDB.BatchRequest.class, io.greptime.v1.GreptimeDB.BatchRequest.Builder.class);
     }
 
-    public static final int ADMINS_FIELD_NUMBER = 1;
+    public static final int HEADER_FIELD_NUMBER = 1;
+    private io.greptime.v1.Common.RequestHeader header_;
+    /**
+     * <code>.greptime.v1.RequestHeader header = 1;</code>
+     * @return Whether the header field is set.
+     */
+    @java.lang.Override
+    public boolean hasHeader() {
+      return header_ != null;
+    }
+    /**
+     * <code>.greptime.v1.RequestHeader header = 1;</code>
+     * @return The header.
+     */
+    @java.lang.Override
+    public io.greptime.v1.Common.RequestHeader getHeader() {
+      return header_ == null ? io.greptime.v1.Common.RequestHeader.getDefaultInstance() : header_;
+    }
+    /**
+     * <code>.greptime.v1.RequestHeader header = 1;</code>
+     */
+    @java.lang.Override
+    public io.greptime.v1.Common.RequestHeaderOrBuilder getHeaderOrBuilder() {
+      return getHeader();
+    }
+
+    public static final int ADMINS_FIELD_NUMBER = 2;
     private java.util.List<io.greptime.v1.Admin.AdminRequest> admins_;
     /**
-     * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+     * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
      */
     @java.lang.Override
     public java.util.List<io.greptime.v1.Admin.AdminRequest> getAdminsList() {
       return admins_;
     }
     /**
-     * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+     * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
      */
     @java.lang.Override
     public java.util.List<? extends io.greptime.v1.Admin.AdminRequestOrBuilder> 
@@ -188,21 +242,21 @@ public final class GreptimeDB {
       return admins_;
     }
     /**
-     * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+     * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
      */
     @java.lang.Override
     public int getAdminsCount() {
       return admins_.size();
     }
     /**
-     * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+     * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
      */
     @java.lang.Override
     public io.greptime.v1.Admin.AdminRequest getAdmins(int index) {
       return admins_.get(index);
     }
     /**
-     * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+     * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
      */
     @java.lang.Override
     public io.greptime.v1.Admin.AdminRequestOrBuilder getAdminsOrBuilder(
@@ -210,17 +264,17 @@ public final class GreptimeDB {
       return admins_.get(index);
     }
 
-    public static final int DATABASES_FIELD_NUMBER = 2;
+    public static final int DATABASES_FIELD_NUMBER = 3;
     private java.util.List<io.greptime.v1.Database.DatabaseRequest> databases_;
     /**
-     * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+     * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
      */
     @java.lang.Override
     public java.util.List<io.greptime.v1.Database.DatabaseRequest> getDatabasesList() {
       return databases_;
     }
     /**
-     * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+     * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
      */
     @java.lang.Override
     public java.util.List<? extends io.greptime.v1.Database.DatabaseRequestOrBuilder> 
@@ -228,21 +282,21 @@ public final class GreptimeDB {
       return databases_;
     }
     /**
-     * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+     * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
      */
     @java.lang.Override
     public int getDatabasesCount() {
       return databases_.size();
     }
     /**
-     * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+     * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
      */
     @java.lang.Override
     public io.greptime.v1.Database.DatabaseRequest getDatabases(int index) {
       return databases_.get(index);
     }
     /**
-     * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+     * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
      */
     @java.lang.Override
     public io.greptime.v1.Database.DatabaseRequestOrBuilder getDatabasesOrBuilder(
@@ -264,11 +318,14 @@ public final class GreptimeDB {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (header_ != null) {
+        output.writeMessage(1, getHeader());
+      }
       for (int i = 0; i < admins_.size(); i++) {
-        output.writeMessage(1, admins_.get(i));
+        output.writeMessage(2, admins_.get(i));
       }
       for (int i = 0; i < databases_.size(); i++) {
-        output.writeMessage(2, databases_.get(i));
+        output.writeMessage(3, databases_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -279,13 +336,17 @@ public final class GreptimeDB {
       if (size != -1) return size;
 
       size = 0;
+      if (header_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getHeader());
+      }
       for (int i = 0; i < admins_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, admins_.get(i));
+          .computeMessageSize(2, admins_.get(i));
       }
       for (int i = 0; i < databases_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, databases_.get(i));
+          .computeMessageSize(3, databases_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -302,6 +363,11 @@ public final class GreptimeDB {
       }
       io.greptime.v1.GreptimeDB.BatchRequest other = (io.greptime.v1.GreptimeDB.BatchRequest) obj;
 
+      if (hasHeader() != other.hasHeader()) return false;
+      if (hasHeader()) {
+        if (!getHeader()
+            .equals(other.getHeader())) return false;
+      }
       if (!getAdminsList()
           .equals(other.getAdminsList())) return false;
       if (!getDatabasesList()
@@ -317,6 +383,10 @@ public final class GreptimeDB {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasHeader()) {
+        hash = (37 * hash) + HEADER_FIELD_NUMBER;
+        hash = (53 * hash) + getHeader().hashCode();
+      }
       if (getAdminsCount() > 0) {
         hash = (37 * hash) + ADMINS_FIELD_NUMBER;
         hash = (53 * hash) + getAdminsList().hashCode();
@@ -460,6 +530,12 @@ public final class GreptimeDB {
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        if (headerBuilder_ == null) {
+          header_ = null;
+        } else {
+          header_ = null;
+          headerBuilder_ = null;
+        }
         if (adminsBuilder_ == null) {
           admins_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
@@ -499,6 +575,11 @@ public final class GreptimeDB {
       public io.greptime.v1.GreptimeDB.BatchRequest buildPartial() {
         io.greptime.v1.GreptimeDB.BatchRequest result = new io.greptime.v1.GreptimeDB.BatchRequest(this);
         int from_bitField0_ = bitField0_;
+        if (headerBuilder_ == null) {
+          result.header_ = header_;
+        } else {
+          result.header_ = headerBuilder_.build();
+        }
         if (adminsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
             admins_ = java.util.Collections.unmodifiableList(admins_);
@@ -565,6 +646,9 @@ public final class GreptimeDB {
 
       public Builder mergeFrom(io.greptime.v1.GreptimeDB.BatchRequest other) {
         if (other == io.greptime.v1.GreptimeDB.BatchRequest.getDefaultInstance()) return this;
+        if (other.hasHeader()) {
+          mergeHeader(other.getHeader());
+        }
         if (adminsBuilder_ == null) {
           if (!other.admins_.isEmpty()) {
             if (admins_.isEmpty()) {
@@ -647,6 +731,125 @@ public final class GreptimeDB {
       }
       private int bitField0_;
 
+      private io.greptime.v1.Common.RequestHeader header_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          io.greptime.v1.Common.RequestHeader, io.greptime.v1.Common.RequestHeader.Builder, io.greptime.v1.Common.RequestHeaderOrBuilder> headerBuilder_;
+      /**
+       * <code>.greptime.v1.RequestHeader header = 1;</code>
+       * @return Whether the header field is set.
+       */
+      public boolean hasHeader() {
+        return headerBuilder_ != null || header_ != null;
+      }
+      /**
+       * <code>.greptime.v1.RequestHeader header = 1;</code>
+       * @return The header.
+       */
+      public io.greptime.v1.Common.RequestHeader getHeader() {
+        if (headerBuilder_ == null) {
+          return header_ == null ? io.greptime.v1.Common.RequestHeader.getDefaultInstance() : header_;
+        } else {
+          return headerBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.greptime.v1.RequestHeader header = 1;</code>
+       */
+      public Builder setHeader(io.greptime.v1.Common.RequestHeader value) {
+        if (headerBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          header_ = value;
+          onChanged();
+        } else {
+          headerBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.greptime.v1.RequestHeader header = 1;</code>
+       */
+      public Builder setHeader(
+          io.greptime.v1.Common.RequestHeader.Builder builderForValue) {
+        if (headerBuilder_ == null) {
+          header_ = builderForValue.build();
+          onChanged();
+        } else {
+          headerBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.greptime.v1.RequestHeader header = 1;</code>
+       */
+      public Builder mergeHeader(io.greptime.v1.Common.RequestHeader value) {
+        if (headerBuilder_ == null) {
+          if (header_ != null) {
+            header_ =
+              io.greptime.v1.Common.RequestHeader.newBuilder(header_).mergeFrom(value).buildPartial();
+          } else {
+            header_ = value;
+          }
+          onChanged();
+        } else {
+          headerBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.greptime.v1.RequestHeader header = 1;</code>
+       */
+      public Builder clearHeader() {
+        if (headerBuilder_ == null) {
+          header_ = null;
+          onChanged();
+        } else {
+          header_ = null;
+          headerBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.greptime.v1.RequestHeader header = 1;</code>
+       */
+      public io.greptime.v1.Common.RequestHeader.Builder getHeaderBuilder() {
+        
+        onChanged();
+        return getHeaderFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.greptime.v1.RequestHeader header = 1;</code>
+       */
+      public io.greptime.v1.Common.RequestHeaderOrBuilder getHeaderOrBuilder() {
+        if (headerBuilder_ != null) {
+          return headerBuilder_.getMessageOrBuilder();
+        } else {
+          return header_ == null ?
+              io.greptime.v1.Common.RequestHeader.getDefaultInstance() : header_;
+        }
+      }
+      /**
+       * <code>.greptime.v1.RequestHeader header = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          io.greptime.v1.Common.RequestHeader, io.greptime.v1.Common.RequestHeader.Builder, io.greptime.v1.Common.RequestHeaderOrBuilder> 
+          getHeaderFieldBuilder() {
+        if (headerBuilder_ == null) {
+          headerBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              io.greptime.v1.Common.RequestHeader, io.greptime.v1.Common.RequestHeader.Builder, io.greptime.v1.Common.RequestHeaderOrBuilder>(
+                  getHeader(),
+                  getParentForChildren(),
+                  isClean());
+          header_ = null;
+        }
+        return headerBuilder_;
+      }
+
       private java.util.List<io.greptime.v1.Admin.AdminRequest> admins_ =
         java.util.Collections.emptyList();
       private void ensureAdminsIsMutable() {
@@ -660,7 +863,7 @@ public final class GreptimeDB {
           io.greptime.v1.Admin.AdminRequest, io.greptime.v1.Admin.AdminRequest.Builder, io.greptime.v1.Admin.AdminRequestOrBuilder> adminsBuilder_;
 
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public java.util.List<io.greptime.v1.Admin.AdminRequest> getAdminsList() {
         if (adminsBuilder_ == null) {
@@ -670,7 +873,7 @@ public final class GreptimeDB {
         }
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public int getAdminsCount() {
         if (adminsBuilder_ == null) {
@@ -680,7 +883,7 @@ public final class GreptimeDB {
         }
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public io.greptime.v1.Admin.AdminRequest getAdmins(int index) {
         if (adminsBuilder_ == null) {
@@ -690,7 +893,7 @@ public final class GreptimeDB {
         }
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public Builder setAdmins(
           int index, io.greptime.v1.Admin.AdminRequest value) {
@@ -707,7 +910,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public Builder setAdmins(
           int index, io.greptime.v1.Admin.AdminRequest.Builder builderForValue) {
@@ -721,7 +924,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public Builder addAdmins(io.greptime.v1.Admin.AdminRequest value) {
         if (adminsBuilder_ == null) {
@@ -737,7 +940,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public Builder addAdmins(
           int index, io.greptime.v1.Admin.AdminRequest value) {
@@ -754,7 +957,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public Builder addAdmins(
           io.greptime.v1.Admin.AdminRequest.Builder builderForValue) {
@@ -768,7 +971,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public Builder addAdmins(
           int index, io.greptime.v1.Admin.AdminRequest.Builder builderForValue) {
@@ -782,7 +985,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public Builder addAllAdmins(
           java.lang.Iterable<? extends io.greptime.v1.Admin.AdminRequest> values) {
@@ -797,7 +1000,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public Builder clearAdmins() {
         if (adminsBuilder_ == null) {
@@ -810,7 +1013,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public Builder removeAdmins(int index) {
         if (adminsBuilder_ == null) {
@@ -823,14 +1026,14 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public io.greptime.v1.Admin.AdminRequest.Builder getAdminsBuilder(
           int index) {
         return getAdminsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public io.greptime.v1.Admin.AdminRequestOrBuilder getAdminsOrBuilder(
           int index) {
@@ -840,7 +1043,7 @@ public final class GreptimeDB {
         }
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public java.util.List<? extends io.greptime.v1.Admin.AdminRequestOrBuilder> 
            getAdminsOrBuilderList() {
@@ -851,14 +1054,14 @@ public final class GreptimeDB {
         }
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public io.greptime.v1.Admin.AdminRequest.Builder addAdminsBuilder() {
         return getAdminsFieldBuilder().addBuilder(
             io.greptime.v1.Admin.AdminRequest.getDefaultInstance());
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public io.greptime.v1.Admin.AdminRequest.Builder addAdminsBuilder(
           int index) {
@@ -866,7 +1069,7 @@ public final class GreptimeDB {
             index, io.greptime.v1.Admin.AdminRequest.getDefaultInstance());
       }
       /**
-       * <code>repeated .greptime.v1.AdminRequest admins = 1;</code>
+       * <code>repeated .greptime.v1.AdminRequest admins = 2;</code>
        */
       public java.util.List<io.greptime.v1.Admin.AdminRequest.Builder> 
            getAdminsBuilderList() {
@@ -900,7 +1103,7 @@ public final class GreptimeDB {
           io.greptime.v1.Database.DatabaseRequest, io.greptime.v1.Database.DatabaseRequest.Builder, io.greptime.v1.Database.DatabaseRequestOrBuilder> databasesBuilder_;
 
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public java.util.List<io.greptime.v1.Database.DatabaseRequest> getDatabasesList() {
         if (databasesBuilder_ == null) {
@@ -910,7 +1113,7 @@ public final class GreptimeDB {
         }
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public int getDatabasesCount() {
         if (databasesBuilder_ == null) {
@@ -920,7 +1123,7 @@ public final class GreptimeDB {
         }
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public io.greptime.v1.Database.DatabaseRequest getDatabases(int index) {
         if (databasesBuilder_ == null) {
@@ -930,7 +1133,7 @@ public final class GreptimeDB {
         }
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public Builder setDatabases(
           int index, io.greptime.v1.Database.DatabaseRequest value) {
@@ -947,7 +1150,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public Builder setDatabases(
           int index, io.greptime.v1.Database.DatabaseRequest.Builder builderForValue) {
@@ -961,7 +1164,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public Builder addDatabases(io.greptime.v1.Database.DatabaseRequest value) {
         if (databasesBuilder_ == null) {
@@ -977,7 +1180,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public Builder addDatabases(
           int index, io.greptime.v1.Database.DatabaseRequest value) {
@@ -994,7 +1197,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public Builder addDatabases(
           io.greptime.v1.Database.DatabaseRequest.Builder builderForValue) {
@@ -1008,7 +1211,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public Builder addDatabases(
           int index, io.greptime.v1.Database.DatabaseRequest.Builder builderForValue) {
@@ -1022,7 +1225,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public Builder addAllDatabases(
           java.lang.Iterable<? extends io.greptime.v1.Database.DatabaseRequest> values) {
@@ -1037,7 +1240,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public Builder clearDatabases() {
         if (databasesBuilder_ == null) {
@@ -1050,7 +1253,7 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public Builder removeDatabases(int index) {
         if (databasesBuilder_ == null) {
@@ -1063,14 +1266,14 @@ public final class GreptimeDB {
         return this;
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public io.greptime.v1.Database.DatabaseRequest.Builder getDatabasesBuilder(
           int index) {
         return getDatabasesFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public io.greptime.v1.Database.DatabaseRequestOrBuilder getDatabasesOrBuilder(
           int index) {
@@ -1080,7 +1283,7 @@ public final class GreptimeDB {
         }
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public java.util.List<? extends io.greptime.v1.Database.DatabaseRequestOrBuilder> 
            getDatabasesOrBuilderList() {
@@ -1091,14 +1294,14 @@ public final class GreptimeDB {
         }
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public io.greptime.v1.Database.DatabaseRequest.Builder addDatabasesBuilder() {
         return getDatabasesFieldBuilder().addBuilder(
             io.greptime.v1.Database.DatabaseRequest.getDefaultInstance());
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public io.greptime.v1.Database.DatabaseRequest.Builder addDatabasesBuilder(
           int index) {
@@ -1106,7 +1309,7 @@ public final class GreptimeDB {
             index, io.greptime.v1.Database.DatabaseRequest.getDefaultInstance());
       }
       /**
-       * <code>repeated .greptime.v1.DatabaseRequest databases = 2;</code>
+       * <code>repeated .greptime.v1.DatabaseRequest databases = 3;</code>
        */
       public java.util.List<io.greptime.v1.Database.DatabaseRequest.Builder> 
            getDatabasesBuilderList() {
@@ -2364,20 +2567,23 @@ public final class GreptimeDB {
   static {
     java.lang.String[] descriptorData = {
       "\n\016greptime.proto\022\013greptime.v1\032\013admin.pro" +
-      "to\032\016database.proto\"j\n\014BatchRequest\022)\n\006ad" +
-      "mins\030\001 \003(\0132\031.greptime.v1.AdminRequest\022/\n" +
-      "\tdatabases\030\002 \003(\0132\034.greptime.v1.DatabaseR" +
-      "equest\"m\n\rBatchResponse\022*\n\006admins\030\001 \003(\0132" +
-      "\032.greptime.v1.AdminResponse\0220\n\tdatabases" +
-      "\030\002 \003(\0132\035.greptime.v1.DatabaseResponse2L\n" +
-      "\010Greptime\022@\n\005Batch\022\031.greptime.v1.BatchRe" +
-      "quest\032\032.greptime.v1.BatchResponse\"\000B\034\n\016i" +
-      "o.greptime.v1B\nGreptimeDBb\006proto3"
+      "to\032\014common.proto\032\016database.proto\"\226\001\n\014Bat" +
+      "chRequest\022*\n\006header\030\001 \001(\0132\032.greptime.v1." +
+      "RequestHeader\022)\n\006admins\030\002 \003(\0132\031.greptime" +
+      ".v1.AdminRequest\022/\n\tdatabases\030\003 \003(\0132\034.gr" +
+      "eptime.v1.DatabaseRequest\"m\n\rBatchRespon" +
+      "se\022*\n\006admins\030\001 \003(\0132\032.greptime.v1.AdminRe" +
+      "sponse\0220\n\tdatabases\030\002 \003(\0132\035.greptime.v1." +
+      "DatabaseResponse2L\n\010Greptime\022@\n\005Batch\022\031." +
+      "greptime.v1.BatchRequest\032\032.greptime.v1.B" +
+      "atchResponse\"\000B\034\n\016io.greptime.v1B\nGrepti" +
+      "meDBb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           io.greptime.v1.Admin.getDescriptor(),
+          io.greptime.v1.Common.getDescriptor(),
           io.greptime.v1.Database.getDescriptor(),
         });
     internal_static_greptime_v1_BatchRequest_descriptor =
@@ -2385,7 +2591,7 @@ public final class GreptimeDB {
     internal_static_greptime_v1_BatchRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_BatchRequest_descriptor,
-        new java.lang.String[] { "Admins", "Databases", });
+        new java.lang.String[] { "Header", "Admins", "Databases", });
     internal_static_greptime_v1_BatchResponse_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_greptime_v1_BatchResponse_fieldAccessorTable = new
@@ -2393,6 +2599,7 @@ public final class GreptimeDB {
         internal_static_greptime_v1_BatchResponse_descriptor,
         new java.lang.String[] { "Admins", "Databases", });
     io.greptime.v1.Admin.getDescriptor();
+    io.greptime.v1.Common.getDescriptor();
     io.greptime.v1.Database.getDescriptor();
   }
 

@@ -17,6 +17,7 @@
 package io.greptime.models;
 
 import io.greptime.common.Endpoint;
+import io.greptime.common.util.Strings;
 
 /**
  * Contains the write/query error value.
@@ -61,7 +62,7 @@ public class Err {
 
     private String tableNameFailed() {
         return this.rowsFailed == null ? "" //
-            : this.rowsFailed.tableName();
+            : Strings.toString(this.rowsFailed.tableName());
     }
 
     @Override

@@ -49,11 +49,12 @@ public final class ColumnHelper {
         COLUMN_TYPES_DICT.put(Columns.ColumnDataType.BOOLEAN, "bool_values");
         COLUMN_TYPES_DICT.put(Columns.ColumnDataType.BINARY, "binary_values");
         COLUMN_TYPES_DICT.put(Columns.ColumnDataType.STRING, "string_values");
+        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.DATE, "date_values");
+        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.DATETIME, "datetime_values");
+        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.TIMESTAMP, "ts_millis_values");
     }
 
     public static Columns.ColumnDataType getValueType(Columns.Column column) {
-        Ensures.ensure(column.hasDatatype(), "`data_type` is required");
-
         return column.getDatatype();
     }
 
@@ -69,8 +70,6 @@ public final class ColumnHelper {
     }
 
     public static Object getValue(Columns.Column column, int index, BitSet nullMask) {
-        Ensures.ensure(column.hasDatatype(), "`data_type` is required");
-
         Columns.Column.Values values = column.getValues();
         Descriptors.FieldDescriptor fd = getValueFd(column);
         if (nullMask.isEmpty()) {

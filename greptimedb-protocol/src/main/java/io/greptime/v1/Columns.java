@@ -79,6 +79,10 @@ public final class Columns {
      * <code>DATETIME = 14;</code>
      */
     DATETIME(14),
+    /**
+     * <code>TIMESTAMP = 15;</code>
+     */
+    TIMESTAMP(15),
     UNRECOGNIZED(-1),
     ;
 
@@ -142,6 +146,10 @@ public final class Columns {
      * <code>DATETIME = 14;</code>
      */
     public static final int DATETIME_VALUE = 14;
+    /**
+     * <code>TIMESTAMP = 15;</code>
+     */
+    public static final int TIMESTAMP_VALUE = 15;
 
 
     public final int getNumber() {
@@ -183,6 +191,7 @@ public final class Columns {
         case 12: return STRING;
         case 13: return DATE;
         case 14: return DATETIME;
+        case 15: return TIMESTAMP;
         default: return null;
       }
     }
@@ -327,16 +336,7 @@ public final class Columns {
      * Helpful in creating vector from column.
      * </pre>
      *
-     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
-     * @return Whether the datatype field is set.
-     */
-    boolean hasDatatype();
-    /**
-     * <pre>
-     * Helpful in creating vector from column.
-     * </pre>
-     *
-     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+     * <code>.greptime.v1.ColumnDataType datatype = 5;</code>
      * @return The enum numeric value on the wire for datatype.
      */
     int getDatatypeValue();
@@ -345,7 +345,7 @@ public final class Columns {
      * Helpful in creating vector from column.
      * </pre>
      *
-     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+     * <code>.greptime.v1.ColumnDataType datatype = 5;</code>
      * @return The datatype.
      */
     io.greptime.v1.Columns.ColumnDataType getDatatype();
@@ -389,7 +389,6 @@ public final class Columns {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
-      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -432,7 +431,7 @@ public final class Columns {
             }
             case 40: {
               int rawValue = input.readEnum();
-              bitField0_ |= 0x00000001;
+
               datatype_ = rawValue;
               break;
             }
@@ -817,6 +816,57 @@ public final class Columns {
        */
       com.google.protobuf.ByteString
           getStringValuesBytes(int index);
+
+      /**
+       * <code>repeated int32 date_values = 14;</code>
+       * @return A list containing the dateValues.
+       */
+      java.util.List<java.lang.Integer> getDateValuesList();
+      /**
+       * <code>repeated int32 date_values = 14;</code>
+       * @return The count of dateValues.
+       */
+      int getDateValuesCount();
+      /**
+       * <code>repeated int32 date_values = 14;</code>
+       * @param index The index of the element to return.
+       * @return The dateValues at the given index.
+       */
+      int getDateValues(int index);
+
+      /**
+       * <code>repeated int64 datetime_values = 15;</code>
+       * @return A list containing the datetimeValues.
+       */
+      java.util.List<java.lang.Long> getDatetimeValuesList();
+      /**
+       * <code>repeated int64 datetime_values = 15;</code>
+       * @return The count of datetimeValues.
+       */
+      int getDatetimeValuesCount();
+      /**
+       * <code>repeated int64 datetime_values = 15;</code>
+       * @param index The index of the element to return.
+       * @return The datetimeValues at the given index.
+       */
+      long getDatetimeValues(int index);
+
+      /**
+       * <code>repeated int64 ts_millis_values = 16;</code>
+       * @return A list containing the tsMillisValues.
+       */
+      java.util.List<java.lang.Long> getTsMillisValuesList();
+      /**
+       * <code>repeated int64 ts_millis_values = 16;</code>
+       * @return The count of tsMillisValues.
+       */
+      int getTsMillisValuesCount();
+      /**
+       * <code>repeated int64 ts_millis_values = 16;</code>
+       * @param index The index of the element to return.
+       * @return The tsMillisValues at the given index.
+       */
+      long getTsMillisValues(int index);
     }
     /**
      * Protobuf type {@code greptime.v1.Column.Values}
@@ -844,6 +894,9 @@ public final class Columns {
         boolValues_ = emptyBooleanList();
         binaryValues_ = java.util.Collections.emptyList();
         stringValues_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        dateValues_ = emptyIntList();
+        datetimeValues_ = emptyLongList();
+        tsMillisValues_ = emptyLongList();
       }
 
       @java.lang.Override
@@ -1125,6 +1178,69 @@ public final class Columns {
                 stringValues_.add(s);
                 break;
               }
+              case 112: {
+                if (!((mutable_bitField0_ & 0x00002000) != 0)) {
+                  dateValues_ = newIntList();
+                  mutable_bitField0_ |= 0x00002000;
+                }
+                dateValues_.addInt(input.readInt32());
+                break;
+              }
+              case 114: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00002000) != 0) && input.getBytesUntilLimit() > 0) {
+                  dateValues_ = newIntList();
+                  mutable_bitField0_ |= 0x00002000;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  dateValues_.addInt(input.readInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+              case 120: {
+                if (!((mutable_bitField0_ & 0x00004000) != 0)) {
+                  datetimeValues_ = newLongList();
+                  mutable_bitField0_ |= 0x00004000;
+                }
+                datetimeValues_.addLong(input.readInt64());
+                break;
+              }
+              case 122: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00004000) != 0) && input.getBytesUntilLimit() > 0) {
+                  datetimeValues_ = newLongList();
+                  mutable_bitField0_ |= 0x00004000;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  datetimeValues_.addLong(input.readInt64());
+                }
+                input.popLimit(limit);
+                break;
+              }
+              case 128: {
+                if (!((mutable_bitField0_ & 0x00008000) != 0)) {
+                  tsMillisValues_ = newLongList();
+                  mutable_bitField0_ |= 0x00008000;
+                }
+                tsMillisValues_.addLong(input.readInt64());
+                break;
+              }
+              case 130: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00008000) != 0) && input.getBytesUntilLimit() > 0) {
+                  tsMillisValues_ = newLongList();
+                  mutable_bitField0_ |= 0x00008000;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  tsMillisValues_.addLong(input.readInt64());
+                }
+                input.popLimit(limit);
+                break;
+              }
               default: {
                 if (!parseUnknownField(
                     input, unknownFields, extensionRegistry, tag)) {
@@ -1178,6 +1294,15 @@ public final class Columns {
           }
           if (((mutable_bitField0_ & 0x00001000) != 0)) {
             stringValues_ = stringValues_.getUnmodifiableView();
+          }
+          if (((mutable_bitField0_ & 0x00002000) != 0)) {
+            dateValues_.makeImmutable(); // C
+          }
+          if (((mutable_bitField0_ & 0x00004000) != 0)) {
+            datetimeValues_.makeImmutable(); // C
+          }
+          if (((mutable_bitField0_ & 0x00008000) != 0)) {
+            tsMillisValues_.makeImmutable(); // C
           }
           this.unknownFields = unknownFields.build();
           makeExtensionsImmutable();
@@ -1566,6 +1691,90 @@ public final class Columns {
         return stringValues_.getByteString(index);
       }
 
+      public static final int DATE_VALUES_FIELD_NUMBER = 14;
+      private com.google.protobuf.Internal.IntList dateValues_;
+      /**
+       * <code>repeated int32 date_values = 14;</code>
+       * @return A list containing the dateValues.
+       */
+      @java.lang.Override
+      public java.util.List<java.lang.Integer>
+          getDateValuesList() {
+        return dateValues_;
+      }
+      /**
+       * <code>repeated int32 date_values = 14;</code>
+       * @return The count of dateValues.
+       */
+      public int getDateValuesCount() {
+        return dateValues_.size();
+      }
+      /**
+       * <code>repeated int32 date_values = 14;</code>
+       * @param index The index of the element to return.
+       * @return The dateValues at the given index.
+       */
+      public int getDateValues(int index) {
+        return dateValues_.getInt(index);
+      }
+      private int dateValuesMemoizedSerializedSize = -1;
+
+      public static final int DATETIME_VALUES_FIELD_NUMBER = 15;
+      private com.google.protobuf.Internal.LongList datetimeValues_;
+      /**
+       * <code>repeated int64 datetime_values = 15;</code>
+       * @return A list containing the datetimeValues.
+       */
+      @java.lang.Override
+      public java.util.List<java.lang.Long>
+          getDatetimeValuesList() {
+        return datetimeValues_;
+      }
+      /**
+       * <code>repeated int64 datetime_values = 15;</code>
+       * @return The count of datetimeValues.
+       */
+      public int getDatetimeValuesCount() {
+        return datetimeValues_.size();
+      }
+      /**
+       * <code>repeated int64 datetime_values = 15;</code>
+       * @param index The index of the element to return.
+       * @return The datetimeValues at the given index.
+       */
+      public long getDatetimeValues(int index) {
+        return datetimeValues_.getLong(index);
+      }
+      private int datetimeValuesMemoizedSerializedSize = -1;
+
+      public static final int TS_MILLIS_VALUES_FIELD_NUMBER = 16;
+      private com.google.protobuf.Internal.LongList tsMillisValues_;
+      /**
+       * <code>repeated int64 ts_millis_values = 16;</code>
+       * @return A list containing the tsMillisValues.
+       */
+      @java.lang.Override
+      public java.util.List<java.lang.Long>
+          getTsMillisValuesList() {
+        return tsMillisValues_;
+      }
+      /**
+       * <code>repeated int64 ts_millis_values = 16;</code>
+       * @return The count of tsMillisValues.
+       */
+      public int getTsMillisValuesCount() {
+        return tsMillisValues_.size();
+      }
+      /**
+       * <code>repeated int64 ts_millis_values = 16;</code>
+       * @param index The index of the element to return.
+       * @return The tsMillisValues at the given index.
+       */
+      public long getTsMillisValues(int index) {
+        return tsMillisValues_.getLong(index);
+      }
+      private int tsMillisValuesMemoizedSerializedSize = -1;
+
       private byte memoizedIsInitialized = -1;
       @java.lang.Override
       public final boolean isInitialized() {
@@ -1663,6 +1872,27 @@ public final class Columns {
         }
         for (int i = 0; i < stringValues_.size(); i++) {
           com.google.protobuf.GeneratedMessageV3.writeString(output, 13, stringValues_.getRaw(i));
+        }
+        if (getDateValuesList().size() > 0) {
+          output.writeUInt32NoTag(114);
+          output.writeUInt32NoTag(dateValuesMemoizedSerializedSize);
+        }
+        for (int i = 0; i < dateValues_.size(); i++) {
+          output.writeInt32NoTag(dateValues_.getInt(i));
+        }
+        if (getDatetimeValuesList().size() > 0) {
+          output.writeUInt32NoTag(122);
+          output.writeUInt32NoTag(datetimeValuesMemoizedSerializedSize);
+        }
+        for (int i = 0; i < datetimeValues_.size(); i++) {
+          output.writeInt64NoTag(datetimeValues_.getLong(i));
+        }
+        if (getTsMillisValuesList().size() > 0) {
+          output.writeUInt32NoTag(130);
+          output.writeUInt32NoTag(tsMillisValuesMemoizedSerializedSize);
+        }
+        for (int i = 0; i < tsMillisValues_.size(); i++) {
+          output.writeInt64NoTag(tsMillisValues_.getLong(i));
         }
         unknownFields.writeTo(output);
       }
@@ -1835,6 +2065,48 @@ public final class Columns {
           size += dataSize;
           size += 1 * getStringValuesList().size();
         }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < dateValues_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dateValues_.getInt(i));
+          }
+          size += dataSize;
+          if (!getDateValuesList().isEmpty()) {
+            size += 1;
+            size += com.google.protobuf.CodedOutputStream
+                .computeInt32SizeNoTag(dataSize);
+          }
+          dateValuesMemoizedSerializedSize = dataSize;
+        }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < datetimeValues_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeInt64SizeNoTag(datetimeValues_.getLong(i));
+          }
+          size += dataSize;
+          if (!getDatetimeValuesList().isEmpty()) {
+            size += 1;
+            size += com.google.protobuf.CodedOutputStream
+                .computeInt32SizeNoTag(dataSize);
+          }
+          datetimeValuesMemoizedSerializedSize = dataSize;
+        }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < tsMillisValues_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeInt64SizeNoTag(tsMillisValues_.getLong(i));
+          }
+          size += dataSize;
+          if (!getTsMillisValuesList().isEmpty()) {
+            size += 2;
+            size += com.google.protobuf.CodedOutputStream
+                .computeInt32SizeNoTag(dataSize);
+          }
+          tsMillisValuesMemoizedSerializedSize = dataSize;
+        }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
         return size;
@@ -1876,6 +2148,12 @@ public final class Columns {
             .equals(other.getBinaryValuesList())) return false;
         if (!getStringValuesList()
             .equals(other.getStringValuesList())) return false;
+        if (!getDateValuesList()
+            .equals(other.getDateValuesList())) return false;
+        if (!getDatetimeValuesList()
+            .equals(other.getDatetimeValuesList())) return false;
+        if (!getTsMillisValuesList()
+            .equals(other.getTsMillisValuesList())) return false;
         if (!unknownFields.equals(other.unknownFields)) return false;
         return true;
       }
@@ -1938,6 +2216,18 @@ public final class Columns {
         if (getStringValuesCount() > 0) {
           hash = (37 * hash) + STRING_VALUES_FIELD_NUMBER;
           hash = (53 * hash) + getStringValuesList().hashCode();
+        }
+        if (getDateValuesCount() > 0) {
+          hash = (37 * hash) + DATE_VALUES_FIELD_NUMBER;
+          hash = (53 * hash) + getDateValuesList().hashCode();
+        }
+        if (getDatetimeValuesCount() > 0) {
+          hash = (37 * hash) + DATETIME_VALUES_FIELD_NUMBER;
+          hash = (53 * hash) + getDatetimeValuesList().hashCode();
+        }
+        if (getTsMillisValuesCount() > 0) {
+          hash = (37 * hash) + TS_MILLIS_VALUES_FIELD_NUMBER;
+          hash = (53 * hash) + getTsMillisValuesList().hashCode();
         }
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
@@ -2098,6 +2388,12 @@ public final class Columns {
           bitField0_ = (bitField0_ & ~0x00000800);
           stringValues_ = com.google.protobuf.LazyStringArrayList.EMPTY;
           bitField0_ = (bitField0_ & ~0x00001000);
+          dateValues_ = emptyIntList();
+          bitField0_ = (bitField0_ & ~0x00002000);
+          datetimeValues_ = emptyLongList();
+          bitField0_ = (bitField0_ & ~0x00004000);
+          tsMillisValues_ = emptyLongList();
+          bitField0_ = (bitField0_ & ~0x00008000);
           return this;
         }
 
@@ -2190,6 +2486,21 @@ public final class Columns {
             bitField0_ = (bitField0_ & ~0x00001000);
           }
           result.stringValues_ = stringValues_;
+          if (((bitField0_ & 0x00002000) != 0)) {
+            dateValues_.makeImmutable();
+            bitField0_ = (bitField0_ & ~0x00002000);
+          }
+          result.dateValues_ = dateValues_;
+          if (((bitField0_ & 0x00004000) != 0)) {
+            datetimeValues_.makeImmutable();
+            bitField0_ = (bitField0_ & ~0x00004000);
+          }
+          result.datetimeValues_ = datetimeValues_;
+          if (((bitField0_ & 0x00008000) != 0)) {
+            tsMillisValues_.makeImmutable();
+            bitField0_ = (bitField0_ & ~0x00008000);
+          }
+          result.tsMillisValues_ = tsMillisValues_;
           onBuilt();
           return result;
         }
@@ -2365,6 +2676,36 @@ public final class Columns {
             } else {
               ensureStringValuesIsMutable();
               stringValues_.addAll(other.stringValues_);
+            }
+            onChanged();
+          }
+          if (!other.dateValues_.isEmpty()) {
+            if (dateValues_.isEmpty()) {
+              dateValues_ = other.dateValues_;
+              bitField0_ = (bitField0_ & ~0x00002000);
+            } else {
+              ensureDateValuesIsMutable();
+              dateValues_.addAll(other.dateValues_);
+            }
+            onChanged();
+          }
+          if (!other.datetimeValues_.isEmpty()) {
+            if (datetimeValues_.isEmpty()) {
+              datetimeValues_ = other.datetimeValues_;
+              bitField0_ = (bitField0_ & ~0x00004000);
+            } else {
+              ensureDatetimeValuesIsMutable();
+              datetimeValues_.addAll(other.datetimeValues_);
+            }
+            onChanged();
+          }
+          if (!other.tsMillisValues_.isEmpty()) {
+            if (tsMillisValues_.isEmpty()) {
+              tsMillisValues_ = other.tsMillisValues_;
+              bitField0_ = (bitField0_ & ~0x00008000);
+            } else {
+              ensureTsMillisValuesIsMutable();
+              tsMillisValues_.addAll(other.tsMillisValues_);
             }
             onChanged();
           }
@@ -3461,6 +3802,243 @@ public final class Columns {
           onChanged();
           return this;
         }
+
+        private com.google.protobuf.Internal.IntList dateValues_ = emptyIntList();
+        private void ensureDateValuesIsMutable() {
+          if (!((bitField0_ & 0x00002000) != 0)) {
+            dateValues_ = mutableCopy(dateValues_);
+            bitField0_ |= 0x00002000;
+           }
+        }
+        /**
+         * <code>repeated int32 date_values = 14;</code>
+         * @return A list containing the dateValues.
+         */
+        public java.util.List<java.lang.Integer>
+            getDateValuesList() {
+          return ((bitField0_ & 0x00002000) != 0) ?
+                   java.util.Collections.unmodifiableList(dateValues_) : dateValues_;
+        }
+        /**
+         * <code>repeated int32 date_values = 14;</code>
+         * @return The count of dateValues.
+         */
+        public int getDateValuesCount() {
+          return dateValues_.size();
+        }
+        /**
+         * <code>repeated int32 date_values = 14;</code>
+         * @param index The index of the element to return.
+         * @return The dateValues at the given index.
+         */
+        public int getDateValues(int index) {
+          return dateValues_.getInt(index);
+        }
+        /**
+         * <code>repeated int32 date_values = 14;</code>
+         * @param index The index to set the value at.
+         * @param value The dateValues to set.
+         * @return This builder for chaining.
+         */
+        public Builder setDateValues(
+            int index, int value) {
+          ensureDateValuesIsMutable();
+          dateValues_.setInt(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 date_values = 14;</code>
+         * @param value The dateValues to add.
+         * @return This builder for chaining.
+         */
+        public Builder addDateValues(int value) {
+          ensureDateValuesIsMutable();
+          dateValues_.addInt(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 date_values = 14;</code>
+         * @param values The dateValues to add.
+         * @return This builder for chaining.
+         */
+        public Builder addAllDateValues(
+            java.lang.Iterable<? extends java.lang.Integer> values) {
+          ensureDateValuesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, dateValues_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 date_values = 14;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearDateValues() {
+          dateValues_ = emptyIntList();
+          bitField0_ = (bitField0_ & ~0x00002000);
+          onChanged();
+          return this;
+        }
+
+        private com.google.protobuf.Internal.LongList datetimeValues_ = emptyLongList();
+        private void ensureDatetimeValuesIsMutable() {
+          if (!((bitField0_ & 0x00004000) != 0)) {
+            datetimeValues_ = mutableCopy(datetimeValues_);
+            bitField0_ |= 0x00004000;
+           }
+        }
+        /**
+         * <code>repeated int64 datetime_values = 15;</code>
+         * @return A list containing the datetimeValues.
+         */
+        public java.util.List<java.lang.Long>
+            getDatetimeValuesList() {
+          return ((bitField0_ & 0x00004000) != 0) ?
+                   java.util.Collections.unmodifiableList(datetimeValues_) : datetimeValues_;
+        }
+        /**
+         * <code>repeated int64 datetime_values = 15;</code>
+         * @return The count of datetimeValues.
+         */
+        public int getDatetimeValuesCount() {
+          return datetimeValues_.size();
+        }
+        /**
+         * <code>repeated int64 datetime_values = 15;</code>
+         * @param index The index of the element to return.
+         * @return The datetimeValues at the given index.
+         */
+        public long getDatetimeValues(int index) {
+          return datetimeValues_.getLong(index);
+        }
+        /**
+         * <code>repeated int64 datetime_values = 15;</code>
+         * @param index The index to set the value at.
+         * @param value The datetimeValues to set.
+         * @return This builder for chaining.
+         */
+        public Builder setDatetimeValues(
+            int index, long value) {
+          ensureDatetimeValuesIsMutable();
+          datetimeValues_.setLong(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int64 datetime_values = 15;</code>
+         * @param value The datetimeValues to add.
+         * @return This builder for chaining.
+         */
+        public Builder addDatetimeValues(long value) {
+          ensureDatetimeValuesIsMutable();
+          datetimeValues_.addLong(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int64 datetime_values = 15;</code>
+         * @param values The datetimeValues to add.
+         * @return This builder for chaining.
+         */
+        public Builder addAllDatetimeValues(
+            java.lang.Iterable<? extends java.lang.Long> values) {
+          ensureDatetimeValuesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, datetimeValues_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int64 datetime_values = 15;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearDatetimeValues() {
+          datetimeValues_ = emptyLongList();
+          bitField0_ = (bitField0_ & ~0x00004000);
+          onChanged();
+          return this;
+        }
+
+        private com.google.protobuf.Internal.LongList tsMillisValues_ = emptyLongList();
+        private void ensureTsMillisValuesIsMutable() {
+          if (!((bitField0_ & 0x00008000) != 0)) {
+            tsMillisValues_ = mutableCopy(tsMillisValues_);
+            bitField0_ |= 0x00008000;
+           }
+        }
+        /**
+         * <code>repeated int64 ts_millis_values = 16;</code>
+         * @return A list containing the tsMillisValues.
+         */
+        public java.util.List<java.lang.Long>
+            getTsMillisValuesList() {
+          return ((bitField0_ & 0x00008000) != 0) ?
+                   java.util.Collections.unmodifiableList(tsMillisValues_) : tsMillisValues_;
+        }
+        /**
+         * <code>repeated int64 ts_millis_values = 16;</code>
+         * @return The count of tsMillisValues.
+         */
+        public int getTsMillisValuesCount() {
+          return tsMillisValues_.size();
+        }
+        /**
+         * <code>repeated int64 ts_millis_values = 16;</code>
+         * @param index The index of the element to return.
+         * @return The tsMillisValues at the given index.
+         */
+        public long getTsMillisValues(int index) {
+          return tsMillisValues_.getLong(index);
+        }
+        /**
+         * <code>repeated int64 ts_millis_values = 16;</code>
+         * @param index The index to set the value at.
+         * @param value The tsMillisValues to set.
+         * @return This builder for chaining.
+         */
+        public Builder setTsMillisValues(
+            int index, long value) {
+          ensureTsMillisValuesIsMutable();
+          tsMillisValues_.setLong(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int64 ts_millis_values = 16;</code>
+         * @param value The tsMillisValues to add.
+         * @return This builder for chaining.
+         */
+        public Builder addTsMillisValues(long value) {
+          ensureTsMillisValuesIsMutable();
+          tsMillisValues_.addLong(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int64 ts_millis_values = 16;</code>
+         * @param values The tsMillisValues to add.
+         * @return This builder for chaining.
+         */
+        public Builder addAllTsMillisValues(
+            java.lang.Iterable<? extends java.lang.Long> values) {
+          ensureTsMillisValuesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, tsMillisValues_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int64 ts_millis_values = 16;</code>
+         * @return This builder for chaining.
+         */
+        public Builder clearTsMillisValues() {
+          tsMillisValues_ = emptyLongList();
+          bitField0_ = (bitField0_ & ~0x00008000);
+          onChanged();
+          return this;
+        }
         @java.lang.Override
         public final Builder setUnknownFields(
             final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -3514,7 +4092,6 @@ public final class Columns {
 
     }
 
-    private int bitField0_;
     public static final int COLUMN_NAME_FIELD_NUMBER = 1;
     private volatile java.lang.Object columnName_;
     /**
@@ -3651,18 +4228,7 @@ public final class Columns {
      * Helpful in creating vector from column.
      * </pre>
      *
-     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
-     * @return Whether the datatype field is set.
-     */
-    @java.lang.Override public boolean hasDatatype() {
-      return ((bitField0_ & 0x00000001) != 0);
-    }
-    /**
-     * <pre>
-     * Helpful in creating vector from column.
-     * </pre>
-     *
-     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+     * <code>.greptime.v1.ColumnDataType datatype = 5;</code>
      * @return The enum numeric value on the wire for datatype.
      */
     @java.lang.Override public int getDatatypeValue() {
@@ -3673,7 +4239,7 @@ public final class Columns {
      * Helpful in creating vector from column.
      * </pre>
      *
-     * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+     * <code>.greptime.v1.ColumnDataType datatype = 5;</code>
      * @return The datatype.
      */
     @java.lang.Override public io.greptime.v1.Columns.ColumnDataType getDatatype() {
@@ -3708,7 +4274,7 @@ public final class Columns {
       if (!nullMask_.isEmpty()) {
         output.writeBytes(4, nullMask_);
       }
-      if (((bitField0_ & 0x00000001) != 0)) {
+      if (datatype_ != io.greptime.v1.Columns.ColumnDataType.BOOLEAN.getNumber()) {
         output.writeEnum(5, datatype_);
       }
       unknownFields.writeTo(output);
@@ -3735,7 +4301,7 @@ public final class Columns {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, nullMask_);
       }
-      if (((bitField0_ & 0x00000001) != 0)) {
+      if (datatype_ != io.greptime.v1.Columns.ColumnDataType.BOOLEAN.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(5, datatype_);
       }
@@ -3764,10 +4330,7 @@ public final class Columns {
       }
       if (!getNullMask()
           .equals(other.getNullMask())) return false;
-      if (hasDatatype() != other.hasDatatype()) return false;
-      if (hasDatatype()) {
-        if (datatype_ != other.datatype_) return false;
-      }
+      if (datatype_ != other.datatype_) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -3789,10 +4352,8 @@ public final class Columns {
       }
       hash = (37 * hash) + NULL_MASK_FIELD_NUMBER;
       hash = (53 * hash) + getNullMask().hashCode();
-      if (hasDatatype()) {
-        hash = (37 * hash) + DATATYPE_FIELD_NUMBER;
-        hash = (53 * hash) + datatype_;
-      }
+      hash = (37 * hash) + DATATYPE_FIELD_NUMBER;
+      hash = (53 * hash) + datatype_;
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3939,7 +4500,7 @@ public final class Columns {
         nullMask_ = com.google.protobuf.ByteString.EMPTY;
 
         datatype_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000001);
+
         return this;
       }
 
@@ -3966,8 +4527,6 @@ public final class Columns {
       @java.lang.Override
       public io.greptime.v1.Columns.Column buildPartial() {
         io.greptime.v1.Columns.Column result = new io.greptime.v1.Columns.Column(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
         result.columnName_ = columnName_;
         result.semanticType_ = semanticType_;
         if (valuesBuilder_ == null) {
@@ -3976,11 +4535,7 @@ public final class Columns {
           result.values_ = valuesBuilder_.build();
         }
         result.nullMask_ = nullMask_;
-        if (((from_bitField0_ & 0x00000001) != 0)) {
-          to_bitField0_ |= 0x00000001;
-        }
         result.datatype_ = datatype_;
-        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -4042,8 +4597,8 @@ public final class Columns {
         if (other.getNullMask() != com.google.protobuf.ByteString.EMPTY) {
           setNullMask(other.getNullMask());
         }
-        if (other.hasDatatype()) {
-          setDatatype(other.getDatatype());
+        if (other.datatype_ != 0) {
+          setDatatypeValue(other.getDatatypeValue());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -4073,7 +4628,6 @@ public final class Columns {
         }
         return this;
       }
-      private int bitField0_;
 
       private java.lang.Object columnName_ = "";
       /**
@@ -4469,18 +5023,7 @@ public final class Columns {
        * Helpful in creating vector from column.
        * </pre>
        *
-       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
-       * @return Whether the datatype field is set.
-       */
-      @java.lang.Override public boolean hasDatatype() {
-        return ((bitField0_ & 0x00000001) != 0);
-      }
-      /**
-       * <pre>
-       * Helpful in creating vector from column.
-       * </pre>
-       *
-       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+       * <code>.greptime.v1.ColumnDataType datatype = 5;</code>
        * @return The enum numeric value on the wire for datatype.
        */
       @java.lang.Override public int getDatatypeValue() {
@@ -4491,12 +5034,12 @@ public final class Columns {
        * Helpful in creating vector from column.
        * </pre>
        *
-       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+       * <code>.greptime.v1.ColumnDataType datatype = 5;</code>
        * @param value The enum numeric value on the wire for datatype to set.
        * @return This builder for chaining.
        */
       public Builder setDatatypeValue(int value) {
-        bitField0_ |= 0x00000001;
+        
         datatype_ = value;
         onChanged();
         return this;
@@ -4506,7 +5049,7 @@ public final class Columns {
        * Helpful in creating vector from column.
        * </pre>
        *
-       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+       * <code>.greptime.v1.ColumnDataType datatype = 5;</code>
        * @return The datatype.
        */
       @java.lang.Override
@@ -4520,7 +5063,7 @@ public final class Columns {
        * Helpful in creating vector from column.
        * </pre>
        *
-       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+       * <code>.greptime.v1.ColumnDataType datatype = 5;</code>
        * @param value The datatype to set.
        * @return This builder for chaining.
        */
@@ -4528,7 +5071,7 @@ public final class Columns {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000001;
+        
         datatype_ = value.getNumber();
         onChanged();
         return this;
@@ -4538,11 +5081,11 @@ public final class Columns {
        * Helpful in creating vector from column.
        * </pre>
        *
-       * <code>optional .greptime.v1.ColumnDataType datatype = 5;</code>
+       * <code>.greptime.v1.ColumnDataType datatype = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearDatatype() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        
         datatype_ = 0;
         onChanged();
         return this;
@@ -4600,6 +5143,861 @@ public final class Columns {
 
   }
 
+  public interface ColumnDefOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:greptime.v1.ColumnDef)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string name = 1;</code>
+     * @return The name.
+     */
+    java.lang.String getName();
+    /**
+     * <code>string name = 1;</code>
+     * @return The bytes for name.
+     */
+    com.google.protobuf.ByteString
+        getNameBytes();
+
+    /**
+     * <code>.greptime.v1.ColumnDataType datatype = 2;</code>
+     * @return The enum numeric value on the wire for datatype.
+     */
+    int getDatatypeValue();
+    /**
+     * <code>.greptime.v1.ColumnDataType datatype = 2;</code>
+     * @return The datatype.
+     */
+    io.greptime.v1.Columns.ColumnDataType getDatatype();
+
+    /**
+     * <code>bool is_nullable = 3;</code>
+     * @return The isNullable.
+     */
+    boolean getIsNullable();
+
+    /**
+     * <code>optional bytes default_constraint = 4;</code>
+     * @return Whether the defaultConstraint field is set.
+     */
+    boolean hasDefaultConstraint();
+    /**
+     * <code>optional bytes default_constraint = 4;</code>
+     * @return The defaultConstraint.
+     */
+    com.google.protobuf.ByteString getDefaultConstraint();
+  }
+  /**
+   * Protobuf type {@code greptime.v1.ColumnDef}
+   */
+  public static final class ColumnDef extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:greptime.v1.ColumnDef)
+      ColumnDefOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ColumnDef.newBuilder() to construct.
+    private ColumnDef(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ColumnDef() {
+      name_ = "";
+      datatype_ = 0;
+      defaultConstraint_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ColumnDef();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ColumnDef(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              name_ = s;
+              break;
+            }
+            case 16: {
+              int rawValue = input.readEnum();
+
+              datatype_ = rawValue;
+              break;
+            }
+            case 24: {
+
+              isNullable_ = input.readBool();
+              break;
+            }
+            case 34: {
+              bitField0_ |= 0x00000001;
+              defaultConstraint_ = input.readBytes();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return io.greptime.v1.Columns.internal_static_greptime_v1_ColumnDef_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return io.greptime.v1.Columns.internal_static_greptime_v1_ColumnDef_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              io.greptime.v1.Columns.ColumnDef.class, io.greptime.v1.Columns.ColumnDef.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int NAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object name_;
+    /**
+     * <code>string name = 1;</code>
+     * @return The name.
+     */
+    @java.lang.Override
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        name_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string name = 1;</code>
+     * @return The bytes for name.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DATATYPE_FIELD_NUMBER = 2;
+    private int datatype_;
+    /**
+     * <code>.greptime.v1.ColumnDataType datatype = 2;</code>
+     * @return The enum numeric value on the wire for datatype.
+     */
+    @java.lang.Override public int getDatatypeValue() {
+      return datatype_;
+    }
+    /**
+     * <code>.greptime.v1.ColumnDataType datatype = 2;</code>
+     * @return The datatype.
+     */
+    @java.lang.Override public io.greptime.v1.Columns.ColumnDataType getDatatype() {
+      @SuppressWarnings("deprecation")
+      io.greptime.v1.Columns.ColumnDataType result = io.greptime.v1.Columns.ColumnDataType.valueOf(datatype_);
+      return result == null ? io.greptime.v1.Columns.ColumnDataType.UNRECOGNIZED : result;
+    }
+
+    public static final int IS_NULLABLE_FIELD_NUMBER = 3;
+    private boolean isNullable_;
+    /**
+     * <code>bool is_nullable = 3;</code>
+     * @return The isNullable.
+     */
+    @java.lang.Override
+    public boolean getIsNullable() {
+      return isNullable_;
+    }
+
+    public static final int DEFAULT_CONSTRAINT_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString defaultConstraint_;
+    /**
+     * <code>optional bytes default_constraint = 4;</code>
+     * @return Whether the defaultConstraint field is set.
+     */
+    @java.lang.Override
+    public boolean hasDefaultConstraint() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <code>optional bytes default_constraint = 4;</code>
+     * @return The defaultConstraint.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getDefaultConstraint() {
+      return defaultConstraint_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
+      }
+      if (datatype_ != io.greptime.v1.Columns.ColumnDataType.BOOLEAN.getNumber()) {
+        output.writeEnum(2, datatype_);
+      }
+      if (isNullable_ != false) {
+        output.writeBool(3, isNullable_);
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        output.writeBytes(4, defaultConstraint_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
+      }
+      if (datatype_ != io.greptime.v1.Columns.ColumnDataType.BOOLEAN.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(2, datatype_);
+      }
+      if (isNullable_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(3, isNullable_);
+      }
+      if (((bitField0_ & 0x00000001) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, defaultConstraint_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof io.greptime.v1.Columns.ColumnDef)) {
+        return super.equals(obj);
+      }
+      io.greptime.v1.Columns.ColumnDef other = (io.greptime.v1.Columns.ColumnDef) obj;
+
+      if (!getName()
+          .equals(other.getName())) return false;
+      if (datatype_ != other.datatype_) return false;
+      if (getIsNullable()
+          != other.getIsNullable()) return false;
+      if (hasDefaultConstraint() != other.hasDefaultConstraint()) return false;
+      if (hasDefaultConstraint()) {
+        if (!getDefaultConstraint()
+            .equals(other.getDefaultConstraint())) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getName().hashCode();
+      hash = (37 * hash) + DATATYPE_FIELD_NUMBER;
+      hash = (53 * hash) + datatype_;
+      hash = (37 * hash) + IS_NULLABLE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getIsNullable());
+      if (hasDefaultConstraint()) {
+        hash = (37 * hash) + DEFAULT_CONSTRAINT_FIELD_NUMBER;
+        hash = (53 * hash) + getDefaultConstraint().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static io.greptime.v1.Columns.ColumnDef parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static io.greptime.v1.Columns.ColumnDef parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static io.greptime.v1.Columns.ColumnDef parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static io.greptime.v1.Columns.ColumnDef parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static io.greptime.v1.Columns.ColumnDef parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static io.greptime.v1.Columns.ColumnDef parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static io.greptime.v1.Columns.ColumnDef parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static io.greptime.v1.Columns.ColumnDef parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static io.greptime.v1.Columns.ColumnDef parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static io.greptime.v1.Columns.ColumnDef parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static io.greptime.v1.Columns.ColumnDef parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static io.greptime.v1.Columns.ColumnDef parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(io.greptime.v1.Columns.ColumnDef prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code greptime.v1.ColumnDef}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:greptime.v1.ColumnDef)
+        io.greptime.v1.Columns.ColumnDefOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return io.greptime.v1.Columns.internal_static_greptime_v1_ColumnDef_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return io.greptime.v1.Columns.internal_static_greptime_v1_ColumnDef_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                io.greptime.v1.Columns.ColumnDef.class, io.greptime.v1.Columns.ColumnDef.Builder.class);
+      }
+
+      // Construct using io.greptime.v1.Columns.ColumnDef.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        name_ = "";
+
+        datatype_ = 0;
+
+        isNullable_ = false;
+
+        defaultConstraint_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return io.greptime.v1.Columns.internal_static_greptime_v1_ColumnDef_descriptor;
+      }
+
+      @java.lang.Override
+      public io.greptime.v1.Columns.ColumnDef getDefaultInstanceForType() {
+        return io.greptime.v1.Columns.ColumnDef.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public io.greptime.v1.Columns.ColumnDef build() {
+        io.greptime.v1.Columns.ColumnDef result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public io.greptime.v1.Columns.ColumnDef buildPartial() {
+        io.greptime.v1.Columns.ColumnDef result = new io.greptime.v1.Columns.ColumnDef(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        result.name_ = name_;
+        result.datatype_ = datatype_;
+        result.isNullable_ = isNullable_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.defaultConstraint_ = defaultConstraint_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof io.greptime.v1.Columns.ColumnDef) {
+          return mergeFrom((io.greptime.v1.Columns.ColumnDef)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(io.greptime.v1.Columns.ColumnDef other) {
+        if (other == io.greptime.v1.Columns.ColumnDef.getDefaultInstance()) return this;
+        if (!other.getName().isEmpty()) {
+          name_ = other.name_;
+          onChanged();
+        }
+        if (other.datatype_ != 0) {
+          setDatatypeValue(other.getDatatypeValue());
+        }
+        if (other.getIsNullable() != false) {
+          setIsNullable(other.getIsNullable());
+        }
+        if (other.hasDefaultConstraint()) {
+          setDefaultConstraint(other.getDefaultConstraint());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        io.greptime.v1.Columns.ColumnDef parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (io.greptime.v1.Columns.ColumnDef) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object name_ = "";
+      /**
+       * <code>string name = 1;</code>
+       * @return The name.
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          name_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @return The bytes for name.
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @param value The name to set.
+       * @return This builder for chaining.
+       */
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearName() {
+        
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string name = 1;</code>
+       * @param value The bytes for name to set.
+       * @return This builder for chaining.
+       */
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        name_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int datatype_ = 0;
+      /**
+       * <code>.greptime.v1.ColumnDataType datatype = 2;</code>
+       * @return The enum numeric value on the wire for datatype.
+       */
+      @java.lang.Override public int getDatatypeValue() {
+        return datatype_;
+      }
+      /**
+       * <code>.greptime.v1.ColumnDataType datatype = 2;</code>
+       * @param value The enum numeric value on the wire for datatype to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatatypeValue(int value) {
+        
+        datatype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.greptime.v1.ColumnDataType datatype = 2;</code>
+       * @return The datatype.
+       */
+      @java.lang.Override
+      public io.greptime.v1.Columns.ColumnDataType getDatatype() {
+        @SuppressWarnings("deprecation")
+        io.greptime.v1.Columns.ColumnDataType result = io.greptime.v1.Columns.ColumnDataType.valueOf(datatype_);
+        return result == null ? io.greptime.v1.Columns.ColumnDataType.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.greptime.v1.ColumnDataType datatype = 2;</code>
+       * @param value The datatype to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatatype(io.greptime.v1.Columns.ColumnDataType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        datatype_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.greptime.v1.ColumnDataType datatype = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDatatype() {
+        
+        datatype_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private boolean isNullable_ ;
+      /**
+       * <code>bool is_nullable = 3;</code>
+       * @return The isNullable.
+       */
+      @java.lang.Override
+      public boolean getIsNullable() {
+        return isNullable_;
+      }
+      /**
+       * <code>bool is_nullable = 3;</code>
+       * @param value The isNullable to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIsNullable(boolean value) {
+        
+        isNullable_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool is_nullable = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIsNullable() {
+        
+        isNullable_ = false;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString defaultConstraint_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes default_constraint = 4;</code>
+       * @return Whether the defaultConstraint field is set.
+       */
+      @java.lang.Override
+      public boolean hasDefaultConstraint() {
+        return ((bitField0_ & 0x00000001) != 0);
+      }
+      /**
+       * <code>optional bytes default_constraint = 4;</code>
+       * @return The defaultConstraint.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString getDefaultConstraint() {
+        return defaultConstraint_;
+      }
+      /**
+       * <code>optional bytes default_constraint = 4;</code>
+       * @param value The defaultConstraint to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDefaultConstraint(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        defaultConstraint_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes default_constraint = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDefaultConstraint() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        defaultConstraint_ = getDefaultInstance().getDefaultConstraint();
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:greptime.v1.ColumnDef)
+    }
+
+    // @@protoc_insertion_point(class_scope:greptime.v1.ColumnDef)
+    private static final io.greptime.v1.Columns.ColumnDef DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new io.greptime.v1.Columns.ColumnDef();
+    }
+
+    public static io.greptime.v1.Columns.ColumnDef getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ColumnDef>
+        PARSER = new com.google.protobuf.AbstractParser<ColumnDef>() {
+      @java.lang.Override
+      public ColumnDef parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ColumnDef(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ColumnDef> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ColumnDef> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public io.greptime.v1.Columns.ColumnDef getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_greptime_v1_Column_descriptor;
   private static final 
@@ -4610,6 +6008,11 @@ public final class Columns {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_greptime_v1_Column_Values_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_greptime_v1_ColumnDef_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_greptime_v1_ColumnDef_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -4619,27 +6022,32 @@ public final class Columns {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014column.proto\022\013greptime.v1\"\235\004\n\006Column\022\023" +
+      "\n\014column.proto\022\013greptime.v1\"\323\004\n\006Column\022\023" +
       "\n\013column_name\030\001 \001(\t\0227\n\rsemantic_type\030\002 \001" +
       "(\0162 .greptime.v1.Column.SemanticType\022*\n\006" +
       "values\030\003 \001(\0132\032.greptime.v1.Column.Values" +
-      "\022\021\n\tnull_mask\030\004 \001(\014\0222\n\010datatype\030\005 \001(\0162\033." +
-      "greptime.v1.ColumnDataTypeH\000\210\001\001\032\221\002\n\006Valu" +
-      "es\022\021\n\ti8_values\030\001 \003(\005\022\022\n\ni16_values\030\002 \003(" +
-      "\005\022\022\n\ni32_values\030\003 \003(\005\022\022\n\ni64_values\030\004 \003(" +
-      "\003\022\021\n\tu8_values\030\005 \003(\r\022\022\n\nu16_values\030\006 \003(\r" +
-      "\022\022\n\nu32_values\030\007 \003(\r\022\022\n\nu64_values\030\010 \003(\004" +
-      "\022\022\n\nf32_values\030\t \003(\002\022\022\n\nf64_values\030\n \003(\001" +
-      "\022\023\n\013bool_values\030\013 \003(\010\022\025\n\rbinary_values\030\014" +
-      " \003(\014\022\025\n\rstring_values\030\r \003(\t\"1\n\014SemanticT" +
-      "ype\022\007\n\003TAG\020\000\022\t\n\005FIELD\020\001\022\r\n\tTIMESTAMP\020\002B\013" +
-      "\n\t_datatype*\301\001\n\016ColumnDataType\022\013\n\007BOOLEA" +
-      "N\020\000\022\010\n\004INT8\020\001\022\t\n\005INT16\020\002\022\t\n\005INT32\020\003\022\t\n\005I" +
-      "NT64\020\004\022\t\n\005UINT8\020\005\022\n\n\006UINT16\020\006\022\n\n\006UINT32\020" +
-      "\007\022\n\n\006UINT64\020\010\022\013\n\007FLOAT32\020\t\022\013\n\007FLOAT64\020\n\022" +
-      "\n\n\006BINARY\020\013\022\n\n\006STRING\020\014\022\010\n\004DATE\020\r\022\014\n\010DAT" +
-      "ETIME\020\016B\031\n\016io.greptime.v1B\007Columnsb\006prot" +
-      "o3"
+      "\022\021\n\tnull_mask\030\004 \001(\014\022-\n\010datatype\030\005 \001(\0162\033." +
+      "greptime.v1.ColumnDataType\032\331\002\n\006Values\022\021\n" +
+      "\ti8_values\030\001 \003(\005\022\022\n\ni16_values\030\002 \003(\005\022\022\n\n" +
+      "i32_values\030\003 \003(\005\022\022\n\ni64_values\030\004 \003(\003\022\021\n\t" +
+      "u8_values\030\005 \003(\r\022\022\n\nu16_values\030\006 \003(\r\022\022\n\nu" +
+      "32_values\030\007 \003(\r\022\022\n\nu64_values\030\010 \003(\004\022\022\n\nf" +
+      "32_values\030\t \003(\002\022\022\n\nf64_values\030\n \003(\001\022\023\n\013b" +
+      "ool_values\030\013 \003(\010\022\025\n\rbinary_values\030\014 \003(\014\022" +
+      "\025\n\rstring_values\030\r \003(\t\022\023\n\013date_values\030\016 " +
+      "\003(\005\022\027\n\017datetime_values\030\017 \003(\003\022\030\n\020ts_milli" +
+      "s_values\030\020 \003(\003\"1\n\014SemanticType\022\007\n\003TAG\020\000\022" +
+      "\t\n\005FIELD\020\001\022\r\n\tTIMESTAMP\020\002\"\225\001\n\tColumnDef\022" +
+      "\014\n\004name\030\001 \001(\t\022-\n\010datatype\030\002 \001(\0162\033.grepti" +
+      "me.v1.ColumnDataType\022\023\n\013is_nullable\030\003 \001(" +
+      "\010\022\037\n\022default_constraint\030\004 \001(\014H\000\210\001\001B\025\n\023_d" +
+      "efault_constraint*\320\001\n\016ColumnDataType\022\013\n\007" +
+      "BOOLEAN\020\000\022\010\n\004INT8\020\001\022\t\n\005INT16\020\002\022\t\n\005INT32\020" +
+      "\003\022\t\n\005INT64\020\004\022\t\n\005UINT8\020\005\022\n\n\006UINT16\020\006\022\n\n\006U" +
+      "INT32\020\007\022\n\n\006UINT64\020\010\022\013\n\007FLOAT32\020\t\022\013\n\007FLOA" +
+      "T64\020\n\022\n\n\006BINARY\020\013\022\n\n\006STRING\020\014\022\010\n\004DATE\020\r\022" +
+      "\014\n\010DATETIME\020\016\022\r\n\tTIMESTAMP\020\017B\031\n\016io.grept" +
+      "ime.v1B\007Columnsb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -4650,13 +6058,19 @@ public final class Columns {
     internal_static_greptime_v1_Column_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_Column_descriptor,
-        new java.lang.String[] { "ColumnName", "SemanticType", "Values", "NullMask", "Datatype", "Datatype", });
+        new java.lang.String[] { "ColumnName", "SemanticType", "Values", "NullMask", "Datatype", });
     internal_static_greptime_v1_Column_Values_descriptor =
       internal_static_greptime_v1_Column_descriptor.getNestedTypes().get(0);
     internal_static_greptime_v1_Column_Values_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_Column_Values_descriptor,
-        new java.lang.String[] { "I8Values", "I16Values", "I32Values", "I64Values", "U8Values", "U16Values", "U32Values", "U64Values", "F32Values", "F64Values", "BoolValues", "BinaryValues", "StringValues", });
+        new java.lang.String[] { "I8Values", "I16Values", "I32Values", "I64Values", "U8Values", "U16Values", "U32Values", "U64Values", "F32Values", "F64Values", "BoolValues", "BinaryValues", "StringValues", "DateValues", "DatetimeValues", "TsMillisValues", });
+    internal_static_greptime_v1_ColumnDef_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_greptime_v1_ColumnDef_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_greptime_v1_ColumnDef_descriptor,
+        new java.lang.String[] { "Name", "Datatype", "IsNullable", "DefaultConstraint", "DefaultConstraint", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
