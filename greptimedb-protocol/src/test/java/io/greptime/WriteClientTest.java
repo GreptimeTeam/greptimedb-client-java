@@ -21,6 +21,7 @@ import io.greptime.models.ColumnDataType;
 import io.greptime.models.Err;
 import io.greptime.models.Result;
 import io.greptime.models.SemanticType;
+import io.greptime.models.TableName;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
 import io.greptime.options.WriteOptions;
@@ -66,7 +67,7 @@ public class WriteClientTest {
 
     @Test
     public void testWriteSuccess() throws ExecutionException, InterruptedException {
-        WriteRows rows = WriteRows.newBuilder("test_table") //
+        WriteRows rows = WriteRows.newBuilder(TableName.with("", "test_table")) //
             .columnNames("test_tag", "test_ts", "test_field") //
             .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field) //
             .dataTypes(ColumnDataType.String, ColumnDataType.Int64, ColumnDataType.Float64) //

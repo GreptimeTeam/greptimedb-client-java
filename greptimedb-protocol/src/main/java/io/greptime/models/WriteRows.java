@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * @author jiachun.fjc
  */
 public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
-    String tableName();
+    TableName tableName();
 
     List<Columns.Column> columns();
 
@@ -48,17 +48,17 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
 
     void finish();
 
-    static WriteRows.Builder newBuilder(String tableName) {
+    static WriteRows.Builder newBuilder(TableName tableName) {
         return new Builder(tableName);
     }
 
     class Builder {
-        private final String                      tableName;
+        private final TableName                   tableName;
         private List<String>                      columnNames;
         private List<Columns.Column.SemanticType> semanticTypes;
         private List<Columns.ColumnDataType>      dataTypes;
 
-        public Builder(String tableName) {
+        public Builder(TableName tableName) {
             this.tableName = tableName;
         }
 
@@ -82,7 +82,7 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
         }
 
         public WriteRows build() {
-            Ensures.ensure(Strings.isNotBlank(this.tableName), "Blank table name");
+            Ensures.ensureNonNull(this.tableName, "Null table name");
 
             int columnCount = this.columnNames.size();
 
@@ -107,14 +107,14 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
     }
 
     class DefaultWriteRows implements WriteRows {
-        private String                       tableName;
+        private TableName                    tableName;
         private int                          columnCount;
         private List<Columns.Column.Builder> builders;
         private BitSet[]                     nullMasks;
         private List<Columns.Column>         columns;
         private int                          rowCount;
 
-        public String tableName() {
+        public TableName tableName() {
             return tableName;
         }
 
@@ -180,13 +180,17 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
                 .setRowCount(rowCount()) //
                 .build();
 
-            Common.ExprHeader header = Common.ExprHeader.newBuilder() //
-                .setVersion(0) // TODO version
+            Database.InsertExpr.Values values = Database.InsertExpr.Values.newBuilder() //
+                .addValues(batch.toByteString()) //
                 .build();
 
             Database.InsertExpr insert = Database.InsertExpr.newBuilder() //
-                .setTableName(tableName()) //
-                .addValues(batch.toByteString()) //
+                .setTableName(tableName().getTableName()) //
+                .setValues(values) //
+                .build();
+
+            Common.ExprHeader header = Common.ExprHeader.newBuilder() //
+                .setVersion(0) // TODO version
                 .build();
 
             Database.ObjectExpr obj = Database.ObjectExpr.newBuilder() //
@@ -195,8 +199,7 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
                 .build();
 
             Database.DatabaseRequest databaseReq = Database.DatabaseRequest.newBuilder() //
-                .setName("") // TODO db name
-                .addExprs(obj) //
+                .setName(tableName().getDatabaseName()).addExprs(obj) //
                 .build();
 
             return GreptimeDB.BatchRequest.newBuilder() //

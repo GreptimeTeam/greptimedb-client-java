@@ -16,51 +16,46 @@
  */
 package io.greptime.models;
 
+import io.greptime.common.util.Ensures;
+import io.greptime.common.util.Strings;
+
 /**
- * Contains the success value of write.
  *
  * @author jiachun.fjc
  */
-public class WriteOk {
+public class TableName {
+    private String databaseName;
+    private String tableName;
 
-    private int       success;
-    private int       failure;
-    private TableName tableName;
-
-    public int getSuccess() {
-        return success;
+    public static TableName with(String databaseName, String tableName) {
+        Ensures.ensure(Strings.isNotBlank(tableName), "Blank table name");
+        TableName tn = new TableName();
+        tn.setDatabaseName(databaseName);
+        tn.setTableName(tableName);
+        return tn;
     }
 
-    public int getFailure() {
-        return failure;
+    public String getDatabaseName() {
+        return databaseName;
     }
 
-    public TableName getTableName() {
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
+
+    public String getTableName() {
         return tableName;
     }
 
-    public Result<WriteOk, Err> mapToResult() {
-        return Result.ok(this);
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     @Override
     public String toString() {
-        return "WriteOk{" + //
-               "success=" + success + //
-               ", failure=" + failure + //
-               ", tableName=" + tableName + //
+        return "TableName{" + //
+               "databaseName='" + databaseName + '\'' + //
+               ", tableName='" + tableName + '\'' + //
                '}';
-    }
-
-    public static WriteOk emptyOk() {
-        return ok(0, 0, null);
-    }
-
-    public static WriteOk ok(int success, int failure, TableName tableName) {
-        WriteOk ok = new WriteOk();
-        ok.success = success;
-        ok.failure = failure;
-        ok.tableName = tableName;
-        return ok;
     }
 }

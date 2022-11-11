@@ -27,7 +27,7 @@ public class WriteOkTest {
 
     @Test
     public void testMapToResult() {
-        WriteOk writeOk = WriteOk.ok(200, 2, "test_table");
+        WriteOk writeOk = WriteOk.ok(200, 2, TableName.with("", "test_table"));
         Result<WriteOk, Err> res = writeOk.mapToResult();
 
         Assert.assertTrue(res.isOk());
@@ -40,6 +40,6 @@ public class WriteOkTest {
         Assert.assertEquals(0, empty.getSuccess());
         Assert.assertEquals(0, empty.getFailure());
         Assert.assertTrue(empty.mapToResult().isOk());
-        Assert.assertTrue(Strings.isNullOrEmpty(empty.getTableName()));
+        Assert.assertNull(empty.getTableName());
     }
 }
