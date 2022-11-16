@@ -1799,6 +1799,21 @@ public final class Admin {
      */
     io.greptime.v1.Admin.AlterExprOrBuilder getAlterOrBuilder();
 
+    /**
+     * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+     * @return Whether the createDatabase field is set.
+     */
+    boolean hasCreateDatabase();
+    /**
+     * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+     * @return The createDatabase.
+     */
+    io.greptime.v1.Admin.CreateDatabaseExpr getCreateDatabase();
+    /**
+     * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+     */
+    io.greptime.v1.Admin.CreateDatabaseExprOrBuilder getCreateDatabaseOrBuilder();
+
     public io.greptime.v1.Admin.AdminExpr.ExprCase getExprCase();
   }
   /**
@@ -1887,6 +1902,20 @@ public final class Admin {
               exprCase_ = 3;
               break;
             }
+            case 34: {
+              io.greptime.v1.Admin.CreateDatabaseExpr.Builder subBuilder = null;
+              if (exprCase_ == 4) {
+                subBuilder = ((io.greptime.v1.Admin.CreateDatabaseExpr) expr_).toBuilder();
+              }
+              expr_ =
+                  input.readMessage(io.greptime.v1.Admin.CreateDatabaseExpr.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((io.greptime.v1.Admin.CreateDatabaseExpr) expr_);
+                expr_ = subBuilder.buildPartial();
+              }
+              exprCase_ = 4;
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -1926,6 +1955,7 @@ public final class Admin {
             com.google.protobuf.AbstractMessage.InternalOneOfEnum {
       CREATE(2),
       ALTER(3),
+      CREATE_DATABASE(4),
       EXPR_NOT_SET(0);
       private final int value;
       private ExprCase(int value) {
@@ -1945,6 +1975,7 @@ public final class Admin {
         switch (value) {
           case 2: return CREATE;
           case 3: return ALTER;
+          case 4: return CREATE_DATABASE;
           case 0: return EXPR_NOT_SET;
           default: return null;
         }
@@ -2048,6 +2079,37 @@ public final class Admin {
       return io.greptime.v1.Admin.AlterExpr.getDefaultInstance();
     }
 
+    public static final int CREATE_DATABASE_FIELD_NUMBER = 4;
+    /**
+     * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+     * @return Whether the createDatabase field is set.
+     */
+    @java.lang.Override
+    public boolean hasCreateDatabase() {
+      return exprCase_ == 4;
+    }
+    /**
+     * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+     * @return The createDatabase.
+     */
+    @java.lang.Override
+    public io.greptime.v1.Admin.CreateDatabaseExpr getCreateDatabase() {
+      if (exprCase_ == 4) {
+         return (io.greptime.v1.Admin.CreateDatabaseExpr) expr_;
+      }
+      return io.greptime.v1.Admin.CreateDatabaseExpr.getDefaultInstance();
+    }
+    /**
+     * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+     */
+    @java.lang.Override
+    public io.greptime.v1.Admin.CreateDatabaseExprOrBuilder getCreateDatabaseOrBuilder() {
+      if (exprCase_ == 4) {
+         return (io.greptime.v1.Admin.CreateDatabaseExpr) expr_;
+      }
+      return io.greptime.v1.Admin.CreateDatabaseExpr.getDefaultInstance();
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -2071,6 +2133,9 @@ public final class Admin {
       if (exprCase_ == 3) {
         output.writeMessage(3, (io.greptime.v1.Admin.AlterExpr) expr_);
       }
+      if (exprCase_ == 4) {
+        output.writeMessage(4, (io.greptime.v1.Admin.CreateDatabaseExpr) expr_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -2091,6 +2156,10 @@ public final class Admin {
       if (exprCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, (io.greptime.v1.Admin.AlterExpr) expr_);
+      }
+      if (exprCase_ == 4) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, (io.greptime.v1.Admin.CreateDatabaseExpr) expr_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2122,6 +2191,10 @@ public final class Admin {
           if (!getAlter()
               .equals(other.getAlter())) return false;
           break;
+        case 4:
+          if (!getCreateDatabase()
+              .equals(other.getCreateDatabase())) return false;
+          break;
         case 0:
         default:
       }
@@ -2148,6 +2221,10 @@ public final class Admin {
         case 3:
           hash = (37 * hash) + ALTER_FIELD_NUMBER;
           hash = (53 * hash) + getAlter().hashCode();
+          break;
+        case 4:
+          hash = (37 * hash) + CREATE_DATABASE_FIELD_NUMBER;
+          hash = (53 * hash) + getCreateDatabase().hashCode();
           break;
         case 0:
         default:
@@ -2338,6 +2415,13 @@ public final class Admin {
             result.expr_ = alterBuilder_.build();
           }
         }
+        if (exprCase_ == 4) {
+          if (createDatabaseBuilder_ == null) {
+            result.expr_ = expr_;
+          } else {
+            result.expr_ = createDatabaseBuilder_.build();
+          }
+        }
         result.exprCase_ = exprCase_;
         onBuilt();
         return result;
@@ -2397,6 +2481,10 @@ public final class Admin {
           }
           case ALTER: {
             mergeAlter(other.getAlter());
+            break;
+          }
+          case CREATE_DATABASE: {
+            mergeCreateDatabase(other.getCreateDatabase());
             break;
           }
           case EXPR_NOT_SET: {
@@ -2846,6 +2934,147 @@ public final class Admin {
         exprCase_ = 3;
         onChanged();;
         return alterBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          io.greptime.v1.Admin.CreateDatabaseExpr, io.greptime.v1.Admin.CreateDatabaseExpr.Builder, io.greptime.v1.Admin.CreateDatabaseExprOrBuilder> createDatabaseBuilder_;
+      /**
+       * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+       * @return Whether the createDatabase field is set.
+       */
+      @java.lang.Override
+      public boolean hasCreateDatabase() {
+        return exprCase_ == 4;
+      }
+      /**
+       * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+       * @return The createDatabase.
+       */
+      @java.lang.Override
+      public io.greptime.v1.Admin.CreateDatabaseExpr getCreateDatabase() {
+        if (createDatabaseBuilder_ == null) {
+          if (exprCase_ == 4) {
+            return (io.greptime.v1.Admin.CreateDatabaseExpr) expr_;
+          }
+          return io.greptime.v1.Admin.CreateDatabaseExpr.getDefaultInstance();
+        } else {
+          if (exprCase_ == 4) {
+            return createDatabaseBuilder_.getMessage();
+          }
+          return io.greptime.v1.Admin.CreateDatabaseExpr.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+       */
+      public Builder setCreateDatabase(io.greptime.v1.Admin.CreateDatabaseExpr value) {
+        if (createDatabaseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          expr_ = value;
+          onChanged();
+        } else {
+          createDatabaseBuilder_.setMessage(value);
+        }
+        exprCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+       */
+      public Builder setCreateDatabase(
+          io.greptime.v1.Admin.CreateDatabaseExpr.Builder builderForValue) {
+        if (createDatabaseBuilder_ == null) {
+          expr_ = builderForValue.build();
+          onChanged();
+        } else {
+          createDatabaseBuilder_.setMessage(builderForValue.build());
+        }
+        exprCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+       */
+      public Builder mergeCreateDatabase(io.greptime.v1.Admin.CreateDatabaseExpr value) {
+        if (createDatabaseBuilder_ == null) {
+          if (exprCase_ == 4 &&
+              expr_ != io.greptime.v1.Admin.CreateDatabaseExpr.getDefaultInstance()) {
+            expr_ = io.greptime.v1.Admin.CreateDatabaseExpr.newBuilder((io.greptime.v1.Admin.CreateDatabaseExpr) expr_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            expr_ = value;
+          }
+          onChanged();
+        } else {
+          if (exprCase_ == 4) {
+            createDatabaseBuilder_.mergeFrom(value);
+          }
+          createDatabaseBuilder_.setMessage(value);
+        }
+        exprCase_ = 4;
+        return this;
+      }
+      /**
+       * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+       */
+      public Builder clearCreateDatabase() {
+        if (createDatabaseBuilder_ == null) {
+          if (exprCase_ == 4) {
+            exprCase_ = 0;
+            expr_ = null;
+            onChanged();
+          }
+        } else {
+          if (exprCase_ == 4) {
+            exprCase_ = 0;
+            expr_ = null;
+          }
+          createDatabaseBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+       */
+      public io.greptime.v1.Admin.CreateDatabaseExpr.Builder getCreateDatabaseBuilder() {
+        return getCreateDatabaseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+       */
+      @java.lang.Override
+      public io.greptime.v1.Admin.CreateDatabaseExprOrBuilder getCreateDatabaseOrBuilder() {
+        if ((exprCase_ == 4) && (createDatabaseBuilder_ != null)) {
+          return createDatabaseBuilder_.getMessageOrBuilder();
+        } else {
+          if (exprCase_ == 4) {
+            return (io.greptime.v1.Admin.CreateDatabaseExpr) expr_;
+          }
+          return io.greptime.v1.Admin.CreateDatabaseExpr.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.greptime.v1.CreateDatabaseExpr create_database = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          io.greptime.v1.Admin.CreateDatabaseExpr, io.greptime.v1.Admin.CreateDatabaseExpr.Builder, io.greptime.v1.Admin.CreateDatabaseExprOrBuilder> 
+          getCreateDatabaseFieldBuilder() {
+        if (createDatabaseBuilder_ == null) {
+          if (!(exprCase_ == 4)) {
+            expr_ = io.greptime.v1.Admin.CreateDatabaseExpr.getDefaultInstance();
+          }
+          createDatabaseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              io.greptime.v1.Admin.CreateDatabaseExpr, io.greptime.v1.Admin.CreateDatabaseExpr.Builder, io.greptime.v1.Admin.CreateDatabaseExprOrBuilder>(
+                  (io.greptime.v1.Admin.CreateDatabaseExpr) expr_,
+                  getParentForChildren(),
+                  isClean());
+          expr_ = null;
+        }
+        exprCase_ = 4;
+        onChanged();;
+        return createDatabaseBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -3988,8 +4217,40 @@ public final class Admin {
 
     java.lang.String getTableOptionsOrThrow(
         java.lang.String key);
+
+    /**
+     * <code>optional uint32 table_id = 10;</code>
+     * @return Whether the tableId field is set.
+     */
+    boolean hasTableId();
+    /**
+     * <code>optional uint32 table_id = 10;</code>
+     * @return The tableId.
+     */
+    int getTableId();
+
+    /**
+     * <code>repeated uint32 region_ids = 11;</code>
+     * @return A list containing the regionIds.
+     */
+    java.util.List<java.lang.Integer> getRegionIdsList();
+    /**
+     * <code>repeated uint32 region_ids = 11;</code>
+     * @return The count of regionIds.
+     */
+    int getRegionIdsCount();
+    /**
+     * <code>repeated uint32 region_ids = 11;</code>
+     * @param index The index of the element to return.
+     * @return The regionIds at the given index.
+     */
+    int getRegionIds(int index);
   }
   /**
+   * <pre>
+   * TODO(hl): rename to CreateTableExpr
+   * </pre>
+   *
    * Protobuf type {@code greptime.v1.CreateExpr}
    */
   public static final class CreateExpr extends
@@ -4009,6 +4270,7 @@ public final class Admin {
       columnDefs_ = java.util.Collections.emptyList();
       timeIndex_ = "";
       primaryKeys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      regionIds_ = emptyIntList();
     }
 
     @java.lang.Override
@@ -4108,6 +4370,32 @@ public final class Admin {
                   tableOptions__.getKey(), tableOptions__.getValue());
               break;
             }
+            case 80: {
+              bitField0_ |= 0x00000008;
+              tableId_ = input.readUInt32();
+              break;
+            }
+            case 88: {
+              if (!((mutable_bitField0_ & 0x00000080) != 0)) {
+                regionIds_ = newIntList();
+                mutable_bitField0_ |= 0x00000080;
+              }
+              regionIds_.addInt(input.readUInt32());
+              break;
+            }
+            case 90: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000080) != 0) && input.getBytesUntilLimit() > 0) {
+                regionIds_ = newIntList();
+                mutable_bitField0_ |= 0x00000080;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                regionIds_.addInt(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -4128,6 +4416,9 @@ public final class Admin {
         }
         if (((mutable_bitField0_ & 0x00000010) != 0)) {
           primaryKeys_ = primaryKeys_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000080) != 0)) {
+          regionIds_.makeImmutable(); // C
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -4540,6 +4831,53 @@ public final class Admin {
       return map.get(key);
     }
 
+    public static final int TABLE_ID_FIELD_NUMBER = 10;
+    private int tableId_;
+    /**
+     * <code>optional uint32 table_id = 10;</code>
+     * @return Whether the tableId field is set.
+     */
+    @java.lang.Override
+    public boolean hasTableId() {
+      return ((bitField0_ & 0x00000008) != 0);
+    }
+    /**
+     * <code>optional uint32 table_id = 10;</code>
+     * @return The tableId.
+     */
+    @java.lang.Override
+    public int getTableId() {
+      return tableId_;
+    }
+
+    public static final int REGION_IDS_FIELD_NUMBER = 11;
+    private com.google.protobuf.Internal.IntList regionIds_;
+    /**
+     * <code>repeated uint32 region_ids = 11;</code>
+     * @return A list containing the regionIds.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Integer>
+        getRegionIdsList() {
+      return regionIds_;
+    }
+    /**
+     * <code>repeated uint32 region_ids = 11;</code>
+     * @return The count of regionIds.
+     */
+    public int getRegionIdsCount() {
+      return regionIds_.size();
+    }
+    /**
+     * <code>repeated uint32 region_ids = 11;</code>
+     * @param index The index of the element to return.
+     * @return The regionIds at the given index.
+     */
+    public int getRegionIds(int index) {
+      return regionIds_.getInt(index);
+    }
+    private int regionIdsMemoizedSerializedSize = -1;
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -4554,6 +4892,7 @@ public final class Admin {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (((bitField0_ & 0x00000001) != 0)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, catalogName_);
       }
@@ -4584,6 +4923,16 @@ public final class Admin {
           internalGetTableOptions(),
           TableOptionsDefaultEntryHolder.defaultEntry,
           9);
+      if (((bitField0_ & 0x00000008) != 0)) {
+        output.writeUInt32(10, tableId_);
+      }
+      if (getRegionIdsList().size() > 0) {
+        output.writeUInt32NoTag(90);
+        output.writeUInt32NoTag(regionIdsMemoizedSerializedSize);
+      }
+      for (int i = 0; i < regionIds_.size(); i++) {
+        output.writeUInt32NoTag(regionIds_.getInt(i));
+      }
       unknownFields.writeTo(output);
     }
 
@@ -4634,6 +4983,24 @@ public final class Admin {
         size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(9, tableOptions__);
       }
+      if (((bitField0_ & 0x00000008) != 0)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(10, tableId_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < regionIds_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeUInt32SizeNoTag(regionIds_.getInt(i));
+        }
+        size += dataSize;
+        if (!getRegionIdsList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        regionIdsMemoizedSerializedSize = dataSize;
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -4676,6 +5043,13 @@ public final class Admin {
           != other.getCreateIfNotExists()) return false;
       if (!internalGetTableOptions().equals(
           other.internalGetTableOptions())) return false;
+      if (hasTableId() != other.hasTableId()) return false;
+      if (hasTableId()) {
+        if (getTableId()
+            != other.getTableId()) return false;
+      }
+      if (!getRegionIdsList()
+          .equals(other.getRegionIdsList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -4717,6 +5091,14 @@ public final class Admin {
       if (!internalGetTableOptions().getMap().isEmpty()) {
         hash = (37 * hash) + TABLE_OPTIONS_FIELD_NUMBER;
         hash = (53 * hash) + internalGetTableOptions().hashCode();
+      }
+      if (hasTableId()) {
+        hash = (37 * hash) + TABLE_ID_FIELD_NUMBER;
+        hash = (53 * hash) + getTableId();
+      }
+      if (getRegionIdsCount() > 0) {
+        hash = (37 * hash) + REGION_IDS_FIELD_NUMBER;
+        hash = (53 * hash) + getRegionIdsList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -4814,6 +5196,10 @@ public final class Admin {
       return builder;
     }
     /**
+     * <pre>
+     * TODO(hl): rename to CreateTableExpr
+     * </pre>
+     *
      * Protobuf type {@code greptime.v1.CreateExpr}
      */
     public static final class Builder extends
@@ -4895,6 +5281,10 @@ public final class Admin {
         createIfNotExists_ = false;
 
         internalGetMutableTableOptions().clear();
+        tableId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000040);
+        regionIds_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
 
@@ -4954,6 +5344,15 @@ public final class Admin {
         result.createIfNotExists_ = createIfNotExists_;
         result.tableOptions_ = internalGetTableOptions();
         result.tableOptions_.makeImmutable();
+        if (((from_bitField0_ & 0x00000040) != 0)) {
+          result.tableId_ = tableId_;
+          to_bitField0_ |= 0x00000008;
+        }
+        if (((bitField0_ & 0x00000080) != 0)) {
+          regionIds_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000080);
+        }
+        result.regionIds_ = regionIds_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -5067,6 +5466,19 @@ public final class Admin {
         }
         internalGetMutableTableOptions().mergeFrom(
             other.internalGetTableOptions());
+        if (other.hasTableId()) {
+          setTableId(other.getTableId());
+        }
+        if (!other.regionIds_.isEmpty()) {
+          if (regionIds_.isEmpty()) {
+            regionIds_ = other.regionIds_;
+            bitField0_ = (bitField0_ & ~0x00000080);
+          } else {
+            ensureRegionIdsIsMutable();
+            regionIds_.addAll(other.regionIds_);
+          }
+          onChanged();
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -6009,6 +6421,124 @@ public final class Admin {
             .putAll(values);
         return this;
       }
+
+      private int tableId_ ;
+      /**
+       * <code>optional uint32 table_id = 10;</code>
+       * @return Whether the tableId field is set.
+       */
+      @java.lang.Override
+      public boolean hasTableId() {
+        return ((bitField0_ & 0x00000040) != 0);
+      }
+      /**
+       * <code>optional uint32 table_id = 10;</code>
+       * @return The tableId.
+       */
+      @java.lang.Override
+      public int getTableId() {
+        return tableId_;
+      }
+      /**
+       * <code>optional uint32 table_id = 10;</code>
+       * @param value The tableId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTableId(int value) {
+        bitField0_ |= 0x00000040;
+        tableId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 table_id = 10;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTableId() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        tableId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.Internal.IntList regionIds_ = emptyIntList();
+      private void ensureRegionIdsIsMutable() {
+        if (!((bitField0_ & 0x00000080) != 0)) {
+          regionIds_ = mutableCopy(regionIds_);
+          bitField0_ |= 0x00000080;
+         }
+      }
+      /**
+       * <code>repeated uint32 region_ids = 11;</code>
+       * @return A list containing the regionIds.
+       */
+      public java.util.List<java.lang.Integer>
+          getRegionIdsList() {
+        return ((bitField0_ & 0x00000080) != 0) ?
+                 java.util.Collections.unmodifiableList(regionIds_) : regionIds_;
+      }
+      /**
+       * <code>repeated uint32 region_ids = 11;</code>
+       * @return The count of regionIds.
+       */
+      public int getRegionIdsCount() {
+        return regionIds_.size();
+      }
+      /**
+       * <code>repeated uint32 region_ids = 11;</code>
+       * @param index The index of the element to return.
+       * @return The regionIds at the given index.
+       */
+      public int getRegionIds(int index) {
+        return regionIds_.getInt(index);
+      }
+      /**
+       * <code>repeated uint32 region_ids = 11;</code>
+       * @param index The index to set the value at.
+       * @param value The regionIds to set.
+       * @return This builder for chaining.
+       */
+      public Builder setRegionIds(
+          int index, int value) {
+        ensureRegionIdsIsMutable();
+        regionIds_.setInt(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated uint32 region_ids = 11;</code>
+       * @param value The regionIds to add.
+       * @return This builder for chaining.
+       */
+      public Builder addRegionIds(int value) {
+        ensureRegionIdsIsMutable();
+        regionIds_.addInt(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated uint32 region_ids = 11;</code>
+       * @param values The regionIds to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllRegionIds(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureRegionIdsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, regionIds_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated uint32 region_ids = 11;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearRegionIds() {
+        regionIds_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000080);
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -6113,19 +6643,19 @@ public final class Admin {
         getTableNameBytes();
 
     /**
-     * <code>.greptime.v1.AddColumn add_column = 4;</code>
-     * @return Whether the addColumn field is set.
+     * <code>.greptime.v1.AddColumns add_columns = 4;</code>
+     * @return Whether the addColumns field is set.
      */
-    boolean hasAddColumn();
+    boolean hasAddColumns();
     /**
-     * <code>.greptime.v1.AddColumn add_column = 4;</code>
-     * @return The addColumn.
+     * <code>.greptime.v1.AddColumns add_columns = 4;</code>
+     * @return The addColumns.
      */
-    io.greptime.v1.Admin.AddColumn getAddColumn();
+    io.greptime.v1.Admin.AddColumns getAddColumns();
     /**
-     * <code>.greptime.v1.AddColumn add_column = 4;</code>
+     * <code>.greptime.v1.AddColumns add_columns = 4;</code>
      */
-    io.greptime.v1.Admin.AddColumnOrBuilder getAddColumnOrBuilder();
+    io.greptime.v1.Admin.AddColumnsOrBuilder getAddColumnsOrBuilder();
 
     public io.greptime.v1.Admin.AlterExpr.KindCase getKindCase();
   }
@@ -6197,14 +6727,14 @@ public final class Admin {
               break;
             }
             case 34: {
-              io.greptime.v1.Admin.AddColumn.Builder subBuilder = null;
+              io.greptime.v1.Admin.AddColumns.Builder subBuilder = null;
               if (kindCase_ == 4) {
-                subBuilder = ((io.greptime.v1.Admin.AddColumn) kind_).toBuilder();
+                subBuilder = ((io.greptime.v1.Admin.AddColumns) kind_).toBuilder();
               }
               kind_ =
-                  input.readMessage(io.greptime.v1.Admin.AddColumn.parser(), extensionRegistry);
+                  input.readMessage(io.greptime.v1.Admin.AddColumns.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((io.greptime.v1.Admin.AddColumn) kind_);
+                subBuilder.mergeFrom((io.greptime.v1.Admin.AddColumns) kind_);
                 kind_ = subBuilder.buildPartial();
               }
               kindCase_ = 4;
@@ -6248,7 +6778,7 @@ public final class Admin {
     public enum KindCase
         implements com.google.protobuf.Internal.EnumLite,
             com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-      ADD_COLUMN(4),
+      ADD_COLUMNS(4),
       KIND_NOT_SET(0);
       private final int value;
       private KindCase(int value) {
@@ -6266,7 +6796,7 @@ public final class Admin {
 
       public static KindCase forNumber(int value) {
         switch (value) {
-          case 4: return ADD_COLUMN;
+          case 4: return ADD_COLUMNS;
           case 0: return KIND_NOT_SET;
           default: return null;
         }
@@ -6412,35 +6942,35 @@ public final class Admin {
       }
     }
 
-    public static final int ADD_COLUMN_FIELD_NUMBER = 4;
+    public static final int ADD_COLUMNS_FIELD_NUMBER = 4;
     /**
-     * <code>.greptime.v1.AddColumn add_column = 4;</code>
-     * @return Whether the addColumn field is set.
+     * <code>.greptime.v1.AddColumns add_columns = 4;</code>
+     * @return Whether the addColumns field is set.
      */
     @java.lang.Override
-    public boolean hasAddColumn() {
+    public boolean hasAddColumns() {
       return kindCase_ == 4;
     }
     /**
-     * <code>.greptime.v1.AddColumn add_column = 4;</code>
-     * @return The addColumn.
+     * <code>.greptime.v1.AddColumns add_columns = 4;</code>
+     * @return The addColumns.
      */
     @java.lang.Override
-    public io.greptime.v1.Admin.AddColumn getAddColumn() {
+    public io.greptime.v1.Admin.AddColumns getAddColumns() {
       if (kindCase_ == 4) {
-         return (io.greptime.v1.Admin.AddColumn) kind_;
+         return (io.greptime.v1.Admin.AddColumns) kind_;
       }
-      return io.greptime.v1.Admin.AddColumn.getDefaultInstance();
+      return io.greptime.v1.Admin.AddColumns.getDefaultInstance();
     }
     /**
-     * <code>.greptime.v1.AddColumn add_column = 4;</code>
+     * <code>.greptime.v1.AddColumns add_columns = 4;</code>
      */
     @java.lang.Override
-    public io.greptime.v1.Admin.AddColumnOrBuilder getAddColumnOrBuilder() {
+    public io.greptime.v1.Admin.AddColumnsOrBuilder getAddColumnsOrBuilder() {
       if (kindCase_ == 4) {
-         return (io.greptime.v1.Admin.AddColumn) kind_;
+         return (io.greptime.v1.Admin.AddColumns) kind_;
       }
-      return io.greptime.v1.Admin.AddColumn.getDefaultInstance();
+      return io.greptime.v1.Admin.AddColumns.getDefaultInstance();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -6467,7 +6997,7 @@ public final class Admin {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, tableName_);
       }
       if (kindCase_ == 4) {
-        output.writeMessage(4, (io.greptime.v1.Admin.AddColumn) kind_);
+        output.writeMessage(4, (io.greptime.v1.Admin.AddColumns) kind_);
       }
       unknownFields.writeTo(output);
     }
@@ -6489,7 +7019,7 @@ public final class Admin {
       }
       if (kindCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, (io.greptime.v1.Admin.AddColumn) kind_);
+          .computeMessageSize(4, (io.greptime.v1.Admin.AddColumns) kind_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -6521,8 +7051,8 @@ public final class Admin {
       if (!getKindCase().equals(other.getKindCase())) return false;
       switch (kindCase_) {
         case 4:
-          if (!getAddColumn()
-              .equals(other.getAddColumn())) return false;
+          if (!getAddColumns()
+              .equals(other.getAddColumns())) return false;
           break;
         case 0:
         default:
@@ -6550,8 +7080,8 @@ public final class Admin {
       hash = (53 * hash) + getTableName().hashCode();
       switch (kindCase_) {
         case 4:
-          hash = (37 * hash) + ADD_COLUMN_FIELD_NUMBER;
-          hash = (53 * hash) + getAddColumn().hashCode();
+          hash = (37 * hash) + ADD_COLUMNS_FIELD_NUMBER;
+          hash = (53 * hash) + getAddColumns().hashCode();
           break;
         case 0:
         default:
@@ -6735,10 +7265,10 @@ public final class Admin {
         result.schemaName_ = schemaName_;
         result.tableName_ = tableName_;
         if (kindCase_ == 4) {
-          if (addColumnBuilder_ == null) {
+          if (addColumnsBuilder_ == null) {
             result.kind_ = kind_;
           } else {
-            result.kind_ = addColumnBuilder_.build();
+            result.kind_ = addColumnsBuilder_.build();
           }
         }
         result.bitField0_ = to_bitField0_;
@@ -6806,8 +7336,8 @@ public final class Admin {
           onChanged();
         }
         switch (other.getKindCase()) {
-          case ADD_COLUMN: {
-            mergeAddColumn(other.getAddColumn());
+          case ADD_COLUMNS: {
+            mergeAddColumns(other.getAddColumns());
             break;
           }
           case KIND_NOT_SET: {
@@ -7102,71 +7632,71 @@ public final class Admin {
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          io.greptime.v1.Admin.AddColumn, io.greptime.v1.Admin.AddColumn.Builder, io.greptime.v1.Admin.AddColumnOrBuilder> addColumnBuilder_;
+          io.greptime.v1.Admin.AddColumns, io.greptime.v1.Admin.AddColumns.Builder, io.greptime.v1.Admin.AddColumnsOrBuilder> addColumnsBuilder_;
       /**
-       * <code>.greptime.v1.AddColumn add_column = 4;</code>
-       * @return Whether the addColumn field is set.
+       * <code>.greptime.v1.AddColumns add_columns = 4;</code>
+       * @return Whether the addColumns field is set.
        */
       @java.lang.Override
-      public boolean hasAddColumn() {
+      public boolean hasAddColumns() {
         return kindCase_ == 4;
       }
       /**
-       * <code>.greptime.v1.AddColumn add_column = 4;</code>
-       * @return The addColumn.
+       * <code>.greptime.v1.AddColumns add_columns = 4;</code>
+       * @return The addColumns.
        */
       @java.lang.Override
-      public io.greptime.v1.Admin.AddColumn getAddColumn() {
-        if (addColumnBuilder_ == null) {
+      public io.greptime.v1.Admin.AddColumns getAddColumns() {
+        if (addColumnsBuilder_ == null) {
           if (kindCase_ == 4) {
-            return (io.greptime.v1.Admin.AddColumn) kind_;
+            return (io.greptime.v1.Admin.AddColumns) kind_;
           }
-          return io.greptime.v1.Admin.AddColumn.getDefaultInstance();
+          return io.greptime.v1.Admin.AddColumns.getDefaultInstance();
         } else {
           if (kindCase_ == 4) {
-            return addColumnBuilder_.getMessage();
+            return addColumnsBuilder_.getMessage();
           }
-          return io.greptime.v1.Admin.AddColumn.getDefaultInstance();
+          return io.greptime.v1.Admin.AddColumns.getDefaultInstance();
         }
       }
       /**
-       * <code>.greptime.v1.AddColumn add_column = 4;</code>
+       * <code>.greptime.v1.AddColumns add_columns = 4;</code>
        */
-      public Builder setAddColumn(io.greptime.v1.Admin.AddColumn value) {
-        if (addColumnBuilder_ == null) {
+      public Builder setAddColumns(io.greptime.v1.Admin.AddColumns value) {
+        if (addColumnsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
           kind_ = value;
           onChanged();
         } else {
-          addColumnBuilder_.setMessage(value);
+          addColumnsBuilder_.setMessage(value);
         }
         kindCase_ = 4;
         return this;
       }
       /**
-       * <code>.greptime.v1.AddColumn add_column = 4;</code>
+       * <code>.greptime.v1.AddColumns add_columns = 4;</code>
        */
-      public Builder setAddColumn(
-          io.greptime.v1.Admin.AddColumn.Builder builderForValue) {
-        if (addColumnBuilder_ == null) {
+      public Builder setAddColumns(
+          io.greptime.v1.Admin.AddColumns.Builder builderForValue) {
+        if (addColumnsBuilder_ == null) {
           kind_ = builderForValue.build();
           onChanged();
         } else {
-          addColumnBuilder_.setMessage(builderForValue.build());
+          addColumnsBuilder_.setMessage(builderForValue.build());
         }
         kindCase_ = 4;
         return this;
       }
       /**
-       * <code>.greptime.v1.AddColumn add_column = 4;</code>
+       * <code>.greptime.v1.AddColumns add_columns = 4;</code>
        */
-      public Builder mergeAddColumn(io.greptime.v1.Admin.AddColumn value) {
-        if (addColumnBuilder_ == null) {
+      public Builder mergeAddColumns(io.greptime.v1.Admin.AddColumns value) {
+        if (addColumnsBuilder_ == null) {
           if (kindCase_ == 4 &&
-              kind_ != io.greptime.v1.Admin.AddColumn.getDefaultInstance()) {
-            kind_ = io.greptime.v1.Admin.AddColumn.newBuilder((io.greptime.v1.Admin.AddColumn) kind_)
+              kind_ != io.greptime.v1.Admin.AddColumns.getDefaultInstance()) {
+            kind_ = io.greptime.v1.Admin.AddColumns.newBuilder((io.greptime.v1.Admin.AddColumns) kind_)
                 .mergeFrom(value).buildPartial();
           } else {
             kind_ = value;
@@ -7174,18 +7704,18 @@ public final class Admin {
           onChanged();
         } else {
           if (kindCase_ == 4) {
-            addColumnBuilder_.mergeFrom(value);
+            addColumnsBuilder_.mergeFrom(value);
           }
-          addColumnBuilder_.setMessage(value);
+          addColumnsBuilder_.setMessage(value);
         }
         kindCase_ = 4;
         return this;
       }
       /**
-       * <code>.greptime.v1.AddColumn add_column = 4;</code>
+       * <code>.greptime.v1.AddColumns add_columns = 4;</code>
        */
-      public Builder clearAddColumn() {
-        if (addColumnBuilder_ == null) {
+      public Builder clearAddColumns() {
+        if (addColumnsBuilder_ == null) {
           if (kindCase_ == 4) {
             kindCase_ = 0;
             kind_ = null;
@@ -7196,50 +7726,50 @@ public final class Admin {
             kindCase_ = 0;
             kind_ = null;
           }
-          addColumnBuilder_.clear();
+          addColumnsBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>.greptime.v1.AddColumn add_column = 4;</code>
+       * <code>.greptime.v1.AddColumns add_columns = 4;</code>
        */
-      public io.greptime.v1.Admin.AddColumn.Builder getAddColumnBuilder() {
-        return getAddColumnFieldBuilder().getBuilder();
+      public io.greptime.v1.Admin.AddColumns.Builder getAddColumnsBuilder() {
+        return getAddColumnsFieldBuilder().getBuilder();
       }
       /**
-       * <code>.greptime.v1.AddColumn add_column = 4;</code>
+       * <code>.greptime.v1.AddColumns add_columns = 4;</code>
        */
       @java.lang.Override
-      public io.greptime.v1.Admin.AddColumnOrBuilder getAddColumnOrBuilder() {
-        if ((kindCase_ == 4) && (addColumnBuilder_ != null)) {
-          return addColumnBuilder_.getMessageOrBuilder();
+      public io.greptime.v1.Admin.AddColumnsOrBuilder getAddColumnsOrBuilder() {
+        if ((kindCase_ == 4) && (addColumnsBuilder_ != null)) {
+          return addColumnsBuilder_.getMessageOrBuilder();
         } else {
           if (kindCase_ == 4) {
-            return (io.greptime.v1.Admin.AddColumn) kind_;
+            return (io.greptime.v1.Admin.AddColumns) kind_;
           }
-          return io.greptime.v1.Admin.AddColumn.getDefaultInstance();
+          return io.greptime.v1.Admin.AddColumns.getDefaultInstance();
         }
       }
       /**
-       * <code>.greptime.v1.AddColumn add_column = 4;</code>
+       * <code>.greptime.v1.AddColumns add_columns = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          io.greptime.v1.Admin.AddColumn, io.greptime.v1.Admin.AddColumn.Builder, io.greptime.v1.Admin.AddColumnOrBuilder> 
-          getAddColumnFieldBuilder() {
-        if (addColumnBuilder_ == null) {
+          io.greptime.v1.Admin.AddColumns, io.greptime.v1.Admin.AddColumns.Builder, io.greptime.v1.Admin.AddColumnsOrBuilder> 
+          getAddColumnsFieldBuilder() {
+        if (addColumnsBuilder_ == null) {
           if (!(kindCase_ == 4)) {
-            kind_ = io.greptime.v1.Admin.AddColumn.getDefaultInstance();
+            kind_ = io.greptime.v1.Admin.AddColumns.getDefaultInstance();
           }
-          addColumnBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              io.greptime.v1.Admin.AddColumn, io.greptime.v1.Admin.AddColumn.Builder, io.greptime.v1.Admin.AddColumnOrBuilder>(
-                  (io.greptime.v1.Admin.AddColumn) kind_,
+          addColumnsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              io.greptime.v1.Admin.AddColumns, io.greptime.v1.Admin.AddColumns.Builder, io.greptime.v1.Admin.AddColumnsOrBuilder>(
+                  (io.greptime.v1.Admin.AddColumns) kind_,
                   getParentForChildren(),
                   isClean());
           kind_ = null;
         }
         kindCase_ = 4;
         onChanged();;
-        return addColumnBuilder_;
+        return addColumnsBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -7294,6 +7824,799 @@ public final class Admin {
 
   }
 
+  public interface AddColumnsOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:greptime.v1.AddColumns)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+     */
+    java.util.List<io.greptime.v1.Admin.AddColumn> 
+        getAddColumnsList();
+    /**
+     * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+     */
+    io.greptime.v1.Admin.AddColumn getAddColumns(int index);
+    /**
+     * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+     */
+    int getAddColumnsCount();
+    /**
+     * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+     */
+    java.util.List<? extends io.greptime.v1.Admin.AddColumnOrBuilder> 
+        getAddColumnsOrBuilderList();
+    /**
+     * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+     */
+    io.greptime.v1.Admin.AddColumnOrBuilder getAddColumnsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code greptime.v1.AddColumns}
+   */
+  public static final class AddColumns extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:greptime.v1.AddColumns)
+      AddColumnsOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use AddColumns.newBuilder() to construct.
+    private AddColumns(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private AddColumns() {
+      addColumns_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new AddColumns();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private AddColumns(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                addColumns_ = new java.util.ArrayList<io.greptime.v1.Admin.AddColumn>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              addColumns_.add(
+                  input.readMessage(io.greptime.v1.Admin.AddColumn.parser(), extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          addColumns_ = java.util.Collections.unmodifiableList(addColumns_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return io.greptime.v1.Admin.internal_static_greptime_v1_AddColumns_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return io.greptime.v1.Admin.internal_static_greptime_v1_AddColumns_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              io.greptime.v1.Admin.AddColumns.class, io.greptime.v1.Admin.AddColumns.Builder.class);
+    }
+
+    public static final int ADD_COLUMNS_FIELD_NUMBER = 1;
+    private java.util.List<io.greptime.v1.Admin.AddColumn> addColumns_;
+    /**
+     * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+     */
+    @java.lang.Override
+    public java.util.List<io.greptime.v1.Admin.AddColumn> getAddColumnsList() {
+      return addColumns_;
+    }
+    /**
+     * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends io.greptime.v1.Admin.AddColumnOrBuilder> 
+        getAddColumnsOrBuilderList() {
+      return addColumns_;
+    }
+    /**
+     * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+     */
+    @java.lang.Override
+    public int getAddColumnsCount() {
+      return addColumns_.size();
+    }
+    /**
+     * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+     */
+    @java.lang.Override
+    public io.greptime.v1.Admin.AddColumn getAddColumns(int index) {
+      return addColumns_.get(index);
+    }
+    /**
+     * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+     */
+    @java.lang.Override
+    public io.greptime.v1.Admin.AddColumnOrBuilder getAddColumnsOrBuilder(
+        int index) {
+      return addColumns_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      for (int i = 0; i < addColumns_.size(); i++) {
+        output.writeMessage(1, addColumns_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < addColumns_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, addColumns_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof io.greptime.v1.Admin.AddColumns)) {
+        return super.equals(obj);
+      }
+      io.greptime.v1.Admin.AddColumns other = (io.greptime.v1.Admin.AddColumns) obj;
+
+      if (!getAddColumnsList()
+          .equals(other.getAddColumnsList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getAddColumnsCount() > 0) {
+        hash = (37 * hash) + ADD_COLUMNS_FIELD_NUMBER;
+        hash = (53 * hash) + getAddColumnsList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static io.greptime.v1.Admin.AddColumns parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static io.greptime.v1.Admin.AddColumns parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static io.greptime.v1.Admin.AddColumns parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static io.greptime.v1.Admin.AddColumns parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static io.greptime.v1.Admin.AddColumns parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static io.greptime.v1.Admin.AddColumns parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static io.greptime.v1.Admin.AddColumns parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static io.greptime.v1.Admin.AddColumns parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static io.greptime.v1.Admin.AddColumns parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static io.greptime.v1.Admin.AddColumns parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static io.greptime.v1.Admin.AddColumns parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static io.greptime.v1.Admin.AddColumns parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(io.greptime.v1.Admin.AddColumns prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code greptime.v1.AddColumns}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:greptime.v1.AddColumns)
+        io.greptime.v1.Admin.AddColumnsOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return io.greptime.v1.Admin.internal_static_greptime_v1_AddColumns_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return io.greptime.v1.Admin.internal_static_greptime_v1_AddColumns_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                io.greptime.v1.Admin.AddColumns.class, io.greptime.v1.Admin.AddColumns.Builder.class);
+      }
+
+      // Construct using io.greptime.v1.Admin.AddColumns.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getAddColumnsFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (addColumnsBuilder_ == null) {
+          addColumns_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          addColumnsBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return io.greptime.v1.Admin.internal_static_greptime_v1_AddColumns_descriptor;
+      }
+
+      @java.lang.Override
+      public io.greptime.v1.Admin.AddColumns getDefaultInstanceForType() {
+        return io.greptime.v1.Admin.AddColumns.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public io.greptime.v1.Admin.AddColumns build() {
+        io.greptime.v1.Admin.AddColumns result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public io.greptime.v1.Admin.AddColumns buildPartial() {
+        io.greptime.v1.Admin.AddColumns result = new io.greptime.v1.Admin.AddColumns(this);
+        int from_bitField0_ = bitField0_;
+        if (addColumnsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            addColumns_ = java.util.Collections.unmodifiableList(addColumns_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.addColumns_ = addColumns_;
+        } else {
+          result.addColumns_ = addColumnsBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof io.greptime.v1.Admin.AddColumns) {
+          return mergeFrom((io.greptime.v1.Admin.AddColumns)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(io.greptime.v1.Admin.AddColumns other) {
+        if (other == io.greptime.v1.Admin.AddColumns.getDefaultInstance()) return this;
+        if (addColumnsBuilder_ == null) {
+          if (!other.addColumns_.isEmpty()) {
+            if (addColumns_.isEmpty()) {
+              addColumns_ = other.addColumns_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureAddColumnsIsMutable();
+              addColumns_.addAll(other.addColumns_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.addColumns_.isEmpty()) {
+            if (addColumnsBuilder_.isEmpty()) {
+              addColumnsBuilder_.dispose();
+              addColumnsBuilder_ = null;
+              addColumns_ = other.addColumns_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              addColumnsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getAddColumnsFieldBuilder() : null;
+            } else {
+              addColumnsBuilder_.addAllMessages(other.addColumns_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        io.greptime.v1.Admin.AddColumns parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (io.greptime.v1.Admin.AddColumns) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<io.greptime.v1.Admin.AddColumn> addColumns_ =
+        java.util.Collections.emptyList();
+      private void ensureAddColumnsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          addColumns_ = new java.util.ArrayList<io.greptime.v1.Admin.AddColumn>(addColumns_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          io.greptime.v1.Admin.AddColumn, io.greptime.v1.Admin.AddColumn.Builder, io.greptime.v1.Admin.AddColumnOrBuilder> addColumnsBuilder_;
+
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public java.util.List<io.greptime.v1.Admin.AddColumn> getAddColumnsList() {
+        if (addColumnsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(addColumns_);
+        } else {
+          return addColumnsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public int getAddColumnsCount() {
+        if (addColumnsBuilder_ == null) {
+          return addColumns_.size();
+        } else {
+          return addColumnsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public io.greptime.v1.Admin.AddColumn getAddColumns(int index) {
+        if (addColumnsBuilder_ == null) {
+          return addColumns_.get(index);
+        } else {
+          return addColumnsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public Builder setAddColumns(
+          int index, io.greptime.v1.Admin.AddColumn value) {
+        if (addColumnsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAddColumnsIsMutable();
+          addColumns_.set(index, value);
+          onChanged();
+        } else {
+          addColumnsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public Builder setAddColumns(
+          int index, io.greptime.v1.Admin.AddColumn.Builder builderForValue) {
+        if (addColumnsBuilder_ == null) {
+          ensureAddColumnsIsMutable();
+          addColumns_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          addColumnsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public Builder addAddColumns(io.greptime.v1.Admin.AddColumn value) {
+        if (addColumnsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAddColumnsIsMutable();
+          addColumns_.add(value);
+          onChanged();
+        } else {
+          addColumnsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public Builder addAddColumns(
+          int index, io.greptime.v1.Admin.AddColumn value) {
+        if (addColumnsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureAddColumnsIsMutable();
+          addColumns_.add(index, value);
+          onChanged();
+        } else {
+          addColumnsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public Builder addAddColumns(
+          io.greptime.v1.Admin.AddColumn.Builder builderForValue) {
+        if (addColumnsBuilder_ == null) {
+          ensureAddColumnsIsMutable();
+          addColumns_.add(builderForValue.build());
+          onChanged();
+        } else {
+          addColumnsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public Builder addAddColumns(
+          int index, io.greptime.v1.Admin.AddColumn.Builder builderForValue) {
+        if (addColumnsBuilder_ == null) {
+          ensureAddColumnsIsMutable();
+          addColumns_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          addColumnsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public Builder addAllAddColumns(
+          java.lang.Iterable<? extends io.greptime.v1.Admin.AddColumn> values) {
+        if (addColumnsBuilder_ == null) {
+          ensureAddColumnsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, addColumns_);
+          onChanged();
+        } else {
+          addColumnsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public Builder clearAddColumns() {
+        if (addColumnsBuilder_ == null) {
+          addColumns_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          addColumnsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public Builder removeAddColumns(int index) {
+        if (addColumnsBuilder_ == null) {
+          ensureAddColumnsIsMutable();
+          addColumns_.remove(index);
+          onChanged();
+        } else {
+          addColumnsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public io.greptime.v1.Admin.AddColumn.Builder getAddColumnsBuilder(
+          int index) {
+        return getAddColumnsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public io.greptime.v1.Admin.AddColumnOrBuilder getAddColumnsOrBuilder(
+          int index) {
+        if (addColumnsBuilder_ == null) {
+          return addColumns_.get(index);  } else {
+          return addColumnsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public java.util.List<? extends io.greptime.v1.Admin.AddColumnOrBuilder> 
+           getAddColumnsOrBuilderList() {
+        if (addColumnsBuilder_ != null) {
+          return addColumnsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(addColumns_);
+        }
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public io.greptime.v1.Admin.AddColumn.Builder addAddColumnsBuilder() {
+        return getAddColumnsFieldBuilder().addBuilder(
+            io.greptime.v1.Admin.AddColumn.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public io.greptime.v1.Admin.AddColumn.Builder addAddColumnsBuilder(
+          int index) {
+        return getAddColumnsFieldBuilder().addBuilder(
+            index, io.greptime.v1.Admin.AddColumn.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .greptime.v1.AddColumn add_columns = 1;</code>
+       */
+      public java.util.List<io.greptime.v1.Admin.AddColumn.Builder> 
+           getAddColumnsBuilderList() {
+        return getAddColumnsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          io.greptime.v1.Admin.AddColumn, io.greptime.v1.Admin.AddColumn.Builder, io.greptime.v1.Admin.AddColumnOrBuilder> 
+          getAddColumnsFieldBuilder() {
+        if (addColumnsBuilder_ == null) {
+          addColumnsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              io.greptime.v1.Admin.AddColumn, io.greptime.v1.Admin.AddColumn.Builder, io.greptime.v1.Admin.AddColumnOrBuilder>(
+                  addColumns_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          addColumns_ = null;
+        }
+        return addColumnsBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:greptime.v1.AddColumns)
+    }
+
+    // @@protoc_insertion_point(class_scope:greptime.v1.AddColumns)
+    private static final io.greptime.v1.Admin.AddColumns DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new io.greptime.v1.Admin.AddColumns();
+    }
+
+    public static io.greptime.v1.Admin.AddColumns getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<AddColumns>
+        PARSER = new com.google.protobuf.AbstractParser<AddColumns>() {
+      @java.lang.Override
+      public AddColumns parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new AddColumns(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<AddColumns> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<AddColumns> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public io.greptime.v1.Admin.AddColumns getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface AddColumnOrBuilder extends
       // @@protoc_insertion_point(interface_extends:greptime.v1.AddColumn)
       com.google.protobuf.MessageOrBuilder {
@@ -7312,6 +8635,12 @@ public final class Admin {
      * <code>.greptime.v1.ColumnDef column_def = 1;</code>
      */
     io.greptime.v1.Columns.ColumnDefOrBuilder getColumnDefOrBuilder();
+
+    /**
+     * <code>bool is_key = 2;</code>
+     * @return The isKey.
+     */
+    boolean getIsKey();
   }
   /**
    * Protobuf type {@code greptime.v1.AddColumn}
@@ -7369,6 +8698,11 @@ public final class Admin {
                 columnDef_ = subBuilder.buildPartial();
               }
 
+              break;
+            }
+            case 16: {
+
+              isKey_ = input.readBool();
               break;
             }
             default: {
@@ -7429,6 +8763,17 @@ public final class Admin {
       return getColumnDef();
     }
 
+    public static final int IS_KEY_FIELD_NUMBER = 2;
+    private boolean isKey_;
+    /**
+     * <code>bool is_key = 2;</code>
+     * @return The isKey.
+     */
+    @java.lang.Override
+    public boolean getIsKey() {
+      return isKey_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -7446,6 +8791,9 @@ public final class Admin {
       if (columnDef_ != null) {
         output.writeMessage(1, getColumnDef());
       }
+      if (isKey_ != false) {
+        output.writeBool(2, isKey_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -7458,6 +8806,10 @@ public final class Admin {
       if (columnDef_ != null) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, getColumnDef());
+      }
+      if (isKey_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(2, isKey_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -7479,6 +8831,8 @@ public final class Admin {
         if (!getColumnDef()
             .equals(other.getColumnDef())) return false;
       }
+      if (getIsKey()
+          != other.getIsKey()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -7494,6 +8848,9 @@ public final class Admin {
         hash = (37 * hash) + COLUMN_DEF_FIELD_NUMBER;
         hash = (53 * hash) + getColumnDef().hashCode();
       }
+      hash = (37 * hash) + IS_KEY_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getIsKey());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -7633,6 +8990,8 @@ public final class Admin {
           columnDef_ = null;
           columnDefBuilder_ = null;
         }
+        isKey_ = false;
+
         return this;
       }
 
@@ -7664,6 +9023,7 @@ public final class Admin {
         } else {
           result.columnDef_ = columnDefBuilder_.build();
         }
+        result.isKey_ = isKey_;
         onBuilt();
         return result;
       }
@@ -7714,6 +9074,9 @@ public final class Admin {
         if (other == io.greptime.v1.Admin.AddColumn.getDefaultInstance()) return this;
         if (other.hasColumnDef()) {
           mergeColumnDef(other.getColumnDef());
+        }
+        if (other.getIsKey() != false) {
+          setIsKey(other.getIsKey());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -7862,6 +9225,37 @@ public final class Admin {
         }
         return columnDefBuilder_;
       }
+
+      private boolean isKey_ ;
+      /**
+       * <code>bool is_key = 2;</code>
+       * @return The isKey.
+       */
+      @java.lang.Override
+      public boolean getIsKey() {
+        return isKey_;
+      }
+      /**
+       * <code>bool is_key = 2;</code>
+       * @param value The isKey to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIsKey(boolean value) {
+        
+        isKey_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool is_key = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIsKey() {
+        
+        isKey_ = false;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -7915,6 +9309,610 @@ public final class Admin {
 
   }
 
+  public interface CreateDatabaseExprOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:greptime.v1.CreateDatabaseExpr)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <pre>
+     *TODO(hl): maybe rename to schema_name?
+     * </pre>
+     *
+     * <code>string database_name = 1;</code>
+     * @return The databaseName.
+     */
+    java.lang.String getDatabaseName();
+    /**
+     * <pre>
+     *TODO(hl): maybe rename to schema_name?
+     * </pre>
+     *
+     * <code>string database_name = 1;</code>
+     * @return The bytes for databaseName.
+     */
+    com.google.protobuf.ByteString
+        getDatabaseNameBytes();
+  }
+  /**
+   * Protobuf type {@code greptime.v1.CreateDatabaseExpr}
+   */
+  public static final class CreateDatabaseExpr extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:greptime.v1.CreateDatabaseExpr)
+      CreateDatabaseExprOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use CreateDatabaseExpr.newBuilder() to construct.
+    private CreateDatabaseExpr(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private CreateDatabaseExpr() {
+      databaseName_ = "";
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new CreateDatabaseExpr();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private CreateDatabaseExpr(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              databaseName_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return io.greptime.v1.Admin.internal_static_greptime_v1_CreateDatabaseExpr_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return io.greptime.v1.Admin.internal_static_greptime_v1_CreateDatabaseExpr_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              io.greptime.v1.Admin.CreateDatabaseExpr.class, io.greptime.v1.Admin.CreateDatabaseExpr.Builder.class);
+    }
+
+    public static final int DATABASE_NAME_FIELD_NUMBER = 1;
+    private volatile java.lang.Object databaseName_;
+    /**
+     * <pre>
+     *TODO(hl): maybe rename to schema_name?
+     * </pre>
+     *
+     * <code>string database_name = 1;</code>
+     * @return The databaseName.
+     */
+    @java.lang.Override
+    public java.lang.String getDatabaseName() {
+      java.lang.Object ref = databaseName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        databaseName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *TODO(hl): maybe rename to schema_name?
+     * </pre>
+     *
+     * <code>string database_name = 1;</code>
+     * @return The bytes for databaseName.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getDatabaseNameBytes() {
+      java.lang.Object ref = databaseName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        databaseName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(databaseName_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, databaseName_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(databaseName_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, databaseName_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof io.greptime.v1.Admin.CreateDatabaseExpr)) {
+        return super.equals(obj);
+      }
+      io.greptime.v1.Admin.CreateDatabaseExpr other = (io.greptime.v1.Admin.CreateDatabaseExpr) obj;
+
+      if (!getDatabaseName()
+          .equals(other.getDatabaseName())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + DATABASE_NAME_FIELD_NUMBER;
+      hash = (53 * hash) + getDatabaseName().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static io.greptime.v1.Admin.CreateDatabaseExpr parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(io.greptime.v1.Admin.CreateDatabaseExpr prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code greptime.v1.CreateDatabaseExpr}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:greptime.v1.CreateDatabaseExpr)
+        io.greptime.v1.Admin.CreateDatabaseExprOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return io.greptime.v1.Admin.internal_static_greptime_v1_CreateDatabaseExpr_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return io.greptime.v1.Admin.internal_static_greptime_v1_CreateDatabaseExpr_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                io.greptime.v1.Admin.CreateDatabaseExpr.class, io.greptime.v1.Admin.CreateDatabaseExpr.Builder.class);
+      }
+
+      // Construct using io.greptime.v1.Admin.CreateDatabaseExpr.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        databaseName_ = "";
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return io.greptime.v1.Admin.internal_static_greptime_v1_CreateDatabaseExpr_descriptor;
+      }
+
+      @java.lang.Override
+      public io.greptime.v1.Admin.CreateDatabaseExpr getDefaultInstanceForType() {
+        return io.greptime.v1.Admin.CreateDatabaseExpr.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public io.greptime.v1.Admin.CreateDatabaseExpr build() {
+        io.greptime.v1.Admin.CreateDatabaseExpr result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public io.greptime.v1.Admin.CreateDatabaseExpr buildPartial() {
+        io.greptime.v1.Admin.CreateDatabaseExpr result = new io.greptime.v1.Admin.CreateDatabaseExpr(this);
+        result.databaseName_ = databaseName_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof io.greptime.v1.Admin.CreateDatabaseExpr) {
+          return mergeFrom((io.greptime.v1.Admin.CreateDatabaseExpr)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(io.greptime.v1.Admin.CreateDatabaseExpr other) {
+        if (other == io.greptime.v1.Admin.CreateDatabaseExpr.getDefaultInstance()) return this;
+        if (!other.getDatabaseName().isEmpty()) {
+          databaseName_ = other.databaseName_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        io.greptime.v1.Admin.CreateDatabaseExpr parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (io.greptime.v1.Admin.CreateDatabaseExpr) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object databaseName_ = "";
+      /**
+       * <pre>
+       *TODO(hl): maybe rename to schema_name?
+       * </pre>
+       *
+       * <code>string database_name = 1;</code>
+       * @return The databaseName.
+       */
+      public java.lang.String getDatabaseName() {
+        java.lang.Object ref = databaseName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          databaseName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       *TODO(hl): maybe rename to schema_name?
+       * </pre>
+       *
+       * <code>string database_name = 1;</code>
+       * @return The bytes for databaseName.
+       */
+      public com.google.protobuf.ByteString
+          getDatabaseNameBytes() {
+        java.lang.Object ref = databaseName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          databaseName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *TODO(hl): maybe rename to schema_name?
+       * </pre>
+       *
+       * <code>string database_name = 1;</code>
+       * @param value The databaseName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatabaseName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        databaseName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *TODO(hl): maybe rename to schema_name?
+       * </pre>
+       *
+       * <code>string database_name = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDatabaseName() {
+        
+        databaseName_ = getDefaultInstance().getDatabaseName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *TODO(hl): maybe rename to schema_name?
+       * </pre>
+       *
+       * <code>string database_name = 1;</code>
+       * @param value The bytes for databaseName to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDatabaseNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        databaseName_ = value;
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:greptime.v1.CreateDatabaseExpr)
+    }
+
+    // @@protoc_insertion_point(class_scope:greptime.v1.CreateDatabaseExpr)
+    private static final io.greptime.v1.Admin.CreateDatabaseExpr DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new io.greptime.v1.Admin.CreateDatabaseExpr();
+    }
+
+    public static io.greptime.v1.Admin.CreateDatabaseExpr getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<CreateDatabaseExpr>
+        PARSER = new com.google.protobuf.AbstractParser<CreateDatabaseExpr>() {
+      @java.lang.Override
+      public CreateDatabaseExpr parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new CreateDatabaseExpr(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<CreateDatabaseExpr> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<CreateDatabaseExpr> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public io.greptime.v1.Admin.CreateDatabaseExpr getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_greptime_v1_AdminRequest_descriptor;
   private static final 
@@ -7951,10 +9949,20 @@ public final class Admin {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_greptime_v1_AlterExpr_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_greptime_v1_AddColumns_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_greptime_v1_AddColumns_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_greptime_v1_AddColumn_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_greptime_v1_AddColumn_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_greptime_v1_CreateDatabaseExpr_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_greptime_v1_CreateDatabaseExpr_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -7968,30 +9976,36 @@ public final class Admin {
       "\032\014common.proto\"C\n\014AdminRequest\022\014\n\004name\030\001" +
       " \001(\t\022%\n\005exprs\030\002 \003(\0132\026.greptime.v1.AdminE" +
       "xpr\":\n\rAdminResponse\022)\n\007results\030\001 \003(\0132\030." +
-      "greptime.v1.AdminResult\"\220\001\n\tAdminExpr\022\'\n" +
+      "greptime.v1.AdminResult\"\314\001\n\tAdminExpr\022\'\n" +
       "\006header\030\001 \001(\0132\027.greptime.v1.ExprHeader\022)" +
       "\n\006create\030\002 \001(\0132\027.greptime.v1.CreateExprH" +
       "\000\022\'\n\005alter\030\003 \001(\0132\026.greptime.v1.AlterExpr" +
-      "H\000B\006\n\004expr\"o\n\013AdminResult\022)\n\006header\030\001 \001(" +
-      "\0132\031.greptime.v1.ResultHeader\022+\n\006mutate\030\002" +
-      " \001(\0132\031.greptime.v1.MutateResultH\000B\010\n\006res" +
-      "ult\"\376\002\n\nCreateExpr\022\031\n\014catalog_name\030\001 \001(\t" +
-      "H\000\210\001\001\022\030\n\013schema_name\030\002 \001(\tH\001\210\001\001\022\022\n\ntable" +
-      "_name\030\003 \001(\t\022\021\n\004desc\030\004 \001(\tH\002\210\001\001\022+\n\013column" +
-      "_defs\030\005 \003(\0132\026.greptime.v1.ColumnDef\022\022\n\nt" +
-      "ime_index\030\006 \001(\t\022\024\n\014primary_keys\030\007 \003(\t\022\034\n" +
-      "\024create_if_not_exists\030\010 \001(\010\022@\n\rtable_opt" +
-      "ions\030\t \003(\0132).greptime.v1.CreateExpr.Tabl" +
-      "eOptionsEntry\0323\n\021TableOptionsEntry\022\013\n\003ke" +
-      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001B\017\n\r_catalog_n" +
-      "ameB\016\n\014_schema_nameB\007\n\005_desc\"\253\001\n\tAlterEx" +
-      "pr\022\031\n\014catalog_name\030\001 \001(\tH\001\210\001\001\022\030\n\013schema_" +
-      "name\030\002 \001(\tH\002\210\001\001\022\022\n\ntable_name\030\003 \001(\t\022,\n\na" +
-      "dd_column\030\004 \001(\0132\026.greptime.v1.AddColumnH" +
-      "\000B\006\n\004kindB\017\n\r_catalog_nameB\016\n\014_schema_na" +
-      "me\"7\n\tAddColumn\022*\n\ncolumn_def\030\001 \001(\0132\026.gr" +
-      "eptime.v1.ColumnDefB\027\n\016io.greptime.v1B\005A" +
-      "dminb\006proto3"
+      "H\000\022:\n\017create_database\030\004 \001(\0132\037.greptime.v" +
+      "1.CreateDatabaseExprH\000B\006\n\004expr\"o\n\013AdminR" +
+      "esult\022)\n\006header\030\001 \001(\0132\031.greptime.v1.Resu" +
+      "ltHeader\022+\n\006mutate\030\002 \001(\0132\031.greptime.v1.M" +
+      "utateResultH\000B\010\n\006result\"\266\003\n\nCreateExpr\022\031" +
+      "\n\014catalog_name\030\001 \001(\tH\000\210\001\001\022\030\n\013schema_name" +
+      "\030\002 \001(\tH\001\210\001\001\022\022\n\ntable_name\030\003 \001(\t\022\021\n\004desc\030" +
+      "\004 \001(\tH\002\210\001\001\022+\n\013column_defs\030\005 \003(\0132\026.grepti" +
+      "me.v1.ColumnDef\022\022\n\ntime_index\030\006 \001(\t\022\024\n\014p" +
+      "rimary_keys\030\007 \003(\t\022\034\n\024create_if_not_exist" +
+      "s\030\010 \001(\010\022@\n\rtable_options\030\t \003(\0132).greptim" +
+      "e.v1.CreateExpr.TableOptionsEntry\022\025\n\010tab" +
+      "le_id\030\n \001(\rH\003\210\001\001\022\022\n\nregion_ids\030\013 \003(\r\0323\n\021" +
+      "TableOptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030" +
+      "\002 \001(\t:\0028\001B\017\n\r_catalog_nameB\016\n\014_schema_na" +
+      "meB\007\n\005_descB\013\n\t_table_id\"\255\001\n\tAlterExpr\022\031" +
+      "\n\014catalog_name\030\001 \001(\tH\001\210\001\001\022\030\n\013schema_name" +
+      "\030\002 \001(\tH\002\210\001\001\022\022\n\ntable_name\030\003 \001(\t\022.\n\013add_c" +
+      "olumns\030\004 \001(\0132\027.greptime.v1.AddColumnsH\000B" +
+      "\006\n\004kindB\017\n\r_catalog_nameB\016\n\014_schema_name" +
+      "\"9\n\nAddColumns\022+\n\013add_columns\030\001 \003(\0132\026.gr" +
+      "eptime.v1.AddColumn\"G\n\tAddColumn\022*\n\ncolu" +
+      "mn_def\030\001 \001(\0132\026.greptime.v1.ColumnDef\022\016\n\006" +
+      "is_key\030\002 \001(\010\"+\n\022CreateDatabaseExpr\022\025\n\rda" +
+      "tabase_name\030\001 \001(\tB\027\n\016io.greptime.v1B\005Adm" +
+      "inb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -8016,7 +10030,7 @@ public final class Admin {
     internal_static_greptime_v1_AdminExpr_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_AdminExpr_descriptor,
-        new java.lang.String[] { "Header", "Create", "Alter", "Expr", });
+        new java.lang.String[] { "Header", "Create", "Alter", "CreateDatabase", "Expr", });
     internal_static_greptime_v1_AdminResult_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_greptime_v1_AdminResult_fieldAccessorTable = new
@@ -8028,7 +10042,7 @@ public final class Admin {
     internal_static_greptime_v1_CreateExpr_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_CreateExpr_descriptor,
-        new java.lang.String[] { "CatalogName", "SchemaName", "TableName", "Desc", "ColumnDefs", "TimeIndex", "PrimaryKeys", "CreateIfNotExists", "TableOptions", "CatalogName", "SchemaName", "Desc", });
+        new java.lang.String[] { "CatalogName", "SchemaName", "TableName", "Desc", "ColumnDefs", "TimeIndex", "PrimaryKeys", "CreateIfNotExists", "TableOptions", "TableId", "RegionIds", "CatalogName", "SchemaName", "Desc", "TableId", });
     internal_static_greptime_v1_CreateExpr_TableOptionsEntry_descriptor =
       internal_static_greptime_v1_CreateExpr_descriptor.getNestedTypes().get(0);
     internal_static_greptime_v1_CreateExpr_TableOptionsEntry_fieldAccessorTable = new
@@ -8040,13 +10054,25 @@ public final class Admin {
     internal_static_greptime_v1_AlterExpr_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_AlterExpr_descriptor,
-        new java.lang.String[] { "CatalogName", "SchemaName", "TableName", "AddColumn", "Kind", "CatalogName", "SchemaName", });
-    internal_static_greptime_v1_AddColumn_descriptor =
+        new java.lang.String[] { "CatalogName", "SchemaName", "TableName", "AddColumns", "Kind", "CatalogName", "SchemaName", });
+    internal_static_greptime_v1_AddColumns_descriptor =
       getDescriptor().getMessageTypes().get(6);
+    internal_static_greptime_v1_AddColumns_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_greptime_v1_AddColumns_descriptor,
+        new java.lang.String[] { "AddColumns", });
+    internal_static_greptime_v1_AddColumn_descriptor =
+      getDescriptor().getMessageTypes().get(7);
     internal_static_greptime_v1_AddColumn_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_AddColumn_descriptor,
-        new java.lang.String[] { "ColumnDef", });
+        new java.lang.String[] { "ColumnDef", "IsKey", });
+    internal_static_greptime_v1_CreateDatabaseExpr_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_greptime_v1_CreateDatabaseExpr_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_greptime_v1_CreateDatabaseExpr_descriptor,
+        new java.lang.String[] { "DatabaseName", });
     io.greptime.v1.Columns.getDescriptor();
     io.greptime.v1.Common.getDescriptor();
   }

@@ -44,6 +44,21 @@ public class Example {
     private static final Logger LOG = LoggerFactory.getLogger(Example.class);
 
     public static void main(String[] args) throws Exception {
+        /*
+           At the time I wrote this, GreptimeDB did not yet support automatic `create table`
+           for the gRPC protocol, so we needed to do it manually. For more details, please
+           refer to [Table Management](https://docs.greptime.com/user-guide/table-management).
+
+           ```SQL
+            CREATE TABLE monitor (
+                host STRING,
+                ts BIGINT,
+                cpu DOUBLE DEFAULT 0,
+                memory DOUBLE NULL,
+                TIME INDEX (ts),
+                PRIMARY KEY(host)) ENGINE=mito WITH(regions=1);
+            ```
+         */
         Executor asyncPool = ForkJoinPool.commonPool();
         GreptimeOptions opts = GreptimeOptions.newBuilder("127.0.0.1:3001") //
             .writeMaxRetries(1) //
@@ -58,18 +73,6 @@ public class Example {
         if (!greptimeDB.init(opts)) {
             throw new RuntimeException("Fail to start GreptimeDB client");
         }
-
-        /*
-           ```SQL
-            CREATE TABLE monitor (
-                host STRING,
-                ts BIGINT,
-                cpu DOUBLE DEFAULT 0,
-                memory DOUBLE NULL,
-                TIME INDEX (ts),
-                PRIMARY KEY(host)) ENGINE=mito WITH(regions=1);
-            ```
-         */
 
         Result<WriteOk, Err> writeResult = runInsert(greptimeDB);
 
@@ -95,7 +98,7 @@ public class Example {
     }
 
     private static Result<WriteOk, Err> runInsert(GreptimeDB greptimeDB) throws Exception {
-        WriteRows rows = WriteRows.newBuilder(TableName.with("", "monitor")) //
+        WriteRows rows = WriteRows.newBuilder(TableName.with("public", "monitor")) //
             .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field) //
             .dataTypes(ColumnDataType.String, ColumnDataType.Int64, ColumnDataType.Float64, ColumnDataType.Float64) //
             .columnNames("host", "ts", "cpu", "memory") //
