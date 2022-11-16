@@ -185,6 +185,7 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
                 .build();
 
             Database.InsertExpr insert = Database.InsertExpr.newBuilder() //
+                .setSchemaName(tableName().getDatabaseName()) //
                 .setTableName(tableName().getTableName()) //
                 .setValues(values) //
                 .build();
@@ -199,7 +200,8 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
                 .build();
 
             Database.DatabaseRequest databaseReq = Database.DatabaseRequest.newBuilder() //
-                .setName(tableName().getDatabaseName()).addExprs(obj) //
+                .setName(tableName().getDatabaseName()) //
+                .addExprs(obj) //
                 .build();
 
             return GreptimeDB.BatchRequest.newBuilder() //
