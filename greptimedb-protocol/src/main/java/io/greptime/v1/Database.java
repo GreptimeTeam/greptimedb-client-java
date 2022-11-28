@@ -4983,112 +4983,69 @@ public final class Database {
         getTableNameBytes();
 
     /**
-     * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-     * @return Whether the values field is set.
+     * <pre>
+     * Data is represented here.
+     * </pre>
+     *
+     * <code>repeated .greptime.v1.Column columns = 3;</code>
      */
-    boolean hasValues();
+    java.util.List<io.greptime.v1.Columns.Column> 
+        getColumnsList();
     /**
-     * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-     * @return The values.
+     * <pre>
+     * Data is represented here.
+     * </pre>
+     *
+     * <code>repeated .greptime.v1.Column columns = 3;</code>
      */
-    io.greptime.v1.Database.InsertExpr.Values getValues();
+    io.greptime.v1.Columns.Column getColumns(int index);
     /**
-     * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
+     * <pre>
+     * Data is represented here.
+     * </pre>
+     *
+     * <code>repeated .greptime.v1.Column columns = 3;</code>
      */
-    io.greptime.v1.Database.InsertExpr.ValuesOrBuilder getValuesOrBuilder();
+    int getColumnsCount();
+    /**
+     * <pre>
+     * Data is represented here.
+     * </pre>
+     *
+     * <code>repeated .greptime.v1.Column columns = 3;</code>
+     */
+    java.util.List<? extends io.greptime.v1.Columns.ColumnOrBuilder> 
+        getColumnsOrBuilderList();
+    /**
+     * <pre>
+     * Data is represented here.
+     * </pre>
+     *
+     * <code>repeated .greptime.v1.Column columns = 3;</code>
+     */
+    io.greptime.v1.Columns.ColumnOrBuilder getColumnsOrBuilder(
+        int index);
 
     /**
      * <pre>
-     * TODO(LFC): Remove field "sql" in InsertExpr.
-     * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-     * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-     * interface shouldn't use SQL directly.
-     * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-     * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-     * The "sql" field is meant to be removed in the future.
+     * The row_count of all columns, which include null and non-null values.
+     * Note: the row_count of all columns in a InsertExpr must be same.
      * </pre>
      *
-     * <code>string sql = 5;</code>
-     * @return Whether the sql field is set.
+     * <code>uint32 row_count = 4;</code>
+     * @return The rowCount.
      */
-    boolean hasSql();
-    /**
-     * <pre>
-     * TODO(LFC): Remove field "sql" in InsertExpr.
-     * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-     * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-     * interface shouldn't use SQL directly.
-     * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-     * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-     * The "sql" field is meant to be removed in the future.
-     * </pre>
-     *
-     * <code>string sql = 5;</code>
-     * @return The sql.
-     */
-    java.lang.String getSql();
-    /**
-     * <pre>
-     * TODO(LFC): Remove field "sql" in InsertExpr.
-     * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-     * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-     * interface shouldn't use SQL directly.
-     * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-     * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-     * The "sql" field is meant to be removed in the future.
-     * </pre>
-     *
-     * <code>string sql = 5;</code>
-     * @return The bytes for sql.
-     */
-    com.google.protobuf.ByteString
-        getSqlBytes();
+    int getRowCount();
 
     /**
      * <pre>
-     *&#47; The region number of current insert request.
+     * The region number of current insert request.
      * </pre>
      *
-     * <code>uint32 region_number = 6;</code>
+     * <code>uint32 region_number = 5;</code>
      * @return The regionNumber.
      */
     int getRegionNumber();
-
-    /**
-     * <code>map&lt;string, bytes&gt; options = 7;</code>
-     */
-    int getOptionsCount();
-    /**
-     * <code>map&lt;string, bytes&gt; options = 7;</code>
-     */
-    boolean containsOptions(
-        java.lang.String key);
-    /**
-     * Use {@link #getOptionsMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, com.google.protobuf.ByteString>
-    getOptions();
-    /**
-     * <code>map&lt;string, bytes&gt; options = 7;</code>
-     */
-    java.util.Map<java.lang.String, com.google.protobuf.ByteString>
-    getOptionsMap();
-    /**
-     * <code>map&lt;string, bytes&gt; options = 7;</code>
-     */
-
-    com.google.protobuf.ByteString getOptionsOrDefault(
-        java.lang.String key,
-        com.google.protobuf.ByteString defaultValue);
-    /**
-     * <code>map&lt;string, bytes&gt; options = 7;</code>
-     */
-
-    com.google.protobuf.ByteString getOptionsOrThrow(
-        java.lang.String key);
-
-    public io.greptime.v1.Database.InsertExpr.ExprCase getExprCase();
   }
   /**
    * Protobuf type {@code greptime.v1.InsertExpr}
@@ -5105,6 +5062,7 @@ public final class Database {
     private InsertExpr() {
       schemaName_ = "";
       tableName_ = "";
+      columns_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -5150,42 +5108,23 @@ public final class Database {
               tableName_ = s;
               break;
             }
-            case 34: {
-              io.greptime.v1.Database.InsertExpr.Values.Builder subBuilder = null;
-              if (exprCase_ == 4) {
-                subBuilder = ((io.greptime.v1.Database.InsertExpr.Values) expr_).toBuilder();
-              }
-              expr_ =
-                  input.readMessage(io.greptime.v1.Database.InsertExpr.Values.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((io.greptime.v1.Database.InsertExpr.Values) expr_);
-                expr_ = subBuilder.buildPartial();
-              }
-              exprCase_ = 4;
-              break;
-            }
-            case 42: {
-              java.lang.String s = input.readStringRequireUtf8();
-              exprCase_ = 5;
-              expr_ = s;
-              break;
-            }
-            case 48: {
-
-              regionNumber_ = input.readUInt32();
-              break;
-            }
-            case 58: {
+            case 26: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                options_ = com.google.protobuf.MapField.newMapField(
-                    OptionsDefaultEntryHolder.defaultEntry);
+                columns_ = new java.util.ArrayList<io.greptime.v1.Columns.Column>();
                 mutable_bitField0_ |= 0x00000001;
               }
-              com.google.protobuf.MapEntry<java.lang.String, com.google.protobuf.ByteString>
-              options__ = input.readMessage(
-                  OptionsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              options_.getMutableMap().put(
-                  options__.getKey(), options__.getValue());
+              columns_.add(
+                  input.readMessage(io.greptime.v1.Columns.Column.parser(), extensionRegistry));
+              break;
+            }
+            case 32: {
+
+              rowCount_ = input.readUInt32();
+              break;
+            }
+            case 40: {
+
+              regionNumber_ = input.readUInt32();
               break;
             }
             default: {
@@ -5203,6 +5142,9 @@ public final class Database {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          columns_ = java.util.Collections.unmodifiableList(columns_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -5212,662 +5154,12 @@ public final class Database {
       return io.greptime.v1.Database.internal_static_greptime_v1_InsertExpr_descriptor;
     }
 
-    @SuppressWarnings({"rawtypes"})
-    @java.lang.Override
-    protected com.google.protobuf.MapField internalGetMapField(
-        int number) {
-      switch (number) {
-        case 7:
-          return internalGetOptions();
-        default:
-          throw new RuntimeException(
-              "Invalid map field number: " + number);
-      }
-    }
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return io.greptime.v1.Database.internal_static_greptime_v1_InsertExpr_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               io.greptime.v1.Database.InsertExpr.class, io.greptime.v1.Database.InsertExpr.Builder.class);
-    }
-
-    public interface ValuesOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:greptime.v1.InsertExpr.Values)
-        com.google.protobuf.MessageOrBuilder {
-
-      /**
-       * <code>repeated bytes values = 3;</code>
-       * @return A list containing the values.
-       */
-      java.util.List<com.google.protobuf.ByteString> getValuesList();
-      /**
-       * <code>repeated bytes values = 3;</code>
-       * @return The count of values.
-       */
-      int getValuesCount();
-      /**
-       * <code>repeated bytes values = 3;</code>
-       * @param index The index of the element to return.
-       * @return The values at the given index.
-       */
-      com.google.protobuf.ByteString getValues(int index);
-    }
-    /**
-     * Protobuf type {@code greptime.v1.InsertExpr.Values}
-     */
-    public static final class Values extends
-        com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:greptime.v1.InsertExpr.Values)
-        ValuesOrBuilder {
-    private static final long serialVersionUID = 0L;
-      // Use Values.newBuilder() to construct.
-      private Values(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-        super(builder);
-      }
-      private Values() {
-        values_ = java.util.Collections.emptyList();
-      }
-
-      @java.lang.Override
-      @SuppressWarnings({"unused"})
-      protected java.lang.Object newInstance(
-          UnusedPrivateParameter unused) {
-        return new Values();
-      }
-
-      @java.lang.Override
-      public final com.google.protobuf.UnknownFieldSet
-      getUnknownFields() {
-        return this.unknownFields;
-      }
-      private Values(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-          throw new java.lang.NullPointerException();
-        }
-        int mutable_bitField0_ = 0;
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              case 26: {
-                if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                  values_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
-                  mutable_bitField0_ |= 0x00000001;
-                }
-                values_.add(input.readBytes());
-                break;
-              }
-              default: {
-                if (!parseUnknownField(
-                    input, unknownFields, extensionRegistry, tag)) {
-                  done = true;
-                }
-                break;
-              }
-            }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-          throw new com.google.protobuf.InvalidProtocolBufferException(
-              e).setUnfinishedMessage(this);
-        } finally {
-          if (((mutable_bitField0_ & 0x00000001) != 0)) {
-            values_ = java.util.Collections.unmodifiableList(values_); // C
-          }
-          this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
-        }
-      }
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return io.greptime.v1.Database.internal_static_greptime_v1_InsertExpr_Values_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return io.greptime.v1.Database.internal_static_greptime_v1_InsertExpr_Values_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                io.greptime.v1.Database.InsertExpr.Values.class, io.greptime.v1.Database.InsertExpr.Values.Builder.class);
-      }
-
-      public static final int VALUES_FIELD_NUMBER = 3;
-      private java.util.List<com.google.protobuf.ByteString> values_;
-      /**
-       * <code>repeated bytes values = 3;</code>
-       * @return A list containing the values.
-       */
-      @java.lang.Override
-      public java.util.List<com.google.protobuf.ByteString>
-          getValuesList() {
-        return values_;
-      }
-      /**
-       * <code>repeated bytes values = 3;</code>
-       * @return The count of values.
-       */
-      public int getValuesCount() {
-        return values_.size();
-      }
-      /**
-       * <code>repeated bytes values = 3;</code>
-       * @param index The index of the element to return.
-       * @return The values at the given index.
-       */
-      public com.google.protobuf.ByteString getValues(int index) {
-        return values_.get(index);
-      }
-
-      private byte memoizedIsInitialized = -1;
-      @java.lang.Override
-      public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        memoizedIsInitialized = 1;
-        return true;
-      }
-
-      @java.lang.Override
-      public void writeTo(com.google.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
-        for (int i = 0; i < values_.size(); i++) {
-          output.writeBytes(3, values_.get(i));
-        }
-        unknownFields.writeTo(output);
-      }
-
-      @java.lang.Override
-      public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        {
-          int dataSize = 0;
-          for (int i = 0; i < values_.size(); i++) {
-            dataSize += com.google.protobuf.CodedOutputStream
-              .computeBytesSizeNoTag(values_.get(i));
-          }
-          size += dataSize;
-          size += 1 * getValuesList().size();
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-      }
-
-      @java.lang.Override
-      public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-         return true;
-        }
-        if (!(obj instanceof io.greptime.v1.Database.InsertExpr.Values)) {
-          return super.equals(obj);
-        }
-        io.greptime.v1.Database.InsertExpr.Values other = (io.greptime.v1.Database.InsertExpr.Values) obj;
-
-        if (!getValuesList()
-            .equals(other.getValuesList())) return false;
-        if (!unknownFields.equals(other.unknownFields)) return false;
-        return true;
-      }
-
-      @java.lang.Override
-      public int hashCode() {
-        if (memoizedHashCode != 0) {
-          return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptor().hashCode();
-        if (getValuesCount() > 0) {
-          hash = (37 * hash) + VALUES_FIELD_NUMBER;
-          hash = (53 * hash) + getValuesList().hashCode();
-        }
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-      }
-
-      public static io.greptime.v1.Database.InsertExpr.Values parseFrom(
-          java.nio.ByteBuffer data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static io.greptime.v1.Database.InsertExpr.Values parseFrom(
-          java.nio.ByteBuffer data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static io.greptime.v1.Database.InsertExpr.Values parseFrom(
-          com.google.protobuf.ByteString data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static io.greptime.v1.Database.InsertExpr.Values parseFrom(
-          com.google.protobuf.ByteString data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static io.greptime.v1.Database.InsertExpr.Values parseFrom(byte[] data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static io.greptime.v1.Database.InsertExpr.Values parseFrom(
-          byte[] data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static io.greptime.v1.Database.InsertExpr.Values parseFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input);
-      }
-      public static io.greptime.v1.Database.InsertExpr.Values parseFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input, extensionRegistry);
-      }
-      public static io.greptime.v1.Database.InsertExpr.Values parseDelimitedFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseDelimitedWithIOException(PARSER, input);
-      }
-      public static io.greptime.v1.Database.InsertExpr.Values parseDelimitedFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-      }
-      public static io.greptime.v1.Database.InsertExpr.Values parseFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input);
-      }
-      public static io.greptime.v1.Database.InsertExpr.Values parseFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input, extensionRegistry);
-      }
-
-      @java.lang.Override
-      public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-      }
-      public static Builder newBuilder(io.greptime.v1.Database.InsertExpr.Values prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-      }
-      @java.lang.Override
-      public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-            ? new Builder() : new Builder().mergeFrom(this);
-      }
-
-      @java.lang.Override
-      protected Builder newBuilderForType(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-      }
-      /**
-       * Protobuf type {@code greptime.v1.InsertExpr.Values}
-       */
-      public static final class Builder extends
-          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-          // @@protoc_insertion_point(builder_implements:greptime.v1.InsertExpr.Values)
-          io.greptime.v1.Database.InsertExpr.ValuesOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-            getDescriptor() {
-          return io.greptime.v1.Database.internal_static_greptime_v1_InsertExpr_Values_descriptor;
-        }
-
-        @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
-          return io.greptime.v1.Database.internal_static_greptime_v1_InsertExpr_Values_fieldAccessorTable
-              .ensureFieldAccessorsInitialized(
-                  io.greptime.v1.Database.InsertExpr.Values.class, io.greptime.v1.Database.InsertExpr.Values.Builder.class);
-        }
-
-        // Construct using io.greptime.v1.Database.InsertExpr.Values.newBuilder()
-        private Builder() {
-          maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-          super(parent);
-          maybeForceBuilderInitialization();
-        }
-        private void maybeForceBuilderInitialization() {
-          if (com.google.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
-          }
-        }
-        @java.lang.Override
-        public Builder clear() {
-          super.clear();
-          values_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          return this;
-        }
-
-        @java.lang.Override
-        public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-          return io.greptime.v1.Database.internal_static_greptime_v1_InsertExpr_Values_descriptor;
-        }
-
-        @java.lang.Override
-        public io.greptime.v1.Database.InsertExpr.Values getDefaultInstanceForType() {
-          return io.greptime.v1.Database.InsertExpr.Values.getDefaultInstance();
-        }
-
-        @java.lang.Override
-        public io.greptime.v1.Database.InsertExpr.Values build() {
-          io.greptime.v1.Database.InsertExpr.Values result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(result);
-          }
-          return result;
-        }
-
-        @java.lang.Override
-        public io.greptime.v1.Database.InsertExpr.Values buildPartial() {
-          io.greptime.v1.Database.InsertExpr.Values result = new io.greptime.v1.Database.InsertExpr.Values(this);
-          int from_bitField0_ = bitField0_;
-          if (((bitField0_ & 0x00000001) != 0)) {
-            values_ = java.util.Collections.unmodifiableList(values_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.values_ = values_;
-          onBuilt();
-          return result;
-        }
-
-        @java.lang.Override
-        public Builder clone() {
-          return super.clone();
-        }
-        @java.lang.Override
-        public Builder setField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value) {
-          return super.setField(field, value);
-        }
-        @java.lang.Override
-        public Builder clearField(
-            com.google.protobuf.Descriptors.FieldDescriptor field) {
-          return super.clearField(field);
-        }
-        @java.lang.Override
-        public Builder clearOneof(
-            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-          return super.clearOneof(oneof);
-        }
-        @java.lang.Override
-        public Builder setRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            int index, java.lang.Object value) {
-          return super.setRepeatedField(field, index, value);
-        }
-        @java.lang.Override
-        public Builder addRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            java.lang.Object value) {
-          return super.addRepeatedField(field, value);
-        }
-        @java.lang.Override
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof io.greptime.v1.Database.InsertExpr.Values) {
-            return mergeFrom((io.greptime.v1.Database.InsertExpr.Values)other);
-          } else {
-            super.mergeFrom(other);
-            return this;
-          }
-        }
-
-        public Builder mergeFrom(io.greptime.v1.Database.InsertExpr.Values other) {
-          if (other == io.greptime.v1.Database.InsertExpr.Values.getDefaultInstance()) return this;
-          if (!other.values_.isEmpty()) {
-            if (values_.isEmpty()) {
-              values_ = other.values_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureValuesIsMutable();
-              values_.addAll(other.values_);
-            }
-            onChanged();
-          }
-          this.mergeUnknownFields(other.unknownFields);
-          onChanged();
-          return this;
-        }
-
-        @java.lang.Override
-        public final boolean isInitialized() {
-          return true;
-        }
-
-        @java.lang.Override
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-          io.greptime.v1.Database.InsertExpr.Values parsedMessage = null;
-          try {
-            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (io.greptime.v1.Database.InsertExpr.Values) e.getUnfinishedMessage();
-            throw e.unwrapIOException();
-          } finally {
-            if (parsedMessage != null) {
-              mergeFrom(parsedMessage);
-            }
-          }
-          return this;
-        }
-        private int bitField0_;
-
-        private java.util.List<com.google.protobuf.ByteString> values_ = java.util.Collections.emptyList();
-        private void ensureValuesIsMutable() {
-          if (!((bitField0_ & 0x00000001) != 0)) {
-            values_ = new java.util.ArrayList<com.google.protobuf.ByteString>(values_);
-            bitField0_ |= 0x00000001;
-           }
-        }
-        /**
-         * <code>repeated bytes values = 3;</code>
-         * @return A list containing the values.
-         */
-        public java.util.List<com.google.protobuf.ByteString>
-            getValuesList() {
-          return ((bitField0_ & 0x00000001) != 0) ?
-                   java.util.Collections.unmodifiableList(values_) : values_;
-        }
-        /**
-         * <code>repeated bytes values = 3;</code>
-         * @return The count of values.
-         */
-        public int getValuesCount() {
-          return values_.size();
-        }
-        /**
-         * <code>repeated bytes values = 3;</code>
-         * @param index The index of the element to return.
-         * @return The values at the given index.
-         */
-        public com.google.protobuf.ByteString getValues(int index) {
-          return values_.get(index);
-        }
-        /**
-         * <code>repeated bytes values = 3;</code>
-         * @param index The index to set the value at.
-         * @param value The values to set.
-         * @return This builder for chaining.
-         */
-        public Builder setValues(
-            int index, com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureValuesIsMutable();
-          values_.set(index, value);
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>repeated bytes values = 3;</code>
-         * @param value The values to add.
-         * @return This builder for chaining.
-         */
-        public Builder addValues(com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureValuesIsMutable();
-          values_.add(value);
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>repeated bytes values = 3;</code>
-         * @param values The values to add.
-         * @return This builder for chaining.
-         */
-        public Builder addAllValues(
-            java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
-          ensureValuesIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, values_);
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>repeated bytes values = 3;</code>
-         * @return This builder for chaining.
-         */
-        public Builder clearValues() {
-          values_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-          return this;
-        }
-        @java.lang.Override
-        public final Builder setUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields) {
-          return super.setUnknownFields(unknownFields);
-        }
-
-        @java.lang.Override
-        public final Builder mergeUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields) {
-          return super.mergeUnknownFields(unknownFields);
-        }
-
-
-        // @@protoc_insertion_point(builder_scope:greptime.v1.InsertExpr.Values)
-      }
-
-      // @@protoc_insertion_point(class_scope:greptime.v1.InsertExpr.Values)
-      private static final io.greptime.v1.Database.InsertExpr.Values DEFAULT_INSTANCE;
-      static {
-        DEFAULT_INSTANCE = new io.greptime.v1.Database.InsertExpr.Values();
-      }
-
-      public static io.greptime.v1.Database.InsertExpr.Values getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-      }
-
-      private static final com.google.protobuf.Parser<Values>
-          PARSER = new com.google.protobuf.AbstractParser<Values>() {
-        @java.lang.Override
-        public Values parsePartialFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-          return new Values(input, extensionRegistry);
-        }
-      };
-
-      public static com.google.protobuf.Parser<Values> parser() {
-        return PARSER;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Parser<Values> getParserForType() {
-        return PARSER;
-      }
-
-      @java.lang.Override
-      public io.greptime.v1.Database.InsertExpr.Values getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
-      }
-
-    }
-
-    private int exprCase_ = 0;
-    private java.lang.Object expr_;
-    public enum ExprCase
-        implements com.google.protobuf.Internal.EnumLite,
-            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-      VALUES(4),
-      SQL(5),
-      EXPR_NOT_SET(0);
-      private final int value;
-      private ExprCase(int value) {
-        this.value = value;
-      }
-      /**
-       * @param value The number of the enum to look for.
-       * @return The enum associated with the given number.
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static ExprCase valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static ExprCase forNumber(int value) {
-        switch (value) {
-          case 4: return VALUES;
-          case 5: return SQL;
-          case 0: return EXPR_NOT_SET;
-          default: return null;
-        }
-      }
-      public int getNumber() {
-        return this.value;
-      }
-    };
-
-    public ExprCase
-    getExprCase() {
-      return ExprCase.forNumber(
-          exprCase_);
     }
 
     public static final int SCHEMA_NAME_FIELD_NUMBER = 1;
@@ -5946,213 +5238,95 @@ public final class Database {
       }
     }
 
-    public static final int VALUES_FIELD_NUMBER = 4;
+    public static final int COLUMNS_FIELD_NUMBER = 3;
+    private java.util.List<io.greptime.v1.Columns.Column> columns_;
     /**
-     * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-     * @return Whether the values field is set.
+     * <pre>
+     * Data is represented here.
+     * </pre>
+     *
+     * <code>repeated .greptime.v1.Column columns = 3;</code>
      */
     @java.lang.Override
-    public boolean hasValues() {
-      return exprCase_ == 4;
+    public java.util.List<io.greptime.v1.Columns.Column> getColumnsList() {
+      return columns_;
     }
     /**
-     * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-     * @return The values.
+     * <pre>
+     * Data is represented here.
+     * </pre>
+     *
+     * <code>repeated .greptime.v1.Column columns = 3;</code>
      */
     @java.lang.Override
-    public io.greptime.v1.Database.InsertExpr.Values getValues() {
-      if (exprCase_ == 4) {
-         return (io.greptime.v1.Database.InsertExpr.Values) expr_;
-      }
-      return io.greptime.v1.Database.InsertExpr.Values.getDefaultInstance();
+    public java.util.List<? extends io.greptime.v1.Columns.ColumnOrBuilder> 
+        getColumnsOrBuilderList() {
+      return columns_;
     }
     /**
-     * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
+     * <pre>
+     * Data is represented here.
+     * </pre>
+     *
+     * <code>repeated .greptime.v1.Column columns = 3;</code>
      */
     @java.lang.Override
-    public io.greptime.v1.Database.InsertExpr.ValuesOrBuilder getValuesOrBuilder() {
-      if (exprCase_ == 4) {
-         return (io.greptime.v1.Database.InsertExpr.Values) expr_;
-      }
-      return io.greptime.v1.Database.InsertExpr.Values.getDefaultInstance();
+    public int getColumnsCount() {
+      return columns_.size();
+    }
+    /**
+     * <pre>
+     * Data is represented here.
+     * </pre>
+     *
+     * <code>repeated .greptime.v1.Column columns = 3;</code>
+     */
+    @java.lang.Override
+    public io.greptime.v1.Columns.Column getColumns(int index) {
+      return columns_.get(index);
+    }
+    /**
+     * <pre>
+     * Data is represented here.
+     * </pre>
+     *
+     * <code>repeated .greptime.v1.Column columns = 3;</code>
+     */
+    @java.lang.Override
+    public io.greptime.v1.Columns.ColumnOrBuilder getColumnsOrBuilder(
+        int index) {
+      return columns_.get(index);
     }
 
-    public static final int SQL_FIELD_NUMBER = 5;
+    public static final int ROW_COUNT_FIELD_NUMBER = 4;
+    private int rowCount_;
     /**
      * <pre>
-     * TODO(LFC): Remove field "sql" in InsertExpr.
-     * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-     * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-     * interface shouldn't use SQL directly.
-     * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-     * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-     * The "sql" field is meant to be removed in the future.
+     * The row_count of all columns, which include null and non-null values.
+     * Note: the row_count of all columns in a InsertExpr must be same.
      * </pre>
      *
-     * <code>string sql = 5;</code>
-     * @return Whether the sql field is set.
+     * <code>uint32 row_count = 4;</code>
+     * @return The rowCount.
      */
-    public boolean hasSql() {
-      return exprCase_ == 5;
-    }
-    /**
-     * <pre>
-     * TODO(LFC): Remove field "sql" in InsertExpr.
-     * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-     * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-     * interface shouldn't use SQL directly.
-     * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-     * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-     * The "sql" field is meant to be removed in the future.
-     * </pre>
-     *
-     * <code>string sql = 5;</code>
-     * @return The sql.
-     */
-    public java.lang.String getSql() {
-      java.lang.Object ref = "";
-      if (exprCase_ == 5) {
-        ref = expr_;
-      }
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (exprCase_ == 5) {
-          expr_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     * TODO(LFC): Remove field "sql" in InsertExpr.
-     * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-     * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-     * interface shouldn't use SQL directly.
-     * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-     * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-     * The "sql" field is meant to be removed in the future.
-     * </pre>
-     *
-     * <code>string sql = 5;</code>
-     * @return The bytes for sql.
-     */
-    public com.google.protobuf.ByteString
-        getSqlBytes() {
-      java.lang.Object ref = "";
-      if (exprCase_ == 5) {
-        ref = expr_;
-      }
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        if (exprCase_ == 5) {
-          expr_ = b;
-        }
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    @java.lang.Override
+    public int getRowCount() {
+      return rowCount_;
     }
 
-    public static final int REGION_NUMBER_FIELD_NUMBER = 6;
+    public static final int REGION_NUMBER_FIELD_NUMBER = 5;
     private int regionNumber_;
     /**
      * <pre>
-     *&#47; The region number of current insert request.
+     * The region number of current insert request.
      * </pre>
      *
-     * <code>uint32 region_number = 6;</code>
+     * <code>uint32 region_number = 5;</code>
      * @return The regionNumber.
      */
     @java.lang.Override
     public int getRegionNumber() {
       return regionNumber_;
-    }
-
-    public static final int OPTIONS_FIELD_NUMBER = 7;
-    private static final class OptionsDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, com.google.protobuf.ByteString> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, com.google.protobuf.ByteString>newDefaultInstance(
-                  io.greptime.v1.Database.internal_static_greptime_v1_InsertExpr_OptionsEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.BYTES,
-                  com.google.protobuf.ByteString.EMPTY);
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, com.google.protobuf.ByteString> options_;
-    private com.google.protobuf.MapField<java.lang.String, com.google.protobuf.ByteString>
-    internalGetOptions() {
-      if (options_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            OptionsDefaultEntryHolder.defaultEntry);
-      }
-      return options_;
-    }
-
-    public int getOptionsCount() {
-      return internalGetOptions().getMap().size();
-    }
-    /**
-     * <code>map&lt;string, bytes&gt; options = 7;</code>
-     */
-
-    @java.lang.Override
-    public boolean containsOptions(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      return internalGetOptions().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getOptionsMap()} instead.
-     */
-    @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, com.google.protobuf.ByteString> getOptions() {
-      return getOptionsMap();
-    }
-    /**
-     * <code>map&lt;string, bytes&gt; options = 7;</code>
-     */
-    @java.lang.Override
-
-    public java.util.Map<java.lang.String, com.google.protobuf.ByteString> getOptionsMap() {
-      return internalGetOptions().getMap();
-    }
-    /**
-     * <code>map&lt;string, bytes&gt; options = 7;</code>
-     */
-    @java.lang.Override
-
-    public com.google.protobuf.ByteString getOptionsOrDefault(
-        java.lang.String key,
-        com.google.protobuf.ByteString defaultValue) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.google.protobuf.ByteString> map =
-          internalGetOptions().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
-    }
-    /**
-     * <code>map&lt;string, bytes&gt; options = 7;</code>
-     */
-    @java.lang.Override
-
-    public com.google.protobuf.ByteString getOptionsOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, com.google.protobuf.ByteString> map =
-          internalGetOptions().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
-      }
-      return map.get(key);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -6175,21 +5349,15 @@ public final class Database {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(tableName_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, tableName_);
       }
-      if (exprCase_ == 4) {
-        output.writeMessage(4, (io.greptime.v1.Database.InsertExpr.Values) expr_);
+      for (int i = 0; i < columns_.size(); i++) {
+        output.writeMessage(3, columns_.get(i));
       }
-      if (exprCase_ == 5) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, expr_);
+      if (rowCount_ != 0) {
+        output.writeUInt32(4, rowCount_);
       }
       if (regionNumber_ != 0) {
-        output.writeUInt32(6, regionNumber_);
+        output.writeUInt32(5, regionNumber_);
       }
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetOptions(),
-          OptionsDefaultEntryHolder.defaultEntry,
-          7);
       unknownFields.writeTo(output);
     }
 
@@ -6205,26 +5373,17 @@ public final class Database {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(tableName_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, tableName_);
       }
-      if (exprCase_ == 4) {
+      for (int i = 0; i < columns_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, (io.greptime.v1.Database.InsertExpr.Values) expr_);
+          .computeMessageSize(3, columns_.get(i));
       }
-      if (exprCase_ == 5) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, expr_);
+      if (rowCount_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(4, rowCount_);
       }
       if (regionNumber_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(6, regionNumber_);
-      }
-      for (java.util.Map.Entry<java.lang.String, com.google.protobuf.ByteString> entry
-           : internalGetOptions().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, com.google.protobuf.ByteString>
-        options__ = OptionsDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(7, options__);
+          .computeUInt32Size(5, regionNumber_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -6245,23 +5404,12 @@ public final class Database {
           .equals(other.getSchemaName())) return false;
       if (!getTableName()
           .equals(other.getTableName())) return false;
+      if (!getColumnsList()
+          .equals(other.getColumnsList())) return false;
+      if (getRowCount()
+          != other.getRowCount()) return false;
       if (getRegionNumber()
           != other.getRegionNumber()) return false;
-      if (!internalGetOptions().equals(
-          other.internalGetOptions())) return false;
-      if (!getExprCase().equals(other.getExprCase())) return false;
-      switch (exprCase_) {
-        case 4:
-          if (!getValues()
-              .equals(other.getValues())) return false;
-          break;
-        case 5:
-          if (!getSql()
-              .equals(other.getSql())) return false;
-          break;
-        case 0:
-        default:
-      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -6277,24 +5425,14 @@ public final class Database {
       hash = (53 * hash) + getSchemaName().hashCode();
       hash = (37 * hash) + TABLE_NAME_FIELD_NUMBER;
       hash = (53 * hash) + getTableName().hashCode();
+      if (getColumnsCount() > 0) {
+        hash = (37 * hash) + COLUMNS_FIELD_NUMBER;
+        hash = (53 * hash) + getColumnsList().hashCode();
+      }
+      hash = (37 * hash) + ROW_COUNT_FIELD_NUMBER;
+      hash = (53 * hash) + getRowCount();
       hash = (37 * hash) + REGION_NUMBER_FIELD_NUMBER;
       hash = (53 * hash) + getRegionNumber();
-      if (!internalGetOptions().getMap().isEmpty()) {
-        hash = (37 * hash) + OPTIONS_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetOptions().hashCode();
-      }
-      switch (exprCase_) {
-        case 4:
-          hash = (37 * hash) + VALUES_FIELD_NUMBER;
-          hash = (53 * hash) + getValues().hashCode();
-          break;
-        case 5:
-          hash = (37 * hash) + SQL_FIELD_NUMBER;
-          hash = (53 * hash) + getSql().hashCode();
-          break;
-        case 0:
-        default:
-      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -6402,28 +5540,6 @@ public final class Database {
         return io.greptime.v1.Database.internal_static_greptime_v1_InsertExpr_descriptor;
       }
 
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMapField(
-          int number) {
-        switch (number) {
-          case 7:
-            return internalGetOptions();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
-        }
-      }
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMutableMapField(
-          int number) {
-        switch (number) {
-          case 7:
-            return internalGetMutableOptions();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
-        }
-      }
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
@@ -6445,6 +5561,7 @@ public final class Database {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getColumnsFieldBuilder();
         }
       }
       @java.lang.Override
@@ -6454,11 +5571,16 @@ public final class Database {
 
         tableName_ = "";
 
+        if (columnsBuilder_ == null) {
+          columns_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          columnsBuilder_.clear();
+        }
+        rowCount_ = 0;
+
         regionNumber_ = 0;
 
-        internalGetMutableOptions().clear();
-        exprCase_ = 0;
-        expr_ = null;
         return this;
       }
 
@@ -6488,20 +5610,17 @@ public final class Database {
         int from_bitField0_ = bitField0_;
         result.schemaName_ = schemaName_;
         result.tableName_ = tableName_;
-        if (exprCase_ == 4) {
-          if (valuesBuilder_ == null) {
-            result.expr_ = expr_;
-          } else {
-            result.expr_ = valuesBuilder_.build();
+        if (columnsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            columns_ = java.util.Collections.unmodifiableList(columns_);
+            bitField0_ = (bitField0_ & ~0x00000001);
           }
+          result.columns_ = columns_;
+        } else {
+          result.columns_ = columnsBuilder_.build();
         }
-        if (exprCase_ == 5) {
-          result.expr_ = expr_;
-        }
+        result.rowCount_ = rowCount_;
         result.regionNumber_ = regionNumber_;
-        result.options_ = internalGetOptions();
-        result.options_.makeImmutable();
-        result.exprCase_ = exprCase_;
         onBuilt();
         return result;
       }
@@ -6558,25 +5677,37 @@ public final class Database {
           tableName_ = other.tableName_;
           onChanged();
         }
+        if (columnsBuilder_ == null) {
+          if (!other.columns_.isEmpty()) {
+            if (columns_.isEmpty()) {
+              columns_ = other.columns_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureColumnsIsMutable();
+              columns_.addAll(other.columns_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.columns_.isEmpty()) {
+            if (columnsBuilder_.isEmpty()) {
+              columnsBuilder_.dispose();
+              columnsBuilder_ = null;
+              columns_ = other.columns_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              columnsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getColumnsFieldBuilder() : null;
+            } else {
+              columnsBuilder_.addAllMessages(other.columns_);
+            }
+          }
+        }
+        if (other.getRowCount() != 0) {
+          setRowCount(other.getRowCount());
+        }
         if (other.getRegionNumber() != 0) {
           setRegionNumber(other.getRegionNumber());
-        }
-        internalGetMutableOptions().mergeFrom(
-            other.internalGetOptions());
-        switch (other.getExprCase()) {
-          case VALUES: {
-            mergeValues(other.getValues());
-            break;
-          }
-          case SQL: {
-            exprCase_ = 5;
-            expr_ = other.expr_;
-            onChanged();
-            break;
-          }
-          case EXPR_NOT_SET: {
-            break;
-          }
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -6606,21 +5737,6 @@ public final class Database {
         }
         return this;
       }
-      private int exprCase_ = 0;
-      private java.lang.Object expr_;
-      public ExprCase
-          getExprCase() {
-        return ExprCase.forNumber(
-            exprCase_);
-      }
-
-      public Builder clearExpr() {
-        exprCase_ = 0;
-        expr_ = null;
-        onChanged();
-        return this;
-      }
-
       private int bitField0_;
 
       private java.lang.Object schemaName_ = "";
@@ -6775,300 +5891,360 @@ public final class Database {
         return this;
       }
 
-      private com.google.protobuf.SingleFieldBuilderV3<
-          io.greptime.v1.Database.InsertExpr.Values, io.greptime.v1.Database.InsertExpr.Values.Builder, io.greptime.v1.Database.InsertExpr.ValuesOrBuilder> valuesBuilder_;
-      /**
-       * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-       * @return Whether the values field is set.
-       */
-      @java.lang.Override
-      public boolean hasValues() {
-        return exprCase_ == 4;
+      private java.util.List<io.greptime.v1.Columns.Column> columns_ =
+        java.util.Collections.emptyList();
+      private void ensureColumnsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          columns_ = new java.util.ArrayList<io.greptime.v1.Columns.Column>(columns_);
+          bitField0_ |= 0x00000001;
+         }
       }
-      /**
-       * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-       * @return The values.
-       */
-      @java.lang.Override
-      public io.greptime.v1.Database.InsertExpr.Values getValues() {
-        if (valuesBuilder_ == null) {
-          if (exprCase_ == 4) {
-            return (io.greptime.v1.Database.InsertExpr.Values) expr_;
-          }
-          return io.greptime.v1.Database.InsertExpr.Values.getDefaultInstance();
-        } else {
-          if (exprCase_ == 4) {
-            return valuesBuilder_.getMessage();
-          }
-          return io.greptime.v1.Database.InsertExpr.Values.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-       */
-      public Builder setValues(io.greptime.v1.Database.InsertExpr.Values value) {
-        if (valuesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          expr_ = value;
-          onChanged();
-        } else {
-          valuesBuilder_.setMessage(value);
-        }
-        exprCase_ = 4;
-        return this;
-      }
-      /**
-       * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-       */
-      public Builder setValues(
-          io.greptime.v1.Database.InsertExpr.Values.Builder builderForValue) {
-        if (valuesBuilder_ == null) {
-          expr_ = builderForValue.build();
-          onChanged();
-        } else {
-          valuesBuilder_.setMessage(builderForValue.build());
-        }
-        exprCase_ = 4;
-        return this;
-      }
-      /**
-       * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-       */
-      public Builder mergeValues(io.greptime.v1.Database.InsertExpr.Values value) {
-        if (valuesBuilder_ == null) {
-          if (exprCase_ == 4 &&
-              expr_ != io.greptime.v1.Database.InsertExpr.Values.getDefaultInstance()) {
-            expr_ = io.greptime.v1.Database.InsertExpr.Values.newBuilder((io.greptime.v1.Database.InsertExpr.Values) expr_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            expr_ = value;
-          }
-          onChanged();
-        } else {
-          if (exprCase_ == 4) {
-            valuesBuilder_.mergeFrom(value);
-          }
-          valuesBuilder_.setMessage(value);
-        }
-        exprCase_ = 4;
-        return this;
-      }
-      /**
-       * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-       */
-      public Builder clearValues() {
-        if (valuesBuilder_ == null) {
-          if (exprCase_ == 4) {
-            exprCase_ = 0;
-            expr_ = null;
-            onChanged();
-          }
-        } else {
-          if (exprCase_ == 4) {
-            exprCase_ = 0;
-            expr_ = null;
-          }
-          valuesBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-       */
-      public io.greptime.v1.Database.InsertExpr.Values.Builder getValuesBuilder() {
-        return getValuesFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-       */
-      @java.lang.Override
-      public io.greptime.v1.Database.InsertExpr.ValuesOrBuilder getValuesOrBuilder() {
-        if ((exprCase_ == 4) && (valuesBuilder_ != null)) {
-          return valuesBuilder_.getMessageOrBuilder();
-        } else {
-          if (exprCase_ == 4) {
-            return (io.greptime.v1.Database.InsertExpr.Values) expr_;
-          }
-          return io.greptime.v1.Database.InsertExpr.Values.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>.greptime.v1.InsertExpr.Values values = 4;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          io.greptime.v1.Database.InsertExpr.Values, io.greptime.v1.Database.InsertExpr.Values.Builder, io.greptime.v1.Database.InsertExpr.ValuesOrBuilder> 
-          getValuesFieldBuilder() {
-        if (valuesBuilder_ == null) {
-          if (!(exprCase_ == 4)) {
-            expr_ = io.greptime.v1.Database.InsertExpr.Values.getDefaultInstance();
-          }
-          valuesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              io.greptime.v1.Database.InsertExpr.Values, io.greptime.v1.Database.InsertExpr.Values.Builder, io.greptime.v1.Database.InsertExpr.ValuesOrBuilder>(
-                  (io.greptime.v1.Database.InsertExpr.Values) expr_,
-                  getParentForChildren(),
-                  isClean());
-          expr_ = null;
-        }
-        exprCase_ = 4;
-        onChanged();;
-        return valuesBuilder_;
-      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          io.greptime.v1.Columns.Column, io.greptime.v1.Columns.Column.Builder, io.greptime.v1.Columns.ColumnOrBuilder> columnsBuilder_;
 
       /**
        * <pre>
-       * TODO(LFC): Remove field "sql" in InsertExpr.
-       * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-       * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-       * interface shouldn't use SQL directly.
-       * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-       * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-       * The "sql" field is meant to be removed in the future.
+       * Data is represented here.
        * </pre>
        *
-       * <code>string sql = 5;</code>
-       * @return Whether the sql field is set.
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
        */
-      @java.lang.Override
-      public boolean hasSql() {
-        return exprCase_ == 5;
-      }
-      /**
-       * <pre>
-       * TODO(LFC): Remove field "sql" in InsertExpr.
-       * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-       * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-       * interface shouldn't use SQL directly.
-       * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-       * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-       * The "sql" field is meant to be removed in the future.
-       * </pre>
-       *
-       * <code>string sql = 5;</code>
-       * @return The sql.
-       */
-      @java.lang.Override
-      public java.lang.String getSql() {
-        java.lang.Object ref = "";
-        if (exprCase_ == 5) {
-          ref = expr_;
-        }
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (exprCase_ == 5) {
-            expr_ = s;
-          }
-          return s;
+      public java.util.List<io.greptime.v1.Columns.Column> getColumnsList() {
+        if (columnsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(columns_);
         } else {
-          return (java.lang.String) ref;
+          return columnsBuilder_.getMessageList();
         }
       }
       /**
        * <pre>
-       * TODO(LFC): Remove field "sql" in InsertExpr.
-       * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-       * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-       * interface shouldn't use SQL directly.
-       * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-       * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-       * The "sql" field is meant to be removed in the future.
+       * Data is represented here.
        * </pre>
        *
-       * <code>string sql = 5;</code>
-       * @return The bytes for sql.
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public int getColumnsCount() {
+        if (columnsBuilder_ == null) {
+          return columns_.size();
+        } else {
+          return columnsBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public io.greptime.v1.Columns.Column getColumns(int index) {
+        if (columnsBuilder_ == null) {
+          return columns_.get(index);
+        } else {
+          return columnsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public Builder setColumns(
+          int index, io.greptime.v1.Columns.Column value) {
+        if (columnsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureColumnsIsMutable();
+          columns_.set(index, value);
+          onChanged();
+        } else {
+          columnsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public Builder setColumns(
+          int index, io.greptime.v1.Columns.Column.Builder builderForValue) {
+        if (columnsBuilder_ == null) {
+          ensureColumnsIsMutable();
+          columns_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          columnsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public Builder addColumns(io.greptime.v1.Columns.Column value) {
+        if (columnsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureColumnsIsMutable();
+          columns_.add(value);
+          onChanged();
+        } else {
+          columnsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public Builder addColumns(
+          int index, io.greptime.v1.Columns.Column value) {
+        if (columnsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureColumnsIsMutable();
+          columns_.add(index, value);
+          onChanged();
+        } else {
+          columnsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public Builder addColumns(
+          io.greptime.v1.Columns.Column.Builder builderForValue) {
+        if (columnsBuilder_ == null) {
+          ensureColumnsIsMutable();
+          columns_.add(builderForValue.build());
+          onChanged();
+        } else {
+          columnsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public Builder addColumns(
+          int index, io.greptime.v1.Columns.Column.Builder builderForValue) {
+        if (columnsBuilder_ == null) {
+          ensureColumnsIsMutable();
+          columns_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          columnsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public Builder addAllColumns(
+          java.lang.Iterable<? extends io.greptime.v1.Columns.Column> values) {
+        if (columnsBuilder_ == null) {
+          ensureColumnsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, columns_);
+          onChanged();
+        } else {
+          columnsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public Builder clearColumns() {
+        if (columnsBuilder_ == null) {
+          columns_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          columnsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public Builder removeColumns(int index) {
+        if (columnsBuilder_ == null) {
+          ensureColumnsIsMutable();
+          columns_.remove(index);
+          onChanged();
+        } else {
+          columnsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public io.greptime.v1.Columns.Column.Builder getColumnsBuilder(
+          int index) {
+        return getColumnsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public io.greptime.v1.Columns.ColumnOrBuilder getColumnsOrBuilder(
+          int index) {
+        if (columnsBuilder_ == null) {
+          return columns_.get(index);  } else {
+          return columnsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public java.util.List<? extends io.greptime.v1.Columns.ColumnOrBuilder> 
+           getColumnsOrBuilderList() {
+        if (columnsBuilder_ != null) {
+          return columnsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(columns_);
+        }
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public io.greptime.v1.Columns.Column.Builder addColumnsBuilder() {
+        return getColumnsFieldBuilder().addBuilder(
+            io.greptime.v1.Columns.Column.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public io.greptime.v1.Columns.Column.Builder addColumnsBuilder(
+          int index) {
+        return getColumnsFieldBuilder().addBuilder(
+            index, io.greptime.v1.Columns.Column.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * Data is represented here.
+       * </pre>
+       *
+       * <code>repeated .greptime.v1.Column columns = 3;</code>
+       */
+      public java.util.List<io.greptime.v1.Columns.Column.Builder> 
+           getColumnsBuilderList() {
+        return getColumnsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          io.greptime.v1.Columns.Column, io.greptime.v1.Columns.Column.Builder, io.greptime.v1.Columns.ColumnOrBuilder> 
+          getColumnsFieldBuilder() {
+        if (columnsBuilder_ == null) {
+          columnsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              io.greptime.v1.Columns.Column, io.greptime.v1.Columns.Column.Builder, io.greptime.v1.Columns.ColumnOrBuilder>(
+                  columns_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          columns_ = null;
+        }
+        return columnsBuilder_;
+      }
+
+      private int rowCount_ ;
+      /**
+       * <pre>
+       * The row_count of all columns, which include null and non-null values.
+       * Note: the row_count of all columns in a InsertExpr must be same.
+       * </pre>
+       *
+       * <code>uint32 row_count = 4;</code>
+       * @return The rowCount.
        */
       @java.lang.Override
-      public com.google.protobuf.ByteString
-          getSqlBytes() {
-        java.lang.Object ref = "";
-        if (exprCase_ == 5) {
-          ref = expr_;
-        }
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          if (exprCase_ == 5) {
-            expr_ = b;
-          }
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
+      public int getRowCount() {
+        return rowCount_;
       }
       /**
        * <pre>
-       * TODO(LFC): Remove field "sql" in InsertExpr.
-       * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-       * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-       * interface shouldn't use SQL directly.
-       * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-       * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-       * The "sql" field is meant to be removed in the future.
+       * The row_count of all columns, which include null and non-null values.
+       * Note: the row_count of all columns in a InsertExpr must be same.
        * </pre>
        *
-       * <code>string sql = 5;</code>
-       * @param value The sql to set.
+       * <code>uint32 row_count = 4;</code>
+       * @param value The rowCount to set.
        * @return This builder for chaining.
        */
-      public Builder setSql(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  exprCase_ = 5;
-        expr_ = value;
+      public Builder setRowCount(int value) {
+        
+        rowCount_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       * TODO(LFC): Remove field "sql" in InsertExpr.
-       * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-       * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-       * interface shouldn't use SQL directly.
-       * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-       * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-       * The "sql" field is meant to be removed in the future.
+       * The row_count of all columns, which include null and non-null values.
+       * Note: the row_count of all columns in a InsertExpr must be same.
        * </pre>
        *
-       * <code>string sql = 5;</code>
+       * <code>uint32 row_count = 4;</code>
        * @return This builder for chaining.
        */
-      public Builder clearSql() {
-        if (exprCase_ == 5) {
-          exprCase_ = 0;
-          expr_ = null;
-          onChanged();
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       * TODO(LFC): Remove field "sql" in InsertExpr.
-       * When Frontend instance received an insertion SQL (`insert into ...`), it's anticipated to parse the SQL and
-       * assemble the values to insert to feed Datanode. In other words, inserting data through Datanode instance's GRPC
-       * interface shouldn't use SQL directly.
-       * Then why the "sql" field exists here? It's because the Frontend needs table schema to create the values to insert,
-       * which is currently not able to find anywhere. (Maybe the table schema is suppose to be fetched from Meta?)
-       * The "sql" field is meant to be removed in the future.
-       * </pre>
-       *
-       * <code>string sql = 5;</code>
-       * @param value The bytes for sql to set.
-       * @return This builder for chaining.
-       */
-      public Builder setSqlBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        exprCase_ = 5;
-        expr_ = value;
+      public Builder clearRowCount() {
+        
+        rowCount_ = 0;
         onChanged();
         return this;
       }
@@ -7076,10 +6252,10 @@ public final class Database {
       private int regionNumber_ ;
       /**
        * <pre>
-       *&#47; The region number of current insert request.
+       * The region number of current insert request.
        * </pre>
        *
-       * <code>uint32 region_number = 6;</code>
+       * <code>uint32 region_number = 5;</code>
        * @return The regionNumber.
        */
       @java.lang.Override
@@ -7088,10 +6264,10 @@ public final class Database {
       }
       /**
        * <pre>
-       *&#47; The region number of current insert request.
+       * The region number of current insert request.
        * </pre>
        *
-       * <code>uint32 region_number = 6;</code>
+       * <code>uint32 region_number = 5;</code>
        * @param value The regionNumber to set.
        * @return This builder for chaining.
        */
@@ -7103,147 +6279,16 @@ public final class Database {
       }
       /**
        * <pre>
-       *&#47; The region number of current insert request.
+       * The region number of current insert request.
        * </pre>
        *
-       * <code>uint32 region_number = 6;</code>
+       * <code>uint32 region_number = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearRegionNumber() {
         
         regionNumber_ = 0;
         onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.MapField<
-          java.lang.String, com.google.protobuf.ByteString> options_;
-      private com.google.protobuf.MapField<java.lang.String, com.google.protobuf.ByteString>
-      internalGetOptions() {
-        if (options_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              OptionsDefaultEntryHolder.defaultEntry);
-        }
-        return options_;
-      }
-      private com.google.protobuf.MapField<java.lang.String, com.google.protobuf.ByteString>
-      internalGetMutableOptions() {
-        onChanged();;
-        if (options_ == null) {
-          options_ = com.google.protobuf.MapField.newMapField(
-              OptionsDefaultEntryHolder.defaultEntry);
-        }
-        if (!options_.isMutable()) {
-          options_ = options_.copy();
-        }
-        return options_;
-      }
-
-      public int getOptionsCount() {
-        return internalGetOptions().getMap().size();
-      }
-      /**
-       * <code>map&lt;string, bytes&gt; options = 7;</code>
-       */
-
-      @java.lang.Override
-      public boolean containsOptions(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        return internalGetOptions().getMap().containsKey(key);
-      }
-      /**
-       * Use {@link #getOptionsMap()} instead.
-       */
-      @java.lang.Override
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.google.protobuf.ByteString> getOptions() {
-        return getOptionsMap();
-      }
-      /**
-       * <code>map&lt;string, bytes&gt; options = 7;</code>
-       */
-      @java.lang.Override
-
-      public java.util.Map<java.lang.String, com.google.protobuf.ByteString> getOptionsMap() {
-        return internalGetOptions().getMap();
-      }
-      /**
-       * <code>map&lt;string, bytes&gt; options = 7;</code>
-       */
-      @java.lang.Override
-
-      public com.google.protobuf.ByteString getOptionsOrDefault(
-          java.lang.String key,
-          com.google.protobuf.ByteString defaultValue) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.google.protobuf.ByteString> map =
-            internalGetOptions().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
-      }
-      /**
-       * <code>map&lt;string, bytes&gt; options = 7;</code>
-       */
-      @java.lang.Override
-
-      public com.google.protobuf.ByteString getOptionsOrThrow(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, com.google.protobuf.ByteString> map =
-            internalGetOptions().getMap();
-        if (!map.containsKey(key)) {
-          throw new java.lang.IllegalArgumentException();
-        }
-        return map.get(key);
-      }
-
-      public Builder clearOptions() {
-        internalGetMutableOptions().getMutableMap()
-            .clear();
-        return this;
-      }
-      /**
-       * <code>map&lt;string, bytes&gt; options = 7;</code>
-       */
-
-      public Builder removeOptions(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        internalGetMutableOptions().getMutableMap()
-            .remove(key);
-        return this;
-      }
-      /**
-       * Use alternate mutation accessors instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, com.google.protobuf.ByteString>
-      getMutableOptions() {
-        return internalGetMutableOptions().getMutableMap();
-      }
-      /**
-       * <code>map&lt;string, bytes&gt; options = 7;</code>
-       */
-      public Builder putOptions(
-          java.lang.String key,
-          com.google.protobuf.ByteString value) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        if (value == null) {
-  throw new NullPointerException("map value");
-}
-
-        internalGetMutableOptions().getMutableMap()
-            .put(key, value);
-        return this;
-      }
-      /**
-       * <code>map&lt;string, bytes&gt; options = 7;</code>
-       */
-
-      public Builder putAllOptions(
-          java.util.Map<java.lang.String, com.google.protobuf.ByteString> values) {
-        internalGetMutableOptions().getMutableMap()
-            .putAll(values);
         return this;
       }
       @java.lang.Override
@@ -9824,16 +8869,6 @@ public final class Database {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_greptime_v1_InsertExpr_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_greptime_v1_InsertExpr_Values_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_greptime_v1_InsertExpr_Values_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_greptime_v1_InsertExpr_OptionsEntry_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_greptime_v1_InsertExpr_OptionsEntry_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_greptime_v1_UpdateExpr_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -9863,38 +8898,36 @@ public final class Database {
   static {
     java.lang.String[] descriptorData = {
       "\n\016database.proto\022\013greptime.v1\032\014common.pr" +
-      "oto\"G\n\017DatabaseRequest\022\014\n\004name\030\001 \001(\t\022&\n\005" +
-      "exprs\030\002 \003(\0132\027.greptime.v1.ObjectExpr\">\n\020" +
-      "DatabaseResponse\022*\n\007results\030\001 \003(\0132\031.grep" +
-      "time.v1.ObjectResult\"\351\001\n\nObjectExpr\022\'\n\006h" +
-      "eader\030\001 \001(\0132\027.greptime.v1.ExprHeader\022)\n\006" +
-      "insert\030\002 \001(\0132\027.greptime.v1.InsertExprH\000\022" +
-      ")\n\006select\030\003 \001(\0132\027.greptime.v1.SelectExpr" +
-      "H\000\022)\n\006update\030\004 \001(\0132\027.greptime.v1.UpdateE" +
-      "xprH\000\022)\n\006delete\030\005 \001(\0132\027.greptime.v1.Dele" +
-      "teExprH\000B\006\n\004expr\"o\n\nSelectExpr\022\r\n\003sql\030\001 " +
-      "\001(\tH\000\022\026\n\014logical_plan\030\002 \001(\014H\000\0222\n\rphysica" +
-      "l_plan\030\017 \001(\0132\031.greptime.v1.PhysicalPlanH" +
-      "\000B\006\n\004expr\"1\n\014PhysicalPlan\022\023\n\013original_ql" +
-      "\030\001 \001(\014\022\014\n\004plan\030\002 \001(\014\"\226\002\n\nInsertExpr\022\023\n\013s" +
-      "chema_name\030\001 \001(\t\022\022\n\ntable_name\030\002 \001(\t\0220\n\006" +
-      "values\030\004 \001(\0132\036.greptime.v1.InsertExpr.Va" +
-      "luesH\000\022\r\n\003sql\030\005 \001(\tH\000\022\025\n\rregion_number\030\006" +
-      " \001(\r\0225\n\007options\030\007 \003(\0132$.greptime.v1.Inse" +
-      "rtExpr.OptionsEntry\032\030\n\006Values\022\016\n\006values\030" +
-      "\003 \003(\014\032.\n\014OptionsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va" +
-      "lue\030\002 \001(\014:\0028\001B\006\n\004expr\"\014\n\nUpdateExpr\"\014\n\nD" +
-      "eleteExpr\"\235\001\n\014ObjectResult\022)\n\006header\030\001 \001" +
-      "(\0132\031.greptime.v1.ResultHeader\022+\n\006select\030" +
-      "\002 \001(\0132\031.greptime.v1.SelectResultH\000\022+\n\006mu" +
-      "tate\030\003 \001(\0132\031.greptime.v1.MutateResultH\000B" +
-      "\010\n\006result\" \n\014SelectResult\022\020\n\010raw_data\030\001 " +
-      "\001(\014B\032\n\016io.greptime.v1B\010Databaseb\006proto3"
+      "oto\032\014column.proto\"G\n\017DatabaseRequest\022\014\n\004" +
+      "name\030\001 \001(\t\022&\n\005exprs\030\002 \003(\0132\027.greptime.v1." +
+      "ObjectExpr\">\n\020DatabaseResponse\022*\n\007result" +
+      "s\030\001 \003(\0132\031.greptime.v1.ObjectResult\"\351\001\n\nO" +
+      "bjectExpr\022\'\n\006header\030\001 \001(\0132\027.greptime.v1." +
+      "ExprHeader\022)\n\006insert\030\002 \001(\0132\027.greptime.v1" +
+      ".InsertExprH\000\022)\n\006select\030\003 \001(\0132\027.greptime" +
+      ".v1.SelectExprH\000\022)\n\006update\030\004 \001(\0132\027.grept" +
+      "ime.v1.UpdateExprH\000\022)\n\006delete\030\005 \001(\0132\027.gr" +
+      "eptime.v1.DeleteExprH\000B\006\n\004expr\"o\n\nSelect" +
+      "Expr\022\r\n\003sql\030\001 \001(\tH\000\022\026\n\014logical_plan\030\002 \001(" +
+      "\014H\000\0222\n\rphysical_plan\030\017 \001(\0132\031.greptime.v1" +
+      ".PhysicalPlanH\000B\006\n\004expr\"1\n\014PhysicalPlan\022" +
+      "\023\n\013original_ql\030\001 \001(\014\022\014\n\004plan\030\002 \001(\014\"\205\001\n\nI" +
+      "nsertExpr\022\023\n\013schema_name\030\001 \001(\t\022\022\n\ntable_" +
+      "name\030\002 \001(\t\022$\n\007columns\030\003 \003(\0132\023.greptime.v" +
+      "1.Column\022\021\n\trow_count\030\004 \001(\r\022\025\n\rregion_nu" +
+      "mber\030\005 \001(\r\"\014\n\nUpdateExpr\"\014\n\nDeleteExpr\"\235" +
+      "\001\n\014ObjectResult\022)\n\006header\030\001 \001(\0132\031.grepti" +
+      "me.v1.ResultHeader\022+\n\006select\030\002 \001(\0132\031.gre" +
+      "ptime.v1.SelectResultH\000\022+\n\006mutate\030\003 \001(\0132" +
+      "\031.greptime.v1.MutateResultH\000B\010\n\006result\" " +
+      "\n\014SelectResult\022\020\n\010raw_data\030\001 \001(\014B\032\n\016io.g" +
+      "reptime.v1B\010Databaseb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           io.greptime.v1.Common.getDescriptor(),
+          io.greptime.v1.Columns.getDescriptor(),
         });
     internal_static_greptime_v1_DatabaseRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -9931,19 +8964,7 @@ public final class Database {
     internal_static_greptime_v1_InsertExpr_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_InsertExpr_descriptor,
-        new java.lang.String[] { "SchemaName", "TableName", "Values", "Sql", "RegionNumber", "Options", "Expr", });
-    internal_static_greptime_v1_InsertExpr_Values_descriptor =
-      internal_static_greptime_v1_InsertExpr_descriptor.getNestedTypes().get(0);
-    internal_static_greptime_v1_InsertExpr_Values_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_greptime_v1_InsertExpr_Values_descriptor,
-        new java.lang.String[] { "Values", });
-    internal_static_greptime_v1_InsertExpr_OptionsEntry_descriptor =
-      internal_static_greptime_v1_InsertExpr_descriptor.getNestedTypes().get(1);
-    internal_static_greptime_v1_InsertExpr_OptionsEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_greptime_v1_InsertExpr_OptionsEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
+        new java.lang.String[] { "SchemaName", "TableName", "Columns", "RowCount", "RegionNumber", });
     internal_static_greptime_v1_UpdateExpr_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_greptime_v1_UpdateExpr_fieldAccessorTable = new
@@ -9969,6 +8990,7 @@ public final class Database {
         internal_static_greptime_v1_SelectResult_descriptor,
         new java.lang.String[] { "RawData", });
     io.greptime.v1.Common.getDescriptor();
+    io.greptime.v1.Columns.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

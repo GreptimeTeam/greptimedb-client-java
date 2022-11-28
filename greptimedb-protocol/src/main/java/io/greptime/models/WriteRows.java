@@ -175,19 +175,11 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
 
         @Override
         public GreptimeDB.BatchRequest into() {
-            Insert.InsertBatch batch = Insert.InsertBatch.newBuilder() //
-                .addAllColumns(columns()) //
-                .setRowCount(rowCount()) //
-                .build();
-
-            Database.InsertExpr.Values values = Database.InsertExpr.Values.newBuilder() //
-                .addValues(batch.toByteString()) //
-                .build();
-
             Database.InsertExpr insert = Database.InsertExpr.newBuilder() //
                 .setSchemaName(tableName().getDatabaseName()) //
                 .setTableName(tableName().getTableName()) //
-                .setValues(values) //
+                .addAllColumns(columns()) //
+                .setRowCount(rowCount()) //
                 .build();
 
             Common.ExprHeader header = Common.ExprHeader.newBuilder() //
