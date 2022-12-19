@@ -51,7 +51,10 @@ public final class ColumnHelper {
         COLUMN_TYPES_DICT.put(Columns.ColumnDataType.STRING, "string_values");
         COLUMN_TYPES_DICT.put(Columns.ColumnDataType.DATE, "date_values");
         COLUMN_TYPES_DICT.put(Columns.ColumnDataType.DATETIME, "datetime_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.TIMESTAMP, "ts_millis_values");
+        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.TIMESTAMP_SECOND, "ts_second_values");
+        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.TIMESTAMP_MILLISECOND, "ts_millisecond_values");
+        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.TIMESTAMP_MICROSECOND, "ts_microsecond_values");
+        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.TIMESTAMP_NANOSECOND, "ts_nanosecond_values");
     }
 
     public static Columns.ColumnDataType getValueType(Columns.Column column) {

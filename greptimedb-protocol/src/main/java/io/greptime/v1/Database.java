@@ -3390,21 +3390,6 @@ public final class Database {
      */
     com.google.protobuf.ByteString getLogicalPlan();
 
-    /**
-     * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-     * @return Whether the physicalPlan field is set.
-     */
-    boolean hasPhysicalPlan();
-    /**
-     * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-     * @return The physicalPlan.
-     */
-    io.greptime.v1.Database.PhysicalPlan getPhysicalPlan();
-    /**
-     * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-     */
-    io.greptime.v1.Database.PhysicalPlanOrBuilder getPhysicalPlanOrBuilder();
-
     public io.greptime.v1.Database.SelectExpr.ExprCase getExprCase();
   }
   /**
@@ -3467,20 +3452,6 @@ public final class Database {
               exprCase_ = 2;
               break;
             }
-            case 122: {
-              io.greptime.v1.Database.PhysicalPlan.Builder subBuilder = null;
-              if (exprCase_ == 15) {
-                subBuilder = ((io.greptime.v1.Database.PhysicalPlan) expr_).toBuilder();
-              }
-              expr_ =
-                  input.readMessage(io.greptime.v1.Database.PhysicalPlan.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((io.greptime.v1.Database.PhysicalPlan) expr_);
-                expr_ = subBuilder.buildPartial();
-              }
-              exprCase_ = 15;
-              break;
-            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -3520,7 +3491,6 @@ public final class Database {
             com.google.protobuf.AbstractMessage.InternalOneOfEnum {
       SQL(1),
       LOGICAL_PLAN(2),
-      PHYSICAL_PLAN(15),
       EXPR_NOT_SET(0);
       private final int value;
       private ExprCase(int value) {
@@ -3540,7 +3510,6 @@ public final class Database {
         switch (value) {
           case 1: return SQL;
           case 2: return LOGICAL_PLAN;
-          case 15: return PHYSICAL_PLAN;
           case 0: return EXPR_NOT_SET;
           default: return null;
         }
@@ -3629,37 +3598,6 @@ public final class Database {
       return com.google.protobuf.ByteString.EMPTY;
     }
 
-    public static final int PHYSICAL_PLAN_FIELD_NUMBER = 15;
-    /**
-     * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-     * @return Whether the physicalPlan field is set.
-     */
-    @java.lang.Override
-    public boolean hasPhysicalPlan() {
-      return exprCase_ == 15;
-    }
-    /**
-     * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-     * @return The physicalPlan.
-     */
-    @java.lang.Override
-    public io.greptime.v1.Database.PhysicalPlan getPhysicalPlan() {
-      if (exprCase_ == 15) {
-         return (io.greptime.v1.Database.PhysicalPlan) expr_;
-      }
-      return io.greptime.v1.Database.PhysicalPlan.getDefaultInstance();
-    }
-    /**
-     * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-     */
-    @java.lang.Override
-    public io.greptime.v1.Database.PhysicalPlanOrBuilder getPhysicalPlanOrBuilder() {
-      if (exprCase_ == 15) {
-         return (io.greptime.v1.Database.PhysicalPlan) expr_;
-      }
-      return io.greptime.v1.Database.PhysicalPlan.getDefaultInstance();
-    }
-
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3681,9 +3619,6 @@ public final class Database {
         output.writeBytes(
             2, (com.google.protobuf.ByteString) expr_);
       }
-      if (exprCase_ == 15) {
-        output.writeMessage(15, (io.greptime.v1.Database.PhysicalPlan) expr_);
-      }
       unknownFields.writeTo(output);
     }
 
@@ -3700,10 +3635,6 @@ public final class Database {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(
               2, (com.google.protobuf.ByteString) expr_);
-      }
-      if (exprCase_ == 15) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(15, (io.greptime.v1.Database.PhysicalPlan) expr_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3730,10 +3661,6 @@ public final class Database {
           if (!getLogicalPlan()
               .equals(other.getLogicalPlan())) return false;
           break;
-        case 15:
-          if (!getPhysicalPlan()
-              .equals(other.getPhysicalPlan())) return false;
-          break;
         case 0:
         default:
       }
@@ -3756,10 +3683,6 @@ public final class Database {
         case 2:
           hash = (37 * hash) + LOGICAL_PLAN_FIELD_NUMBER;
           hash = (53 * hash) + getLogicalPlan().hashCode();
-          break;
-        case 15:
-          hash = (37 * hash) + PHYSICAL_PLAN_FIELD_NUMBER;
-          hash = (53 * hash) + getPhysicalPlan().hashCode();
           break;
         case 0:
         default:
@@ -3935,13 +3858,6 @@ public final class Database {
         if (exprCase_ == 2) {
           result.expr_ = expr_;
         }
-        if (exprCase_ == 15) {
-          if (physicalPlanBuilder_ == null) {
-            result.expr_ = expr_;
-          } else {
-            result.expr_ = physicalPlanBuilder_.build();
-          }
-        }
         result.exprCase_ = exprCase_;
         onBuilt();
         return result;
@@ -4000,10 +3916,6 @@ public final class Database {
           }
           case LOGICAL_PLAN: {
             setLogicalPlan(other.getLogicalPlan());
-            break;
-          }
-          case PHYSICAL_PLAN: {
-            mergePhysicalPlan(other.getPhysicalPlan());
             break;
           }
           case EXPR_NOT_SET: {
@@ -4194,147 +4106,6 @@ public final class Database {
         }
         return this;
       }
-
-      private com.google.protobuf.SingleFieldBuilderV3<
-          io.greptime.v1.Database.PhysicalPlan, io.greptime.v1.Database.PhysicalPlan.Builder, io.greptime.v1.Database.PhysicalPlanOrBuilder> physicalPlanBuilder_;
-      /**
-       * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-       * @return Whether the physicalPlan field is set.
-       */
-      @java.lang.Override
-      public boolean hasPhysicalPlan() {
-        return exprCase_ == 15;
-      }
-      /**
-       * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-       * @return The physicalPlan.
-       */
-      @java.lang.Override
-      public io.greptime.v1.Database.PhysicalPlan getPhysicalPlan() {
-        if (physicalPlanBuilder_ == null) {
-          if (exprCase_ == 15) {
-            return (io.greptime.v1.Database.PhysicalPlan) expr_;
-          }
-          return io.greptime.v1.Database.PhysicalPlan.getDefaultInstance();
-        } else {
-          if (exprCase_ == 15) {
-            return physicalPlanBuilder_.getMessage();
-          }
-          return io.greptime.v1.Database.PhysicalPlan.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-       */
-      public Builder setPhysicalPlan(io.greptime.v1.Database.PhysicalPlan value) {
-        if (physicalPlanBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          expr_ = value;
-          onChanged();
-        } else {
-          physicalPlanBuilder_.setMessage(value);
-        }
-        exprCase_ = 15;
-        return this;
-      }
-      /**
-       * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-       */
-      public Builder setPhysicalPlan(
-          io.greptime.v1.Database.PhysicalPlan.Builder builderForValue) {
-        if (physicalPlanBuilder_ == null) {
-          expr_ = builderForValue.build();
-          onChanged();
-        } else {
-          physicalPlanBuilder_.setMessage(builderForValue.build());
-        }
-        exprCase_ = 15;
-        return this;
-      }
-      /**
-       * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-       */
-      public Builder mergePhysicalPlan(io.greptime.v1.Database.PhysicalPlan value) {
-        if (physicalPlanBuilder_ == null) {
-          if (exprCase_ == 15 &&
-              expr_ != io.greptime.v1.Database.PhysicalPlan.getDefaultInstance()) {
-            expr_ = io.greptime.v1.Database.PhysicalPlan.newBuilder((io.greptime.v1.Database.PhysicalPlan) expr_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            expr_ = value;
-          }
-          onChanged();
-        } else {
-          if (exprCase_ == 15) {
-            physicalPlanBuilder_.mergeFrom(value);
-          }
-          physicalPlanBuilder_.setMessage(value);
-        }
-        exprCase_ = 15;
-        return this;
-      }
-      /**
-       * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-       */
-      public Builder clearPhysicalPlan() {
-        if (physicalPlanBuilder_ == null) {
-          if (exprCase_ == 15) {
-            exprCase_ = 0;
-            expr_ = null;
-            onChanged();
-          }
-        } else {
-          if (exprCase_ == 15) {
-            exprCase_ = 0;
-            expr_ = null;
-          }
-          physicalPlanBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-       */
-      public io.greptime.v1.Database.PhysicalPlan.Builder getPhysicalPlanBuilder() {
-        return getPhysicalPlanFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-       */
-      @java.lang.Override
-      public io.greptime.v1.Database.PhysicalPlanOrBuilder getPhysicalPlanOrBuilder() {
-        if ((exprCase_ == 15) && (physicalPlanBuilder_ != null)) {
-          return physicalPlanBuilder_.getMessageOrBuilder();
-        } else {
-          if (exprCase_ == 15) {
-            return (io.greptime.v1.Database.PhysicalPlan) expr_;
-          }
-          return io.greptime.v1.Database.PhysicalPlan.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>.greptime.v1.PhysicalPlan physical_plan = 15;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          io.greptime.v1.Database.PhysicalPlan, io.greptime.v1.Database.PhysicalPlan.Builder, io.greptime.v1.Database.PhysicalPlanOrBuilder> 
-          getPhysicalPlanFieldBuilder() {
-        if (physicalPlanBuilder_ == null) {
-          if (!(exprCase_ == 15)) {
-            expr_ = io.greptime.v1.Database.PhysicalPlan.getDefaultInstance();
-          }
-          physicalPlanBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              io.greptime.v1.Database.PhysicalPlan, io.greptime.v1.Database.PhysicalPlan.Builder, io.greptime.v1.Database.PhysicalPlanOrBuilder>(
-                  (io.greptime.v1.Database.PhysicalPlan) expr_,
-                  getParentForChildren(),
-                  isClean());
-          expr_ = null;
-        }
-        exprCase_ = 15;
-        onChanged();;
-        return physicalPlanBuilder_;
-      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -4383,572 +4154,6 @@ public final class Database {
 
     @java.lang.Override
     public io.greptime.v1.Database.SelectExpr getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
-  public interface PhysicalPlanOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:greptime.v1.PhysicalPlan)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>bytes original_ql = 1;</code>
-     * @return The originalQl.
-     */
-    com.google.protobuf.ByteString getOriginalQl();
-
-    /**
-     * <code>bytes plan = 2;</code>
-     * @return The plan.
-     */
-    com.google.protobuf.ByteString getPlan();
-  }
-  /**
-   * Protobuf type {@code greptime.v1.PhysicalPlan}
-   */
-  public static final class PhysicalPlan extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:greptime.v1.PhysicalPlan)
-      PhysicalPlanOrBuilder {
-  private static final long serialVersionUID = 0L;
-    // Use PhysicalPlan.newBuilder() to construct.
-    private PhysicalPlan(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-    private PhysicalPlan() {
-      originalQl_ = com.google.protobuf.ByteString.EMPTY;
-      plan_ = com.google.protobuf.ByteString.EMPTY;
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new PhysicalPlan();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private PhysicalPlan(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-
-              originalQl_ = input.readBytes();
-              break;
-            }
-            case 18: {
-
-              plan_ = input.readBytes();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return io.greptime.v1.Database.internal_static_greptime_v1_PhysicalPlan_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return io.greptime.v1.Database.internal_static_greptime_v1_PhysicalPlan_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              io.greptime.v1.Database.PhysicalPlan.class, io.greptime.v1.Database.PhysicalPlan.Builder.class);
-    }
-
-    public static final int ORIGINAL_QL_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString originalQl_;
-    /**
-     * <code>bytes original_ql = 1;</code>
-     * @return The originalQl.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getOriginalQl() {
-      return originalQl_;
-    }
-
-    public static final int PLAN_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString plan_;
-    /**
-     * <code>bytes plan = 2;</code>
-     * @return The plan.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString getPlan() {
-      return plan_;
-    }
-
-    private byte memoizedIsInitialized = -1;
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (!originalQl_.isEmpty()) {
-        output.writeBytes(1, originalQl_);
-      }
-      if (!plan_.isEmpty()) {
-        output.writeBytes(2, plan_);
-      }
-      unknownFields.writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (!originalQl_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, originalQl_);
-      }
-      if (!plan_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, plan_);
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof io.greptime.v1.Database.PhysicalPlan)) {
-        return super.equals(obj);
-      }
-      io.greptime.v1.Database.PhysicalPlan other = (io.greptime.v1.Database.PhysicalPlan) obj;
-
-      if (!getOriginalQl()
-          .equals(other.getOriginalQl())) return false;
-      if (!getPlan()
-          .equals(other.getPlan())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + ORIGINAL_QL_FIELD_NUMBER;
-      hash = (53 * hash) + getOriginalQl().hashCode();
-      hash = (37 * hash) + PLAN_FIELD_NUMBER;
-      hash = (53 * hash) + getPlan().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static io.greptime.v1.Database.PhysicalPlan parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static io.greptime.v1.Database.PhysicalPlan parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static io.greptime.v1.Database.PhysicalPlan parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static io.greptime.v1.Database.PhysicalPlan parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static io.greptime.v1.Database.PhysicalPlan parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static io.greptime.v1.Database.PhysicalPlan parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static io.greptime.v1.Database.PhysicalPlan parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static io.greptime.v1.Database.PhysicalPlan parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static io.greptime.v1.Database.PhysicalPlan parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
-    }
-    public static io.greptime.v1.Database.PhysicalPlan parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-    public static io.greptime.v1.Database.PhysicalPlan parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
-    public static io.greptime.v1.Database.PhysicalPlan parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(io.greptime.v1.Database.PhysicalPlan prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code greptime.v1.PhysicalPlan}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:greptime.v1.PhysicalPlan)
-        io.greptime.v1.Database.PhysicalPlanOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return io.greptime.v1.Database.internal_static_greptime_v1_PhysicalPlan_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return io.greptime.v1.Database.internal_static_greptime_v1_PhysicalPlan_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                io.greptime.v1.Database.PhysicalPlan.class, io.greptime.v1.Database.PhysicalPlan.Builder.class);
-      }
-
-      // Construct using io.greptime.v1.Database.PhysicalPlan.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
-      }
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        originalQl_ = com.google.protobuf.ByteString.EMPTY;
-
-        plan_ = com.google.protobuf.ByteString.EMPTY;
-
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return io.greptime.v1.Database.internal_static_greptime_v1_PhysicalPlan_descriptor;
-      }
-
-      @java.lang.Override
-      public io.greptime.v1.Database.PhysicalPlan getDefaultInstanceForType() {
-        return io.greptime.v1.Database.PhysicalPlan.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public io.greptime.v1.Database.PhysicalPlan build() {
-        io.greptime.v1.Database.PhysicalPlan result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public io.greptime.v1.Database.PhysicalPlan buildPartial() {
-        io.greptime.v1.Database.PhysicalPlan result = new io.greptime.v1.Database.PhysicalPlan(this);
-        result.originalQl_ = originalQl_;
-        result.plan_ = plan_;
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.setField(field, value);
-      }
-      @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-      @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof io.greptime.v1.Database.PhysicalPlan) {
-          return mergeFrom((io.greptime.v1.Database.PhysicalPlan)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(io.greptime.v1.Database.PhysicalPlan other) {
-        if (other == io.greptime.v1.Database.PhysicalPlan.getDefaultInstance()) return this;
-        if (other.getOriginalQl() != com.google.protobuf.ByteString.EMPTY) {
-          setOriginalQl(other.getOriginalQl());
-        }
-        if (other.getPlan() != com.google.protobuf.ByteString.EMPTY) {
-          setPlan(other.getPlan());
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        io.greptime.v1.Database.PhysicalPlan parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (io.greptime.v1.Database.PhysicalPlan) e.getUnfinishedMessage();
-          throw e.unwrapIOException();
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      private com.google.protobuf.ByteString originalQl_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes original_ql = 1;</code>
-       * @return The originalQl.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getOriginalQl() {
-        return originalQl_;
-      }
-      /**
-       * <code>bytes original_ql = 1;</code>
-       * @param value The originalQl to set.
-       * @return This builder for chaining.
-       */
-      public Builder setOriginalQl(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        originalQl_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes original_ql = 1;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearOriginalQl() {
-        
-        originalQl_ = getDefaultInstance().getOriginalQl();
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString plan_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>bytes plan = 2;</code>
-       * @return The plan.
-       */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getPlan() {
-        return plan_;
-      }
-      /**
-       * <code>bytes plan = 2;</code>
-       * @param value The plan to set.
-       * @return This builder for chaining.
-       */
-      public Builder setPlan(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        plan_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>bytes plan = 2;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearPlan() {
-        
-        plan_ = getDefaultInstance().getPlan();
-        onChanged();
-        return this;
-      }
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-
-      // @@protoc_insertion_point(builder_scope:greptime.v1.PhysicalPlan)
-    }
-
-    // @@protoc_insertion_point(class_scope:greptime.v1.PhysicalPlan)
-    private static final io.greptime.v1.Database.PhysicalPlan DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new io.greptime.v1.Database.PhysicalPlan();
-    }
-
-    public static io.greptime.v1.Database.PhysicalPlan getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<PhysicalPlan>
-        PARSER = new com.google.protobuf.AbstractParser<PhysicalPlan>() {
-      @java.lang.Override
-      public PhysicalPlan parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new PhysicalPlan(input, extensionRegistry);
-      }
-    };
-
-    public static com.google.protobuf.Parser<PhysicalPlan> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PhysicalPlan> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public io.greptime.v1.Database.PhysicalPlan getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -8859,11 +8064,6 @@ public final class Database {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_greptime_v1_SelectExpr_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_greptime_v1_PhysicalPlan_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_greptime_v1_PhysicalPlan_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_greptime_v1_InsertExpr_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -8907,21 +8107,19 @@ public final class Database {
       ".InsertExprH\000\022)\n\006select\030\003 \001(\0132\027.greptime" +
       ".v1.SelectExprH\000\022)\n\006update\030\004 \001(\0132\027.grept" +
       "ime.v1.UpdateExprH\000\022)\n\006delete\030\005 \001(\0132\027.gr" +
-      "eptime.v1.DeleteExprH\000B\006\n\004expr\"o\n\nSelect" +
+      "eptime.v1.DeleteExprH\000B\006\n\004expr\";\n\nSelect" +
       "Expr\022\r\n\003sql\030\001 \001(\tH\000\022\026\n\014logical_plan\030\002 \001(" +
-      "\014H\000\0222\n\rphysical_plan\030\017 \001(\0132\031.greptime.v1" +
-      ".PhysicalPlanH\000B\006\n\004expr\"1\n\014PhysicalPlan\022" +
-      "\023\n\013original_ql\030\001 \001(\014\022\014\n\004plan\030\002 \001(\014\"\205\001\n\nI" +
-      "nsertExpr\022\023\n\013schema_name\030\001 \001(\t\022\022\n\ntable_" +
-      "name\030\002 \001(\t\022$\n\007columns\030\003 \003(\0132\023.greptime.v" +
-      "1.Column\022\021\n\trow_count\030\004 \001(\r\022\025\n\rregion_nu" +
-      "mber\030\005 \001(\r\"\014\n\nUpdateExpr\"\014\n\nDeleteExpr\"\235" +
-      "\001\n\014ObjectResult\022)\n\006header\030\001 \001(\0132\031.grepti" +
-      "me.v1.ResultHeader\022+\n\006select\030\002 \001(\0132\031.gre" +
-      "ptime.v1.SelectResultH\000\022+\n\006mutate\030\003 \001(\0132" +
-      "\031.greptime.v1.MutateResultH\000B\010\n\006result\" " +
-      "\n\014SelectResult\022\020\n\010raw_data\030\001 \001(\014B\032\n\016io.g" +
-      "reptime.v1B\010Databaseb\006proto3"
+      "\014H\000B\006\n\004expr\"\205\001\n\nInsertExpr\022\023\n\013schema_nam" +
+      "e\030\001 \001(\t\022\022\n\ntable_name\030\002 \001(\t\022$\n\007columns\030\003" +
+      " \003(\0132\023.greptime.v1.Column\022\021\n\trow_count\030\004" +
+      " \001(\r\022\025\n\rregion_number\030\005 \001(\r\"\014\n\nUpdateExp" +
+      "r\"\014\n\nDeleteExpr\"\235\001\n\014ObjectResult\022)\n\006head" +
+      "er\030\001 \001(\0132\031.greptime.v1.ResultHeader\022+\n\006s" +
+      "elect\030\002 \001(\0132\031.greptime.v1.SelectResultH\000" +
+      "\022+\n\006mutate\030\003 \001(\0132\031.greptime.v1.MutateRes" +
+      "ultH\000B\010\n\006result\" \n\014SelectResult\022\020\n\010raw_d" +
+      "ata\030\001 \001(\014B\032\n\016io.greptime.v1B\010Databaseb\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -8952,39 +8150,33 @@ public final class Database {
     internal_static_greptime_v1_SelectExpr_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_SelectExpr_descriptor,
-        new java.lang.String[] { "Sql", "LogicalPlan", "PhysicalPlan", "Expr", });
-    internal_static_greptime_v1_PhysicalPlan_descriptor =
-      getDescriptor().getMessageTypes().get(4);
-    internal_static_greptime_v1_PhysicalPlan_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_greptime_v1_PhysicalPlan_descriptor,
-        new java.lang.String[] { "OriginalQl", "Plan", });
+        new java.lang.String[] { "Sql", "LogicalPlan", "Expr", });
     internal_static_greptime_v1_InsertExpr_descriptor =
-      getDescriptor().getMessageTypes().get(5);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_greptime_v1_InsertExpr_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_InsertExpr_descriptor,
         new java.lang.String[] { "SchemaName", "TableName", "Columns", "RowCount", "RegionNumber", });
     internal_static_greptime_v1_UpdateExpr_descriptor =
-      getDescriptor().getMessageTypes().get(6);
+      getDescriptor().getMessageTypes().get(5);
     internal_static_greptime_v1_UpdateExpr_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_UpdateExpr_descriptor,
         new java.lang.String[] { });
     internal_static_greptime_v1_DeleteExpr_descriptor =
-      getDescriptor().getMessageTypes().get(7);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_greptime_v1_DeleteExpr_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_DeleteExpr_descriptor,
         new java.lang.String[] { });
     internal_static_greptime_v1_ObjectResult_descriptor =
-      getDescriptor().getMessageTypes().get(8);
+      getDescriptor().getMessageTypes().get(7);
     internal_static_greptime_v1_ObjectResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_ObjectResult_descriptor,
         new java.lang.String[] { "Header", "Select", "Mutate", "Result", });
     internal_static_greptime_v1_SelectResult_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(8);
     internal_static_greptime_v1_SelectResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_greptime_v1_SelectResult_descriptor,

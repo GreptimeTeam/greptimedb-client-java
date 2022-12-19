@@ -60,7 +60,7 @@ public class Example {
             ```
          */
         Executor asyncPool = ForkJoinPool.commonPool();
-        GreptimeOptions opts = GreptimeOptions.newBuilder("127.0.0.1:3001") //
+        GreptimeOptions opts = GreptimeOptions.newBuilder("127.0.0.1:4001") //
             .writeMaxRetries(1) //
             .readMaxRetries(2) //
             .asyncPool(asyncPool, asyncPool) //
