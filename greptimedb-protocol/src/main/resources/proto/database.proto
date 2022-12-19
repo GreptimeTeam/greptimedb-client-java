@@ -31,13 +31,7 @@ message SelectExpr {
   oneof expr {
     string sql = 1;
     bytes logical_plan = 2;
-    PhysicalPlan physical_plan = 15;
   }
-}
-
-message PhysicalPlan {
-  bytes original_ql = 1;
-  bytes plan = 2;
 }
 
 message InsertExpr {
@@ -46,10 +40,12 @@ message InsertExpr {
 
   // Data is represented here.
   repeated Column columns = 3;
+
   // The row_count of all columns, which include null and non-null values.
   //
   // Note: the row_count of all columns in a InsertExpr must be same.
   uint32 row_count = 4;
+
   // The region number of current insert request.
   uint32 region_number = 5;
 }
