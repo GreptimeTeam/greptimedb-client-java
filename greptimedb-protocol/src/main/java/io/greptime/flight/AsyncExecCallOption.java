@@ -14,27 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime.models;
+package io.greptime.flight;
 
-import java.util.List;
+import io.grpc.stub.AbstractStub;
+import org.apache.arrow.flight.CallOptions;
 
-/**
- * @author jiachun.fjc
- */
-public interface Row {
-    List<Value> values();
+import java.util.concurrent.Executor;
 
-    final class DefaultRow implements Row {
+public class AsyncExecCallOption implements CallOptions.GrpcCallOption {
 
-        private final List<Value> values;
+    private final Executor executor;
 
-        public DefaultRow(List<Value> values) {
-            this.values = values;
-        }
+    public AsyncExecCallOption(Executor executor) {
+        this.executor = executor;
+    }
 
-        @Override
-        public List<Value> values() {
-            return values;
-        }
+    @Override
+    public <T extends AbstractStub<T>> T wrapStub(T stub) {
+        return stub.withExecutor(executor);
     }
 }

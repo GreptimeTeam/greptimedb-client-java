@@ -30,9 +30,9 @@ public class ResultTest {
         final Result<Integer, Err> r2 = r1.map(WriteOk::getSuccess);
         Assert.assertEquals(2, r2.getOk().intValue());
 
-        final Result<QueryOk, Err> r3 = Result.ok(QueryOk.ok(null, 5, null));
-        final Result<Integer, Err> r4 = r3.map(QueryOk::getRowCount);
-        Assert.assertEquals(5, r4.getOk().intValue());
+        final Result<QueryOk, Err> r3 = Result.ok(QueryOk.ok("my query", null));
+        final Result<String, Err> r4 = r3.map(QueryOk::getQl);
+        Assert.assertEquals("my query", r4.getOk());
 
         final Result<WriteOk, Err> r5 = Result.err(Err.writeErr(400, null, null, null));
         final Result<Integer, Err> r6 = r5.map(WriteOk::getSuccess);
@@ -64,12 +64,12 @@ public class ResultTest {
     @Test
     public void testMapErr() {
         final Result<WriteOk, Err> r1 = Result.ok(WriteOk.ok(2, 0, null));
-        final Result<WriteOk, String> r2 = r1.mapErr(Err::getError);
+        final Result<WriteOk, Throwable> r2 = r1.mapErr(Err::getError);
         Assert.assertEquals(2, r2.getOk().getSuccess());
 
-        final Result<WriteOk, Err> r3 = Result.err(Err.writeErr(400, "error test", null, null));
-        final Result<WriteOk, String> r4 = r3.mapErr(Err::getError);
-        Assert.assertEquals("error test", r4.getErr());
+        final Result<WriteOk, Err> r3 = Result.err(Err.writeErr(400, new IllegalStateException("error test"), null, null));
+        final Result<WriteOk, Throwable> r4 = r3.mapErr(Err::getError);
+        Assert.assertEquals("error test", r4.getErr().getMessage());
     }
 
     @Test

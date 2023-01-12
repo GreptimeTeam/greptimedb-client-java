@@ -16,57 +16,61 @@
  */
 package io.greptime.models;
 
-import com.google.protobuf.ByteStringHelper;
-import com.google.protobuf.InvalidProtocolBufferException;
 import io.greptime.Status;
 import io.greptime.common.Endpoint;
-import io.greptime.v1.Common;
-import io.greptime.v1.Database;
-import io.greptime.v1.GreptimeDB;
-import io.greptime.v1.codec.Select;
+import io.greptime.flight.FlightMessage;
+import io.greptime.rpc.Context;
+import io.greptime.rpc.Observer;
+import org.apache.arrow.vector.VectorSchemaRoot;
 
 /**
- *
  * @author jiachun.fjc
  */
-public final class QueryResultHelper {
+public final class QueryResultHelper implements Observer<FlightMessage> {
 
-    /**
-     * Converts the given {@link io.greptime.v1.GreptimeDB.BatchResponse} to {@link Result} that
-     * upper-level readable.
-     *
-     * @param res        the query response
-     * @param ql         query text, sash as sql
-     * @param to         the server address
-     * @param errHandler the error handler
-     * @return a readable query result
-     */
-    public static Result<QueryOk, Err> from(GreptimeDB.BatchResponse res, String ql, Endpoint to, Runnable errHandler) {
-        Database.DatabaseResponse db = res.getDatabases(0); // single write request
-        Database.ObjectResult obj = db.getResults(0); // single write request
-        Common.ResultHeader header = obj.getHeader();
-        Database.SelectResult rawSelect = obj.getSelect();
+    private final Endpoint       endpoint;
+    private final QueryRequest   query;
+    private final Context        ctx;
+    private Result<QueryOk, Err> result;
 
-        int statusCode = header.getCode();
-        String errMsg = header.getErrMsg();
-
-        if (!Status.isSuccess(statusCode)) {
-            if (errHandler != null) {
-                errHandler.run();
-            }
-            return Err.queryErr(statusCode, errMsg, to, ql).mapToResult();
-        }
-
-        Select.SelectResult select;
-        try {
-            byte[] rawData = ByteStringHelper.sealByteArray(rawSelect.getRawData());
-            select = Select.SelectResult.parseFrom(rawData);
-        } catch (InvalidProtocolBufferException e) {
-            throw new RuntimeException(e);
-        }
-        return QueryOk.ok(ql, select.getRowCount(), SelectRows.from(select)).mapToResult();
+    public QueryResultHelper(Endpoint endpoint, QueryRequest query, Context ctx) {
+        this.endpoint = endpoint;
+        this.query = query;
+        this.ctx = ctx;
     }
 
-    private QueryResultHelper() {
+    @Override
+    public void onNext(FlightMessage message) {
+        if (message.getType() != FlightMessage.Type.Recordbatch) {
+            IllegalStateException error = new IllegalStateException(
+                "Expect server returns Recordbatch message, actual: " + message.getType().name());
+            result = Err.queryErr(Status.Unexpected.getStatusCode(), error, endpoint, query.getQl()).mapToResult();
+            return;
+        }
+
+        if (result == null) {
+            result = QueryOk.ok(query.getQl(), new SelectRows.DefaultSelectRows(ctx)).mapToResult();
+        }
+
+        if (!result.isOk()) {
+            return;
+        }
+        SelectRows rows = result.getOk().getRows();
+
+        VectorSchemaRoot recordbatch = message.getRecordbatch();
+        try {
+            rows.produce(recordbatch);
+        } catch (Throwable e) {
+            onError(e);
+        }
+    }
+
+    @Override
+    public void onError(Throwable err) {
+        result = Err.queryErr(Status.Unknown.getStatusCode(), err, endpoint, query.getQl()).mapToResult();
+    }
+
+    public Result<QueryOk, Err> getResult() {
+        return result;
     }
 }

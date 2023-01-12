@@ -14,26 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime;
+package io.greptime.flight;
 
-import io.greptime.rpc.MethodDescriptor;
-import io.greptime.rpc.RpcFactoryProvider;
-import io.greptime.v1.GreptimeDB;
+import com.google.protobuf.MessageLite;
+import io.greptime.common.Into;
+import org.apache.arrow.flight.Ticket;
 
-/**
- *
- * @author jiachun.fjc
- */
-public class RpcServiceRegister {
+public class GreptimeRequest implements Into<Ticket> {
 
-    private static final String METHOD_TEMPLATE = "greptime.v1.Greptime/%s";
+    private final MessageLite message;
 
-    public static void registerAllService() {
-        // register protobuf serializer
-        RpcFactoryProvider.getRpcFactory().register(
-            MethodDescriptor.of(String.format(METHOD_TEMPLATE, "Batch"), MethodDescriptor.MethodType.UNARY, 1), //
-            GreptimeDB.BatchRequest.class, //
-            GreptimeDB.BatchRequest.getDefaultInstance(), //
-            GreptimeDB.BatchResponse.getDefaultInstance());
+    public GreptimeRequest(MessageLite message) {
+        this.message = message;
+    }
+
+    @Override
+    public Ticket into() {
+        return new Ticket(message.toByteArray());
     }
 }

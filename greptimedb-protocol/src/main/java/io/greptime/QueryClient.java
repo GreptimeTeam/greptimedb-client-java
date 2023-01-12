@@ -26,19 +26,19 @@ import io.greptime.common.util.Clock;
 import io.greptime.common.util.Ensures;
 import io.greptime.common.util.MetricsUtil;
 import io.greptime.common.util.SerializingExecutor;
-import io.greptime.models.Err;
-import io.greptime.models.QueryOk;
-import io.greptime.models.QueryRequest;
-import io.greptime.models.QueryResultHelper;
-import io.greptime.models.Result;
+import io.greptime.flight.AsyncExecCallOption;
+import io.greptime.flight.GreptimeFlightClient;
+import io.greptime.flight.GreptimeRequest;
+import io.greptime.models.*;
 import io.greptime.options.QueryOptions;
 import io.greptime.rpc.Context;
-import io.greptime.v1.GreptimeDB;
+import org.apache.arrow.flight.FlightStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Default Query API impl.
@@ -47,11 +47,13 @@ import java.util.concurrent.Executor;
  */
 public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
 
-    private static final Logger LOG = LoggerFactory.getLogger(QueryClient.class);
+    private static final Logger     LOG      = LoggerFactory.getLogger(QueryClient.class);
 
-    private QueryOptions        opts;
-    private RouterClient        routerClient;
-    private Executor            asyncPool;
+    private static final AtomicLong QUERY_ID = new AtomicLong(0);
+
+    private QueryOptions            opts;
+    private RouterClient            routerClient;
+    private Executor                asyncPool;
 
     @Override
     public boolean init(QueryOptions opts) {
@@ -71,24 +73,16 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
     public CompletableFuture<Result<QueryOk, Err>> query(QueryRequest req, Context ctx) {
         Ensures.ensureNonNull(req, "req");
 
+        ctx.with(Context.KEY_QUERY_ID, QUERY_ID.incrementAndGet());
+
         long startCall = Clock.defaultClock().getTick();
+        ctx.with(Context.KEY_QUERY_START, startCall);
+
         return query0(req, ctx, 0).whenCompleteAsync((r, e) -> {
             InnerMetricHelper.readQps().mark();
-            if (r != null) {
-                int rowCount = r.mapOr(0, QueryOk::getRowCount);
-                InnerMetricHelper.readRowsNum().update(rowCount);
-                if (Util.isRwLogging()) {
-                    LOG.info("Read from {}, duration={} ms, rowCount={}.",
-                            Keys.DB_NAME,
-                            Clock.defaultClock().duration(startCall),
-                            rowCount
-                    );
-                }
-                if (r.isOk()) {
-                    return;
-                }
+            if (!r.isOk()) {
+                InnerMetricHelper.readFailureNum().mark();
             }
-            InnerMetricHelper.readFailureNum().mark();
         }, this.asyncPool);
     }
 
@@ -96,7 +90,7 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
         InnerMetricHelper.readByRetries(retries).mark();;
 
         return this.routerClient.route()
-            .thenComposeAsync(endpoint -> queryFrom(endpoint, req, ctx, retries), this.asyncPool)
+                .thenComposeAsync(endpoint -> queryFrom(endpoint, req, ctx), asyncPool)
             .thenComposeAsync(r -> {
                 if (r.isOk()) {
                     LOG.debug("Success to read from {}, ok={}.", Keys.DB_NAME, r.getOk());
@@ -118,20 +112,18 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
             }, this.asyncPool);
     }
 
-    private CompletableFuture<Result<QueryOk, Err>> queryFrom(Endpoint endpoint, //
-                                                              QueryRequest req, //
-                                                              Context ctx, //
-                                                              int retries) {
-        CompletableFuture<GreptimeDB.BatchResponse> f = this.routerClient.invoke(
-                endpoint, //
-                req.into(), //
-                ctx.with("retries", retries) // server can use this in metrics
-        );
+    private CompletableFuture<Result<QueryOk, Err>> queryFrom(Endpoint endpoint, QueryRequest req, Context ctx) {
+        GreptimeFlightClient flightClient = routerClient.getFlightClient(endpoint);
 
-        return f.thenApplyAsync(
-                res -> QueryResultHelper.from(res, req.getQl(), endpoint, new ErrHandler(req)),
-                this.asyncPool
-        );
+        GreptimeRequest request = new GreptimeRequest(req.into());
+
+        AsyncExecCallOption option = new AsyncExecCallOption(asyncPool);
+        FlightStream stream = flightClient.doRequest(request, option);
+
+        QueryResultHelper helper = new QueryResultHelper(endpoint, req, ctx);
+        flightClient.consumeStream(stream, helper);
+
+        return Util.completedCf(helper.getResult());
     }
 
     private static final class ErrHandler implements Runnable {
@@ -166,12 +158,12 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
                '}';
     }
 
-    static final class InnerMetricHelper {
+    public static final class InnerMetricHelper {
         static final Histogram READ_ROWS_NUM    = MetricsUtil.histogram("read_rows_num");
         static final Meter     READ_FAILURE_NUM = MetricsUtil.meter("read_failure_num");
         static final Meter     READ_QPS         = MetricsUtil.meter("read_qps");
 
-        static Histogram readRowsNum() {
+        public static Histogram readRowsNum() {
             return READ_ROWS_NUM;
         }
 

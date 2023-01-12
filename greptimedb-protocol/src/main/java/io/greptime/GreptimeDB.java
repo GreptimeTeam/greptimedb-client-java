@@ -24,12 +24,7 @@ import io.greptime.common.Lifecycle;
 import io.greptime.common.signal.SignalHandlersLoader;
 import io.greptime.common.util.MetricExecutor;
 import io.greptime.common.util.MetricsUtil;
-import io.greptime.models.Err;
-import io.greptime.models.QueryOk;
-import io.greptime.models.QueryRequest;
-import io.greptime.models.Result;
-import io.greptime.models.WriteOk;
-import io.greptime.models.WriteRows;
+import io.greptime.models.*;
 import io.greptime.options.GreptimeOptions;
 import io.greptime.options.QueryOptions;
 import io.greptime.options.RouterOptions;
@@ -92,8 +87,7 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
 
         this.opts = GreptimeOptions.checkSelf(opts).copy();
 
-        RpcClient rpcClient = makeRpcClient(opts);
-        this.routerClient = makeRouteClient(opts, rpcClient);
+        this.routerClient = makeRouteClient(opts);
         this.asyncWritePool = makeMetricPool(this.opts.getAsyncWritePool(), "async_write_pool.time");
         this.asyncReadPool = makeMetricPool(this.opts.getAsyncReadPool(), "async_read_pool.time");
         this.writeClient = makeWriteClient(opts, this.routerClient, this.asyncWritePool);
@@ -213,9 +207,8 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
         return rpcClient;
     }
 
-    private static RouterClient makeRouteClient(GreptimeOptions opts, RpcClient rpcClient) {
+    private static RouterClient makeRouteClient(GreptimeOptions opts) {
         RouterOptions routerOpts = opts.getRouterOptions();
-        routerOpts.setRpcClient(rpcClient);
         RouterClient routerClient = new RouterClient();
         if (!routerClient.init(routerOpts)) {
             throw new IllegalStateException("Fail to start router client");
@@ -316,8 +309,6 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
     private static void doGlobalInitializeWorks() {
         // load all signal handlers
         SignalHandlersLoader.load();
-        // register all rpc service
-        RpcServiceRegister.registerAllService();
         // start scheduled metric reporter
         MetricsUtil.startScheduledReporter(Util.autoReportPeriodMin(), TimeUnit.MINUTES);
         Runtime.getRuntime().addShutdownHook(new Thread(MetricsUtil::stopScheduledReporterAndDestroy));

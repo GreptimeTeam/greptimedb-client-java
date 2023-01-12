@@ -18,43 +18,40 @@ package io.greptime.models;
 
 import io.greptime.Status;
 import io.greptime.common.Endpoint;
-import io.greptime.v1.Common;
-import io.greptime.v1.Database;
-import io.greptime.v1.GreptimeDB;
+import io.greptime.flight.FlightMessage;
+import io.greptime.rpc.Observer;
 
 /**
- *
  * @author jiachun.fjc
  */
-public final class WriteResultHelper {
+public final class WriteResultHelper implements Observer<FlightMessage> {
 
-    /**
-     * Converts the given {@link io.greptime.v1.GreptimeDB.BatchResponse} to {@link Result}
-     * that upper-level readable.
-     *
-     * @param res  the wrote response
-     * @param to   the server address wrote to
-     * @param rows wrote data in this RPC
-     * @return a readable write result
-     */
-    public static Result<WriteOk, Err> from(GreptimeDB.BatchResponse res, Endpoint to, WriteRows rows) {
-        Database.DatabaseResponse db = res.getDatabases(0); // single write request
-        Database.ObjectResult obj = db.getResults(0); // single write request
-        Common.ResultHeader header = obj.getHeader();
-        Common.MutateResult mutate = obj.getMutate();
+    private final Endpoint       endpoint;
+    private final WriteRows      writeRows;
+    private Result<WriteOk, Err> result;
 
-        int statusCode = header.getCode();
-        String errMsg = header.getErrMsg();
-        int success = mutate.getSuccess();
-        int failure = mutate.getFailure();
-
-        if (Status.isSuccess(statusCode)) {
-            return WriteOk.ok(success, failure, rows.tableName()).mapToResult();
-        }
-
-        return Err.writeErr(statusCode, errMsg, to, rows).mapToResult();
+    public WriteResultHelper(Endpoint endpoint, WriteRows writeRows) {
+        this.endpoint = endpoint;
+        this.writeRows = writeRows;
     }
 
-    private WriteResultHelper() {
+    @Override
+    public void onNext(FlightMessage message) {
+        if (message.getType() != FlightMessage.Type.AffectedRows) {
+            IllegalStateException error = new IllegalStateException(
+                "Expect server returns affected rows message, actual: " + message.getType().name());
+            result = Err.writeErr(Status.Unexpected.getStatusCode(), error, endpoint, writeRows).mapToResult();
+        } else {
+            result = WriteOk.ok(message.getAffectedRows(), 0, writeRows.tableName()).mapToResult();
+        }
+    }
+
+    @Override
+    public void onError(Throwable err) {
+        result = Err.writeErr(Status.Unknown.getStatusCode(), err, endpoint, writeRows).mapToResult();
+    }
+
+    public Result<WriteOk, Err> getResult() {
+        return result;
     }
 }

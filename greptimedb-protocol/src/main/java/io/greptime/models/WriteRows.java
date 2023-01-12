@@ -19,12 +19,8 @@ package io.greptime.models;
 import com.google.protobuf.ByteStringHelper;
 import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
-import io.greptime.common.util.Strings;
 import io.greptime.v1.Columns;
-import io.greptime.v1.Common;
 import io.greptime.v1.Database;
-import io.greptime.v1.GreptimeDB;
-import io.greptime.v1.codec.Insert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +33,7 @@ import java.util.stream.Collectors;
  *
  * @author jiachun.fjc
  */
-public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
+public interface WriteRows extends Into<Database.GreptimeRequest> {
     TableName tableName();
 
     List<Columns.Column> columns();
@@ -174,31 +170,14 @@ public interface WriteRows extends Into<GreptimeDB.BatchRequest> {
         }
 
         @Override
-        public GreptimeDB.BatchRequest into() {
-            Database.InsertExpr insert = Database.InsertExpr.newBuilder() //
-                .setSchemaName(tableName().getDatabaseName()) //
-                .setTableName(tableName().getTableName()) //
-                .addAllColumns(columns()) //
-                .setRowCount(rowCount()) //
-                .build();
-
-            Common.ExprHeader header = Common.ExprHeader.newBuilder() //
-                .setVersion(0) // TODO version
-                .build();
-
-            Database.ObjectExpr obj = Database.ObjectExpr.newBuilder() //
-                .setHeader(header) //
-                .setInsert(insert) //
-                .build();
-
-            Database.DatabaseRequest databaseReq = Database.DatabaseRequest.newBuilder() //
-                .setName(tableName().getDatabaseName()) //
-                .addExprs(obj) //
-                .build();
-
-            return GreptimeDB.BatchRequest.newBuilder() //
-                .addDatabases(databaseReq) //
-                .build();
+        public Database.GreptimeRequest into() {
+            Database.InsertRequest.Builder builder = Database.InsertRequest.newBuilder();
+            builder.setSchemaName(tableName().getDatabaseName());
+            builder.setTableName(tableName().getTableName());
+            builder.addAllColumns(columns());
+            builder.setRowCount(rowCount());
+            Database.InsertRequest insertRequest = builder.build();
+            return Database.GreptimeRequest.newBuilder().setInsert(insertRequest).build();
         }
     }
 }

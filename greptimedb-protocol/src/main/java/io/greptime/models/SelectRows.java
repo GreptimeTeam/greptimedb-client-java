@@ -16,16 +16,22 @@
  */
 package io.greptime.models;
 
-import io.greptime.v1.Columns.Column;
-import io.greptime.v1.codec.Select;
+import io.greptime.QueryClient;
+import io.greptime.Util;
+import io.greptime.common.util.Clock;
+import io.greptime.rpc.Context;
+import org.apache.arrow.vector.FieldVector;
+import org.apache.arrow.vector.VectorSchemaRoot;
+import org.apache.arrow.vector.types.pojo.Field;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -35,96 +41,91 @@ import java.util.stream.StreamSupport;
  * @author jiachun.fjc
  */
 public interface SelectRows extends Iterator<Row> {
-    int rowCount();
+
+    void produce(VectorSchemaRoot recordbatch) throws InterruptedException;
 
     default List<Row> collect() {
         Iterable<Row> iterable = () -> this;
         return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
     }
 
-    static SelectRows empty() {
-        return DefaultSelectRows.EMPTY;
-    }
-
-    static SelectRows from(Select.SelectResult res) {
-        return new DefaultSelectRows(res);
-    }
-
     class DefaultSelectRows implements SelectRows {
 
-        private static final DefaultSelectRows EMPTY  = new DefaultSelectRows(null);
+        private static final Logger LOG = LoggerFactory.getLogger(DefaultSelectRows.class);
 
-        private final int                      rowCount;
-        private final List<Column>             columns;
-        private final Map<String, BitSet>      nullMaskCache;
-        private int                            cursor = 0;
+        private static final int MAX_CACHED_ROWS = 1024;
 
-        DefaultSelectRows(Select.SelectResult res) {
-            if (res == null) {
-                this.rowCount = 0;
-                this.columns = null;
-                this.nullMaskCache = Collections.emptyMap();
-            } else {
-                this.rowCount = res.getRowCount();
-                this.columns = res.getColumnsList();
-                this.nullMaskCache = new HashMap<>(this.columns.size());
+        private final Context ctx;
+        private final BlockingQueue<Row> rows = new LinkedBlockingQueue<>(MAX_CACHED_ROWS);
+
+        public DefaultSelectRows(Context ctx) {
+            this.ctx = ctx;
+        }
+
+        @Override
+        public void produce(VectorSchemaRoot recordbatch) throws InterruptedException {
+            List<Field> fields = recordbatch.getSchema().getFields();
+            List<FieldVector> vectors = recordbatch.getFieldVectors();
+
+            Long queryId = ctx.get(Context.KEY_QUERY_ID);
+
+            Long queryStart = ctx.get(Context.KEY_QUERY_START);
+            if (Util.isRwLogging() && queryStart != null) {
+                LOG.info("[Query-{}] First time received data costs {} ms",
+                        queryId,
+                        Clock.defaultClock().duration(queryStart));
+                ctx.remove(Context.KEY_QUERY_START);
+            }
+
+            long start = Clock.defaultClock().getTick();
+
+            int index = 0;
+            try {
+                while (index < recordbatch.getRowCount()) {
+                    List<Value> values = new ArrayList<>(vectors.size());
+                    for (int i = 0; i < vectors.size(); i++) {
+                        Field field = fields.get(i);
+                        FieldVector vector = vectors.get(i);
+
+                        values.add(new Value.DefaultValue(
+                                field.getName(),
+                                ColumnDataType.fromArrowType(field.getType()),
+                                vector.getObject(index)));
+                    }
+
+                    if (!rows.offer(new Row.DefaultRow(values), 1, TimeUnit.SECONDS)) {
+                        throw new RuntimeException(String.format(
+                                "[Query-%s] Rows buffer queue is full, please accelerate consumer speed.",
+                                queryId));
+                    }
+
+                    QueryClient.InnerMetricHelper.readRowsNum().update(1);
+
+                    index += 1;
+                }
+            } finally {
+                if (Util.isRwLogging()) {
+                    LOG.info("[Query-{}] Produce {} rows, costs {} ms",
+                            queryId,
+                            index,
+                            Clock.defaultClock().duration(start)
+                    );
+                }
             }
         }
 
         @Override
-        public int rowCount() {
-            return rowCount;
-        }
-
-        @Override
         public boolean hasNext() {
-            return this.cursor < rowCount;
+            return !rows.isEmpty();
         }
 
         @Override
         public Row next() {
-            int index = this.cursor++;
-            List<Value> values = this.columns.stream() //
-                .map(column -> new Value() {
-                    @Override
-                    public String name() {
-                        return column.getColumnName();
-                    }
-
-                    @Override
-                    public SemanticType semanticType() {
-                        return SemanticType.fromProtoValue(column.getSemanticType());
-                    }
-
-                    @Override
-                    public ColumnDataType dataType() {
-                        return ColumnDataType.fromProtoValue(ColumnHelper.getValueType(column));
-                    }
-
-                    @Override
-                    public Object value() {
-                        return getColumnValue(column, index);
-                    }
-
-                    @Override
-                    public String toString() {
-                        return "Value{" + //
-                                "name='" + name() + '\'' + //
-                                ", semanticType=" + semanticType() + //
-                                ", dataType=" + dataType() + //
-                                ", value=" + value() + //
-                                '}';
-                    }
-                })
-                .collect(Collectors.toList());
-
-            return () -> values;
-        }
-
-        private Object getColumnValue(Column column, int index) {
-            Function<String, BitSet> func = k -> ColumnHelper.getNullMaskBits(column);
-            BitSet nullMask = this.nullMaskCache.computeIfAbsent(column.getColumnName(), func);
-            return ColumnHelper.getValue(column, index, nullMask);
+            try {
+                return rows.take();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

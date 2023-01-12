@@ -16,27 +16,28 @@
  */
 package io.greptime;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import io.greptime.common.Endpoint;
-import io.greptime.models.ColumnDataType;
-import io.greptime.models.Err;
-import io.greptime.models.Result;
-import io.greptime.models.SemanticType;
-import io.greptime.models.TableName;
-import io.greptime.models.WriteOk;
-import io.greptime.models.WriteRows;
+import io.greptime.models.*;
+import io.greptime.options.RouterOptions;
 import io.greptime.options.WriteOptions;
-import io.greptime.v1.Common;
 import io.greptime.v1.Database;
-import io.greptime.v1.GreptimeDB;
+import org.apache.arrow.flight.FlightServer;
+import org.apache.arrow.flight.Location;
+import org.apache.arrow.flight.NoOpFlightProducer;
+import org.apache.arrow.flight.Ticket;
+import org.apache.arrow.memory.ArrowBuf;
+import org.apache.arrow.memory.BufferAllocator;
+import org.apache.arrow.memory.RootAllocator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
@@ -45,12 +46,45 @@ import java.util.concurrent.ForkJoinPool;
  */
 @RunWith(value = MockitoJUnitRunner.class)
 public class WriteClientTest {
+
+    static class TestFlightProducer extends NoOpFlightProducer {
+
+        @Override
+        public void getStream(CallContext context, Ticket ticket, ServerStreamListener listener) {
+            BufferAllocator allocator = new RootAllocator(Integer.MAX_VALUE);
+
+            byte[] bytes = ticket.getBytes();
+            Database.GreptimeRequest request;
+            try {
+                request = Database.GreptimeRequest.parseFrom(bytes);
+            } catch (InvalidProtocolBufferException e) {
+                throw new RuntimeException(e);
+            }
+            Database.InsertRequest insert = request.getInsert();
+
+            Database.FlightMetadata.Builder builder = Database.FlightMetadata.newBuilder();
+            builder.setAffectedRows(Database.AffectedRows.newBuilder().setValue(insert.getRowCount()).build());
+            Database.FlightMetadata flightMetadata = builder.build();
+            byte[] rawMetadata = flightMetadata.toByteArray();
+
+            ArrowBuf buffer = allocator.buffer(rawMetadata.length);
+            buffer.writeBytes(rawMetadata);
+            listener.putMetadata(buffer);
+            listener.completed();
+        }
+    }
+
     private WriteClient  writeClient;
-    @Mock
     private RouterClient routerClient;
 
     @Before
     public void before() {
+        RouterOptions opts = new RouterOptions();
+        opts.setEndpoints(Collections.singletonList(Endpoint.of("127.0.0.1", 44444)));
+
+        routerClient = new RouterClient();
+        routerClient.init(opts);
+
         WriteOptions writeOpts = new WriteOptions();
         writeOpts.setAsyncPool(ForkJoinPool.commonPool());
         writeOpts.setRouterClient(this.routerClient);
@@ -66,7 +100,11 @@ public class WriteClientTest {
     }
 
     @Test
-    public void testWriteSuccess() throws ExecutionException, InterruptedException {
+    public void testWriteSuccess() throws ExecutionException, InterruptedException, IOException {
+        FlightServer flightServer = FlightServer.builder(new RootAllocator(Integer.MAX_VALUE),
+            Location.forGrpcInsecure("127.0.0.1", 44444), new TestFlightProducer()).build();
+        flightServer.start();
+
         WriteRows rows = WriteRows.newBuilder(TableName.with("", "test_table")) //
             .columnNames("test_tag", "test_ts", "test_field") //
             .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field) //
@@ -79,22 +117,8 @@ public class WriteClientTest {
 
         rows.finish();
 
-        Endpoint addr = Endpoint.parse("127.0.0.1:8081");
-        GreptimeDB.BatchResponse response = GreptimeDB.BatchResponse.newBuilder() //
-            .addDatabases(Database.DatabaseResponse.newBuilder() //
-                .addResults(Database.ObjectResult.newBuilder() //
-                    .setHeader(Common.ResultHeader.newBuilder().setCode(Status.Success.getStatusCode())) //
-                    .setMutate(Common.MutateResult.newBuilder().setSuccess(3)) //
-                )) //
-            .build();
-
-        Mockito.when(this.routerClient.route()) //
-            .thenReturn(Util.completedCf(addr));
-        Mockito.when(this.routerClient.invoke(Mockito.eq(addr), Mockito.any(), Mockito.any())) //
-            .thenReturn(Util.completedCf(response));
-
         Result<WriteOk, Err> res = this.writeClient.write(rows).get();
-
         Assert.assertTrue(res.isOk());
+        Assert.assertEquals(3, res.getOk().getSuccess());
     }
 }

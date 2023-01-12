@@ -21,19 +21,14 @@ import io.greptime.common.Endpoint;
 import io.greptime.common.Lifecycle;
 import io.greptime.common.util.Ensures;
 import io.greptime.common.util.SharedScheduledPool;
+import io.greptime.flight.GreptimeFlightClient;
 import io.greptime.options.RouterOptions;
-import io.greptime.rpc.Context;
-import io.greptime.rpc.Observer;
-import io.greptime.rpc.RpcClient;
-import io.greptime.rpc.errors.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Enumeration;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -48,15 +43,14 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
 
     private static final SharedScheduledPool REFRESHER_POOL = Util.getSharedScheduledPool("route_cache_refresher", 1);
 
-    private ScheduledExecutorService         refresher;
-    private RouterOptions                    opts;
-    private RpcClient                        rpcClient;
-    private InnerRouter                      inner;
+    private ScheduledExecutorService                                refresher;
+    private RouterOptions                                           opts;
+    private final ConcurrentHashMap<Endpoint, GreptimeFlightClient> flightClients  = new ConcurrentHashMap<>();
+    private InnerRouter                                             inner;
 
     @Override
     public boolean init(RouterOptions opts) {
         this.opts = Ensures.ensureNonNull(opts, "Null RouterClient.opts").copy();
-        this.rpcClient = this.opts.getRpcClient();
 
         List<Endpoint> endpoints = Ensures.ensureNonNull(this.opts.getEndpoints(), "Null endpoints");
 
@@ -78,8 +72,14 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
 
     @Override
     public void shutdownGracefully() {
-        if (this.rpcClient != null) {
-            this.rpcClient.shutdownGracefully();
+        for (GreptimeFlightClient client : flightClients.values()) {
+            try {
+                client.close();
+            } catch (Exception ex) {
+                LOG.warn("Failed to close " + client, ex);
+                continue;
+            }
+            LOG.info("Closed {}", client);
         }
 
         if (this.refresher != null) {
@@ -92,62 +92,8 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
         return this.inner.routeFor(null);
     }
 
-    public <Req, Resp> CompletableFuture<Resp> invoke(Endpoint endpoint, //
-                                                      Req request, //
-                                                      Context ctx) {
-        return invoke(endpoint, request, ctx, -1 /* use default rpc timeout */);
-    }
-
-    public <Req, Resp> CompletableFuture<Resp> invoke(Endpoint endpoint, //
-                                                      Req request, //
-                                                      Context ctx, //
-                                                      long timeoutMs) {
-        CompletableFuture<Resp> future = new CompletableFuture<>();
-
-        try {
-            this.rpcClient.invokeAsync(endpoint, request, ctx, new Observer<Resp>() {
-
-                @Override
-                public void onNext(Resp value) {
-                    future.complete(value);
-                }
-
-                @Override
-                public void onError(Throwable err) {
-                    future.completeExceptionally(err);
-                }
-            }, timeoutMs);
-
-        } catch (RemotingException e) {
-            future.completeExceptionally(e);
-        }
-
-        return future;
-    }
-
-    @SuppressWarnings("unused")
-    public <Req, Resp> void invokeServerStreaming(Endpoint endpoint, //
-                                                  Req request, //
-                                                  Context ctx, //
-                                                  Observer<Resp> observer) {
-        try {
-            this.rpcClient.invokeServerStreaming(endpoint, request, ctx, observer);
-        } catch (RemotingException e) {
-            observer.onError(e);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public <Req, Resp> Observer<Req> invokeClientStreaming(Endpoint endpoint, //
-                                                           Req defaultReqIns, //
-                                                           Context ctx, //
-                                                           Observer<Resp> respObserver) {
-        try {
-            return this.rpcClient.invokeClientStreaming(endpoint, defaultReqIns, ctx, respObserver);
-        } catch (RemotingException e) {
-            respObserver.onError(e);
-            return new Observer.RejectedObserver<>(e);
-        }
+    public GreptimeFlightClient getFlightClient(Endpoint endpoint) {
+        return flightClients.computeIfAbsent(endpoint, GreptimeFlightClient::createClient);
     }
 
     @Override
@@ -156,10 +102,19 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
             .print("opts=") //
             .println(this.opts);
 
-        if (this.rpcClient != null) {
-            out.println("");
-            this.rpcClient.display(out);
+        out.println("");
+
+        StringBuilder sb = new StringBuilder("Flight clients: [");
+        Enumeration<Endpoint> keys = flightClients.keys();
+        while (keys.hasMoreElements()) {
+            sb.append(keys.nextElement());
+
+            if (keys.hasMoreElements()) {
+                sb.append(",");
+            }
         }
+        sb.append("]");
+        out.println(sb.toString());
     }
 
     @Override
@@ -167,8 +122,7 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
         return "RouterClient{" + //
                "refresher=" + refresher + //
                ", opts=" + opts + //
-               ", rpcClient=" + rpcClient + //
-               '}';
+               ", flightClients=" + flightClients + '}';
     }
 
     /**

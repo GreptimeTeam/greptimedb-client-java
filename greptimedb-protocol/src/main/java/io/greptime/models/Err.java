@@ -28,7 +28,7 @@ public class Err {
     // error code from server
     private int       code;
     // error message
-    private String    error;
+    private Throwable error;
     // the server address where the error occurred
     private Endpoint  errTo;
     // the data of wrote failed, can be used to retry
@@ -40,7 +40,7 @@ public class Err {
         return code;
     }
 
-    public String getError() {
+    public Throwable getError() {
         return error;
     }
 
@@ -76,10 +76,7 @@ public class Err {
                '}';
     }
 
-    public static Err writeErr(int code, //
-                               String error, //
-                               Endpoint errTo, //
-                               WriteRows rowsFailed) {
+    public static Err writeErr(int code, Throwable error, Endpoint errTo, WriteRows rowsFailed) {
         Err err = new Err();
         err.code = code;
         err.error = error;
@@ -88,10 +85,7 @@ public class Err {
         return err;
     }
 
-    public static Err queryErr(int code, //
-                               String error, //
-                               Endpoint errTo, //
-                               String failedQl) {
+    public static Err queryErr(int code, Throwable error, Endpoint errTo, String failedQl) {
         Err err = new Err();
         err.code = code;
         err.error = error;
