@@ -18,7 +18,17 @@ package io.greptime.example;
 
 import io.greptime.GreptimeDB;
 import io.greptime.Util;
-import io.greptime.models.*;
+import io.greptime.models.ColumnDataType;
+import io.greptime.models.Err;
+import io.greptime.models.QueryOk;
+import io.greptime.models.QueryRequest;
+import io.greptime.models.Result;
+import io.greptime.models.SelectExprType;
+import io.greptime.models.SelectRows;
+import io.greptime.models.SemanticType;
+import io.greptime.models.TableName;
+import io.greptime.models.WriteOk;
+import io.greptime.models.WriteRows;
 import io.greptime.options.GreptimeOptions;
 import io.greptime.rpc.RpcOptions;
 import org.slf4j.Logger;

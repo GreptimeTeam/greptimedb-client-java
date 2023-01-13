@@ -16,7 +16,7 @@
  */
 package io.greptime.models;
 
-import io.greptime.QueryClient;
+import com.codahale.metrics.Histogram;
 import io.greptime.Util;
 import io.greptime.common.util.Clock;
 import io.greptime.rpc.Context;
@@ -57,9 +57,11 @@ public interface SelectRows extends Iterator<Row> {
 
         private final Context ctx;
         private final BlockingQueue<Row> rows = new LinkedBlockingQueue<>(MAX_CACHED_ROWS);
+        private final Histogram readRowsNum;
 
-        public DefaultSelectRows(Context ctx) {
+        public DefaultSelectRows(Context ctx, Histogram readRowsNum) {
             this.ctx = ctx;
+            this.readRowsNum = readRowsNum;
         }
 
         @Override
@@ -99,7 +101,9 @@ public interface SelectRows extends Iterator<Row> {
                                 queryId));
                     }
 
-                    QueryClient.InnerMetricHelper.readRowsNum().update(1);
+                    if (this.readRowsNum != null) {
+                        this.readRowsNum.update(1);
+                    }
 
                     index += 1;
                 }

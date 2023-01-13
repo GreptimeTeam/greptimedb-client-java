@@ -25,8 +25,9 @@ import io.greptime.flight.GreptimeFlightClient;
 import io.greptime.options.RouterOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -71,7 +72,9 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
 
     @Override
     public void shutdownGracefully() {
-        for (GreptimeFlightClient client : flightClients.values()) {
+        Iterator<Map.Entry<Endpoint, GreptimeFlightClient>> iterator = this.flightClients.entrySet().iterator();
+        while (iterator.hasNext()) {
+            GreptimeFlightClient client = iterator.next().getValue();
             try {
                 client.close();
             } catch (Exception ex) {
@@ -79,6 +82,8 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
                 continue;
             }
             LOG.info("Closed {}", client);
+
+            iterator.remove();
         }
 
         if (this.refresher != null) {
@@ -102,18 +107,7 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
                 .println(this.opts);
 
         out.println("");
-
-        StringBuilder sb = new StringBuilder("Flight clients: [");
-        Enumeration<Endpoint> keys = flightClients.keys();
-        while (keys.hasMoreElements()) {
-            sb.append(keys.nextElement());
-
-            if (keys.hasMoreElements()) {
-                sb.append(",");
-            }
-        }
-        sb.append("]");
-        out.println(sb.toString());
+        out.println("Flight clients: ").print(this.flightClients.keys());
     }
 
     @Override

@@ -70,7 +70,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
         Ensures.ensureNonNull(rows, "rows");
 
         long startCall = Clock.defaultClock().getTick();
-        return write0(rows, 0).whenCompleteAsync((r, e) -> {
+        return write0(rows, ctx, 0).whenCompleteAsync((r, e) -> {
             InnerMetricHelper.writeQps().mark();
             if (r != null) {
                 if (Util.isRwLogging()) {
@@ -91,11 +91,11 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
         }, this.asyncPool);
     }
 
-    private CompletableFuture<Result<WriteOk, Err>> write0(WriteRows rows, int retries) {
+    private CompletableFuture<Result<WriteOk, Err>> write0(WriteRows rows, Context ctx, int retries) {
         InnerMetricHelper.writeByRetries(retries).mark();
 
         return this.routerClient.route()
-                .thenComposeAsync(endpoint -> writeTo(endpoint, rows), asyncPool)
+                .thenComposeAsync(endpoint -> writeTo(endpoint, rows, ctx), this.asyncPool)
             .thenComposeAsync(r -> {
                 if (r.isOk()) {
                     LOG.debug("Success to write to {}, ok={}.", Keys.DB_NAME, r.getOk());
@@ -113,11 +113,11 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                     return Util.completedCf(r);
                 }
 
-                    return write0(rows, retries + 1);
+                    return write0(rows, ctx, retries + 1);
             }, this.asyncPool);
     }
 
-    private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, WriteRows rows) {
+    private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, WriteRows rows, Context ctx) {
         GreptimeFlightClient flightClient = routerClient.getFlightClient(endpoint);
 
         GreptimeRequest request = new GreptimeRequest(rows.into());

@@ -16,6 +16,7 @@
  */
 package io.greptime.flight;
 
+import io.greptime.common.util.StringBuilderHelper;
 import org.apache.arrow.vector.VectorSchemaRoot;
 
 public class FlightMessage {
@@ -26,7 +27,7 @@ public class FlightMessage {
 
     private final Type type;
     private final Integer affectedRows;
-    private final VectorSchemaRoot recordbatch;
+    private final VectorSchemaRoot recordBatch;
 
     FlightMessage(int affectedRows) {
         this(Type.AffectedRows, affectedRows, null);
@@ -39,7 +40,7 @@ public class FlightMessage {
     private FlightMessage(Type type, Integer affectedRows, VectorSchemaRoot recordbatch) {
         this.type = type;
         this.affectedRows = affectedRows;
-        this.recordbatch = recordbatch;
+        this.recordBatch = recordbatch;
     }
 
     public Type getType() {
@@ -50,19 +51,20 @@ public class FlightMessage {
         return affectedRows;
     }
 
-    public VectorSchemaRoot getRecordbatch() {
-        return recordbatch;
+    public VectorSchemaRoot getRecordBatch() {
+        return recordBatch;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("FlightMessage{");
+        StringBuilder sb = StringBuilderHelper.get();
+        sb.append("FlightMessage{");
         switch (type) {
             case AffectedRows:
                 sb.append("affectedRows=").append(affectedRows);
                 break;
             case Recordbatch:
-                sb.append("recordbatch=").append(recordbatch);
+                sb.append("recordBatch=").append(recordBatch);
                 break;
         }
         sb.append('}');

@@ -35,7 +35,7 @@ public class SelectRowsTest {
 
     @Test
     public void testSelectRowsCollect() throws InterruptedException {
-        SelectRows rows = new SelectRows.DefaultSelectRows(Context.newDefault());
+        SelectRows rows = new SelectRows.DefaultSelectRows(Context.newDefault(), null);
 
         rows.produce(genRecordbatch());
 
@@ -48,7 +48,7 @@ public class SelectRowsTest {
 
     @Test
     public void testSelectRowsIterator() throws InterruptedException {
-        SelectRows rows = new SelectRows.DefaultSelectRows(Context.newDefault());
+        SelectRows rows = new SelectRows.DefaultSelectRows(Context.newDefault(), null);
 
         rows.produce(genRecordbatch());
 

@@ -24,15 +24,18 @@ import io.greptime.common.Lifecycle;
 import io.greptime.common.signal.SignalHandlersLoader;
 import io.greptime.common.util.MetricExecutor;
 import io.greptime.common.util.MetricsUtil;
-import io.greptime.models.*;
+import io.greptime.models.Err;
+import io.greptime.models.QueryOk;
+import io.greptime.models.QueryRequest;
+import io.greptime.models.Result;
+import io.greptime.models.WriteOk;
+import io.greptime.models.WriteRows;
 import io.greptime.options.GreptimeOptions;
 import io.greptime.options.QueryOptions;
 import io.greptime.options.RouterOptions;
 import io.greptime.options.WriteOptions;
 import io.greptime.rpc.Context;
 import io.greptime.rpc.RpcClient;
-import io.greptime.rpc.RpcFactoryProvider;
-import io.greptime.rpc.RpcOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
@@ -194,16 +197,6 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
 
     private static Executor makeMetricPool(Executor pool, String name) {
         return pool == null ? null : new MetricExecutor(pool, name);
-    }
-
-    private static RpcClient makeRpcClient(GreptimeOptions opts) {
-        RpcOptions rpcOpts = opts.getRpcOptions();
-        RpcClient rpcClient = RpcFactoryProvider.getRpcFactory().createRpcClient();
-        if (!rpcClient.init(rpcOpts)) {
-            throw new IllegalStateException("Fail to start RPC client");
-        }
-        rpcClient.registerConnectionObserver(new RpcConnectionObserver());
-        return rpcClient;
     }
 
     private static RouterClient makeRouteClient(GreptimeOptions opts) {

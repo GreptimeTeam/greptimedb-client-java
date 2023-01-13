@@ -16,6 +16,7 @@
  */
 package io.greptime.models;
 
+import com.codahale.metrics.Histogram;
 import io.greptime.Status;
 import io.greptime.common.Endpoint;
 import io.greptime.flight.FlightMessage;
@@ -31,12 +32,14 @@ public final class QueryResultHelper implements Observer<FlightMessage> {
     private final Endpoint endpoint;
     private final QueryRequest query;
     private final Context ctx;
+    private final Histogram readRowsNum;
     private Result<QueryOk, Err> result;
 
-    public QueryResultHelper(Endpoint endpoint, QueryRequest query, Context ctx) {
+    public QueryResultHelper(Endpoint endpoint, QueryRequest query, Context ctx, Histogram readRowsNum) {
         this.endpoint = endpoint;
         this.query = query;
         this.ctx = ctx;
+        this.readRowsNum = readRowsNum;
     }
 
     @Override
@@ -50,7 +53,7 @@ public final class QueryResultHelper implements Observer<FlightMessage> {
         }
 
         if (result == null) {
-            result = QueryOk.ok(query.getQl(), new SelectRows.DefaultSelectRows(ctx)).mapToResult();
+            result = QueryOk.ok(query.getQl(), new SelectRows.DefaultSelectRows(ctx, readRowsNum)).mapToResult();
         }
 
         if (!result.isOk()) {
@@ -58,7 +61,7 @@ public final class QueryResultHelper implements Observer<FlightMessage> {
         }
         SelectRows rows = result.getOk().getRows();
 
-        VectorSchemaRoot recordbatch = message.getRecordbatch();
+        VectorSchemaRoot recordbatch = message.getRecordBatch();
         try {
             rows.produce(recordbatch);
         } catch (Throwable e) {

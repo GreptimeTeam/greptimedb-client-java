@@ -57,7 +57,7 @@ public class QueryOk implements Streamable<Row> {
     }
 
     public static QueryOk emptyOk() {
-        return ok("", new SelectRows.DefaultSelectRows(Context.newDefault()));
+        return ok("", new SelectRows.DefaultSelectRows(Context.newDefault(), null));
     }
 
     public static QueryOk ok(String ql, SelectRows rows) {
