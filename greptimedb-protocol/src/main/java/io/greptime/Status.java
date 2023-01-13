@@ -81,8 +81,8 @@ public enum Status {
         }
     }
 
-    private final int                         statusCode;
-    private final boolean                     shouldRetry;
+    private final int statusCode;
+    private final boolean shouldRetry;
 
     Status(int statusCode) {
         this(statusCode, false);

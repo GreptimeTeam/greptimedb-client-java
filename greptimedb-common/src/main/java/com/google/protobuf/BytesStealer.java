@@ -25,7 +25,7 @@ import java.nio.ByteBuffer;
  */
 public class BytesStealer extends ByteOutput {
 
-    private byte[]  value;
+    private byte[] value;
     private boolean valid = false;
 
     public byte[] value() {

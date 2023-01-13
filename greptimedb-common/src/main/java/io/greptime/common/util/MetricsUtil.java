@@ -25,7 +25,6 @@ import com.codahale.metrics.Slf4jReporter;
 import com.codahale.metrics.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -37,29 +36,29 @@ import java.util.concurrent.TimeUnit;
  */
 public final class MetricsUtil {
 
-    private static final Logger            LOG             = LoggerFactory.getLogger(MetricsUtil.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MetricsUtil.class);
 
-    private static final MetricRegistry    METRIC_REGISTRY = new MetricRegistry();
+    private static final MetricRegistry METRIC_REGISTRY = new MetricRegistry();
     private static final ScheduledReporter SCHEDULED_REPORTER;
 
     static {
         ScheduledExecutorService scheduledPool = ThreadPoolUtil.newScheduledBuilder() //
-            .enableMetric(true) //
-            .coreThreads(1) //
-            .poolName("metrics.reporter") //
-            .threadFactory(new NamedThreadFactory("metrics.reporter", true)) //
-            .build();
+                .enableMetric(true) //
+                .coreThreads(1) //
+                .poolName("metrics.reporter") //
+                .threadFactory(new NamedThreadFactory("metrics.reporter", true)) //
+                .build();
         SCHEDULED_REPORTER = createReporter(scheduledPool);
     }
 
     private static ScheduledReporter createReporter(ScheduledExecutorService scheduledPool) {
         try {
             return Slf4jReporter.forRegistry(MetricsUtil.METRIC_REGISTRY) //
-                .withLoggingLevel(Slf4jReporter.LoggingLevel.INFO) //
-                .outputTo(LOG) //
-                .scheduleOn(scheduledPool) //
-                .shutdownExecutorOnStop(true) //
-                .build();
+                    .withLoggingLevel(Slf4jReporter.LoggingLevel.INFO) //
+                    .outputTo(LOG) //
+                    .scheduleOn(scheduledPool) //
+                    .shutdownExecutorOnStop(true) //
+                    .build();
         } catch (Throwable ex) {
             LOG.warn("Fail to create metrics reporter.", ex);
             return null;
@@ -190,6 +189,5 @@ public final class MetricsUtil {
         }
     }
 
-    private MetricsUtil() {
-    }
+    private MetricsUtil() {}
 }

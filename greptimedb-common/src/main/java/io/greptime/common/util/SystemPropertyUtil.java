@@ -18,7 +18,6 @@ package io.greptime.common.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
@@ -171,7 +170,7 @@ public final class SystemPropertyUtil {
         }
 
         LOG.warn("Unable to parse the long integer system property '{}':{} - using the default value: {}.", key, value,
-            def);
+                def);
 
         return def;
     }
@@ -184,6 +183,5 @@ public final class SystemPropertyUtil {
         return System.getProperties().setProperty(key, value);
     }
 
-    private SystemPropertyUtil() {
-    }
+    private SystemPropertyUtil() {}
 }

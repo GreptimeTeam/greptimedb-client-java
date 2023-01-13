@@ -21,7 +21,6 @@ import io.greptime.common.util.ServiceLoader;
 import io.greptime.common.util.SystemPropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +35,7 @@ import java.util.Map;
  */
 public class SignalHandlersLoader {
 
-    private static final Logger  LOG           = LoggerFactory.getLogger(SignalHandlersLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SignalHandlersLoader.class);
 
     private static final boolean USE_OS_SIGNAL = SystemPropertyUtil.getBool(Keys.USE_OS_SIGNAL, true);
 

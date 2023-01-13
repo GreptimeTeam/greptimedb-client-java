@@ -14,25 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime.common;
+package io.greptime.flight;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import io.grpc.stub.AbstractStub;
+import org.apache.arrow.flight.CallOptions;
+import java.util.concurrent.Executor;
 
-/**
- * Service provide interface annotation.
- *
- * @author jiachun.fjc
- */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-public @interface SPI {
+public class AsyncExecCallOption implements CallOptions.GrpcCallOption {
 
-    String name() default "";
+    private final Executor executor;
 
-    int priority() default 0;
+    public AsyncExecCallOption(Executor executor) {
+        this.executor = executor;
+    }
+
+    @Override
+    public <T extends AbstractStub<T>> T wrapStub(T stub) {
+        return stub.withExecutor(executor);
+    }
 }

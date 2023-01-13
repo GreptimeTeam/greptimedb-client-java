@@ -23,7 +23,7 @@ package io.greptime.common.util;
  */
 public class RcObjectPool<T> implements ObjectPool<T> {
 
-    private final Resource<T>         resource;
+    private final Resource<T> resource;
     private final RcResourceHolder<T> resourceHolder = new RcResourceHolder<>();
 
     public RcObjectPool(Resource<T> resource) {

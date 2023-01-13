@@ -17,7 +17,6 @@
 package io.greptime.common;
 
 import io.greptime.common.util.Strings;
-
 import java.io.Serializable;
 
 /**
@@ -29,8 +28,8 @@ public class Endpoint implements Serializable {
 
     private static final long serialVersionUID = -7329681263115546100L;
 
-    private final String      addr;
-    private final int         port;
+    private final String addr;
+    private final int port;
 
     public static Endpoint of(String addr, int port) {
         return new Endpoint(addr, port);

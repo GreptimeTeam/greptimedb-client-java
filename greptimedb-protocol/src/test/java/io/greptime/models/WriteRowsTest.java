@@ -20,7 +20,6 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.ByteStringHelper;
 import org.junit.Assert;
 import org.junit.Test;
-
 import java.util.BitSet;
 
 /**
@@ -31,15 +30,15 @@ public class WriteRowsTest {
     @Test
     public void testWriteRowsNonNull() {
         WriteRows rows = WriteRows.newBuilder(TableName.with("", "test_table")) //
-            .columnNames("col1", "col2", "col3") //
-            .semanticTypes(SemanticType.Tag, SemanticType.Tag, SemanticType.Field) //
-            .dataTypes(ColumnDataType.String, ColumnDataType.String, ColumnDataType.Int32) //
-            .build();
+                .columnNames("col1", "col2", "col3") //
+                .semanticTypes(SemanticType.Tag, SemanticType.Tag, SemanticType.Field) //
+                .dataTypes(ColumnDataType.String, ColumnDataType.String, ColumnDataType.Int32) //
+                .build();
 
         rows.insert("1", "11", 111) //
-            .insert("2", "22", 222) //
-            .insert("3", "33", 333) //
-            .finish();
+                .insert("2", "22", 222) //
+                .insert("3", "33", 333) //
+                .finish();
 
         Assert.assertEquals(3, rows.rowCount());
         Assert.assertEquals(111, rows.columns().get(2).getValues().getI32Values(0));
@@ -50,15 +49,15 @@ public class WriteRowsTest {
     @Test
     public void testWriteRowsSomeNull() {
         WriteRows rows = WriteRows.newBuilder(TableName.with("", "test_table")) //
-            .columnNames("col1", "col2", "col3") //
-            .semanticTypes(SemanticType.Tag, SemanticType.Tag, SemanticType.Field) //
-            .dataTypes(ColumnDataType.String, ColumnDataType.String, ColumnDataType.Int32) //
-            .build();
+                .columnNames("col1", "col2", "col3") //
+                .semanticTypes(SemanticType.Tag, SemanticType.Tag, SemanticType.Field) //
+                .dataTypes(ColumnDataType.String, ColumnDataType.String, ColumnDataType.Int32) //
+                .build();
 
         rows.insert("1", "11", 111) //
-            .insert("2", null, 222) //
-            .insert("3", "33", null) //
-            .finish();
+                .insert("2", null, 222) //
+                .insert("3", "33", null) //
+                .finish();
 
         Assert.assertEquals(3, rows.rowCount());
         Assert.assertEquals(111, rows.columns().get(2).getValues().getI32Values(0));

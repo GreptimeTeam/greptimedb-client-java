@@ -17,22 +17,12 @@
 package io.greptime.example;
 
 import io.greptime.GreptimeDB;
-import io.greptime.models.ColumnDataType;
-import io.greptime.models.Err;
-import io.greptime.models.QueryOk;
-import io.greptime.models.QueryRequest;
-import io.greptime.models.Result;
-import io.greptime.models.SelectExprType;
-import io.greptime.models.SelectRows;
-import io.greptime.models.SemanticType;
-import io.greptime.models.TableName;
-import io.greptime.models.WriteOk;
-import io.greptime.models.WriteRows;
+import io.greptime.Util;
+import io.greptime.models.*;
 import io.greptime.options.GreptimeOptions;
 import io.greptime.rpc.RpcOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 
@@ -44,6 +34,8 @@ public class Example {
     private static final Logger LOG = LoggerFactory.getLogger(Example.class);
 
     public static void main(String[] args) throws Exception {
+        Util.resetRwLogging();
+
         /*
            At the time I wrote this, GreptimeDB did not yet support automatic `create table`
            for the gRPC protocol, so we needed to do it manually. For more details, please
@@ -79,7 +71,8 @@ public class Example {
         LOG.info("Write result: {}", writeResult);
 
         if (!writeResult.isOk()) {
-            fail(writeResult.getErr().toString());
+            writeResult.getErr().getError().printStackTrace();
+            return;
         }
 
         Result<QueryOk, Err> queryResult = runQuery(greptimeDB);
@@ -87,7 +80,8 @@ public class Example {
         LOG.info("Query result: {}", queryResult);
 
         if (!queryResult.isOk()) {
-            fail(queryResult.getErr().toString());
+            queryResult.getErr().getError().printStackTrace();
+            return;
         }
 
         SelectRows rows = queryResult.getOk().getRows();
@@ -98,29 +92,26 @@ public class Example {
     }
 
     private static Result<WriteOk, Err> runInsert(GreptimeDB greptimeDB) throws Exception {
-        WriteRows rows = WriteRows.newBuilder(TableName.with("public", "monitor")) //
-            .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field) //
-            .dataTypes(ColumnDataType.String, ColumnDataType.Int64, ColumnDataType.Float64, ColumnDataType.Float64) //
-            .columnNames("host", "ts", "cpu", "memory") //
-            .build();
+        WriteRows rows =
+                WriteRows
+                        .newBuilder(TableName.with("public", "monitor"))
+                        .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field)
+                        .dataTypes(ColumnDataType.String, ColumnDataType.TimestampMillisecond, ColumnDataType.Float64,
+                                ColumnDataType.Float64).columnNames("host", "ts", "cpu", "memory").build();
 
         rows.insert("127.0.0.1", System.currentTimeMillis(), 0.1, null) //
-            .insert("127.0.0.2", System.currentTimeMillis(), 0.3, 0.5) //
-            .finish();
+                .insert("127.0.0.2", System.currentTimeMillis(), 0.3, 0.5) //
+                .finish();
 
         return greptimeDB.write(rows).get();
     }
 
     private static Result<QueryOk, Err> runQuery(GreptimeDB greptimeDB) throws Exception {
         QueryRequest request = QueryRequest.newBuilder() //
-            .exprType(SelectExprType.Sql) //
-            .ql("SELECT * FROM monitor;") //
-            .build();
+                .exprType(SelectExprType.Sql) //
+                .ql("SELECT * FROM monitor;") //
+                .build();
 
         return greptimeDB.query(request).get();
-    }
-
-    private static void fail(String err) {
-        throw new RuntimeException(err);
     }
 }

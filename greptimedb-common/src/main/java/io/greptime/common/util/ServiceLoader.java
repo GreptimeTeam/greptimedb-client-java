@@ -19,7 +19,6 @@ package io.greptime.common.util;
 import io.greptime.common.SPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,21 +43,21 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public final class ServiceLoader<S> implements Iterable<S> {
 
-    private static final Logger            LOG       = LoggerFactory.getLogger(ServiceLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServiceLoader.class);
 
-    private static final String            PREFIX    = "META-INF/services/";
+    private static final String PREFIX = "META-INF/services/";
 
     // the class or interface representing the service being loaded
-    private final Class<S>                 service;
+    private final Class<S> service;
 
     // the class loader used to locate, load, and instantiate providers
-    private final ClassLoader              loader;
+    private final ClassLoader loader;
 
     // cached providers, in instantiation order
     private final LinkedHashMap<String, S> providers = new LinkedHashMap<>();
 
     // the current lazy-lookup iterator
-    private LazyIterator                   lookupIterator;
+    private LazyIterator lookupIterator;
 
     public static <S> ServiceLoader<S> load(Class<S> service) {
         return ServiceLoader.load(service, Thread.currentThread().getContextClassLoader());
@@ -177,7 +176,7 @@ public final class ServiceLoader<S> implements Iterable<S> {
     // parse a single line from the given configuration file, adding the name
     // on the line to the names list.
     private int parseLine(Class<?> service, URL u, BufferedReader r, int lc, List<String> names) throws IOException,
-                                                                                                ServiceConfigurationError {
+            ServiceConfigurationError {
 
         String ln = r.readLine();
         if (ln == null) {
@@ -216,8 +215,7 @@ public final class ServiceLoader<S> implements Iterable<S> {
                 BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             int lc = 1;
             // noinspection StatementWithEmptyBody
-            while ((lc = parseLine(service, url, r, lc, names)) >= 0)
-                ;
+            while ((lc = parseLine(service, url, r, lc, names)) >= 0);
         } catch (IOException x) {
             throw fail(service, "error reading configuration file", x);
         }
@@ -299,11 +297,11 @@ public final class ServiceLoader<S> implements Iterable<S> {
     }
 
     private class LazyIterator implements Iterator<Class<S>> {
-        Class<S>         service;
-        ClassLoader      loader;
-        Enumeration<URL> configs  = null;
-        Iterator<String> pending  = null;
-        String           nextName = null;
+        Class<S> service;
+        ClassLoader loader;
+        Enumeration<URL> configs = null;
+        Iterator<String> pending = null;
+        String nextName = null;
 
         private LazyIterator(Class<S> service, ClassLoader loader) {
             this.service = service;

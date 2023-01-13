@@ -17,15 +17,45 @@
 package io.greptime.models;
 
 /**
- *
  * @author jiachun.fjc
  */
 public interface Value {
     String name();
 
-    SemanticType semanticType();
-
     ColumnDataType dataType();
 
     Object value();
+
+    final class DefaultValue implements Value {
+
+        private final String name;
+        private final ColumnDataType dataType;
+        private final Object value;
+
+        public DefaultValue(String name, ColumnDataType dataType, Object value) {
+            this.name = name;
+            this.dataType = dataType;
+            this.value = value;
+        }
+
+        @Override
+        public String name() {
+            return name;
+        }
+
+        @Override
+        public ColumnDataType dataType() {
+            return dataType;
+        }
+
+        @Override
+        public Object value() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return "Value{" + "name='" + name + '\'' + ", dataType=" + dataType + ", value=" + value + '}';
+        }
+    }
 }

@@ -64,24 +64,24 @@ public class StringsTest {
     public void splitTest() {
         Assert.assertNull(Strings.split(null, '*'));
         Assert.assertArrayEquals(new String[0], Strings.split("", '*'));
-        Assert.assertArrayEquals(new String[] { "a", "b", "c" }, Strings.split("a.b.c", '.'));
-        Assert.assertArrayEquals(new String[] { "a", "b", "c" }, Strings.split("a..b.c", '.'));
-        Assert.assertArrayEquals(new String[] { "a:b:c" }, Strings.split("a:b:c", '.'));
-        Assert.assertArrayEquals(new String[] { "a", "b", "c" }, Strings.split("a b c", ' '));
+        Assert.assertArrayEquals(new String[] {"a", "b", "c"}, Strings.split("a.b.c", '.'));
+        Assert.assertArrayEquals(new String[] {"a", "b", "c"}, Strings.split("a..b.c", '.'));
+        Assert.assertArrayEquals(new String[] {"a:b:c"}, Strings.split("a:b:c", '.'));
+        Assert.assertArrayEquals(new String[] {"a", "b", "c"}, Strings.split("a b c", ' '));
     }
 
     @Test
     public void splitPreserveAllTokensTest() {
         Assert.assertNull(Strings.split(null, '*', true));
         Assert.assertArrayEquals(new String[0], Strings.split("", '*', true));
-        Assert.assertArrayEquals(new String[] { "a", "b", "c" }, Strings.split("a.b.c", '.', true));
-        Assert.assertArrayEquals(new String[] { "a", "", "b", "c" }, Strings.split("a..b.c", '.', true));
-        Assert.assertArrayEquals(new String[] { "a:b:c" }, Strings.split("a:b:c", '.', true));
-        Assert.assertArrayEquals(new String[] { "a", "b", "c" }, Strings.split("a b c", ' ', true));
-        Assert.assertArrayEquals(new String[] { "a", "b", "c", "" }, Strings.split("a b c ", ' ', true));
-        Assert.assertArrayEquals(new String[] { "a", "b", "c", "", "" }, Strings.split("a b c  ", ' ', true));
-        Assert.assertArrayEquals(new String[] { "", "a", "b", "c" }, Strings.split(" a b c", ' ', true));
-        Assert.assertArrayEquals(new String[] { "", "", "a", "b", "c" }, Strings.split("  a b c", ' ', true));
-        Assert.assertArrayEquals(new String[] { "", "a", "b", "c", "" }, Strings.split(" a b c ", ' ', true));
+        Assert.assertArrayEquals(new String[] {"a", "b", "c"}, Strings.split("a.b.c", '.', true));
+        Assert.assertArrayEquals(new String[] {"a", "", "b", "c"}, Strings.split("a..b.c", '.', true));
+        Assert.assertArrayEquals(new String[] {"a:b:c"}, Strings.split("a:b:c", '.', true));
+        Assert.assertArrayEquals(new String[] {"a", "b", "c"}, Strings.split("a b c", ' ', true));
+        Assert.assertArrayEquals(new String[] {"a", "b", "c", ""}, Strings.split("a b c ", ' ', true));
+        Assert.assertArrayEquals(new String[] {"a", "b", "c", "", ""}, Strings.split("a b c  ", ' ', true));
+        Assert.assertArrayEquals(new String[] {"", "a", "b", "c"}, Strings.split(" a b c", ' ', true));
+        Assert.assertArrayEquals(new String[] {"", "", "a", "b", "c"}, Strings.split("  a b c", ' ', true));
+        Assert.assertArrayEquals(new String[] {"", "a", "b", "c", ""}, Strings.split(" a b c ", ' ', true));
     }
 }

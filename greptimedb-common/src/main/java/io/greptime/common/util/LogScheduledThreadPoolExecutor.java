@@ -18,7 +18,6 @@ package io.greptime.common.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -37,8 +36,8 @@ public class LogScheduledThreadPoolExecutor extends ScheduledThreadPoolExecutor 
 
     private static final Logger LOG = LoggerFactory.getLogger(LogScheduledThreadPoolExecutor.class);
 
-    private final int           corePoolSize;
-    private final String        name;
+    private final int corePoolSize;
+    private final String name;
 
     public LogScheduledThreadPoolExecutor(int corePoolSize, String name) {
         super(corePoolSize);
@@ -59,7 +58,7 @@ public class LogScheduledThreadPoolExecutor extends ScheduledThreadPoolExecutor 
     }
 
     public LogScheduledThreadPoolExecutor(int corePoolSize, ThreadFactory threadFactory,
-                                          RejectedExecutionHandler handler, String name) {
+            RejectedExecutionHandler handler, String name) {
         super(corePoolSize, threadFactory, handler);
         this.corePoolSize = corePoolSize;
         this.name = name;
@@ -100,8 +99,8 @@ public class LogScheduledThreadPoolExecutor extends ScheduledThreadPoolExecutor 
     @Override
     public String toString() {
         return "ScheduledThreadPoolExecutor {" + //
-               "corePoolSize=" + corePoolSize + //
-               ", name='" + name + '\'' + //
-               "} " + super.toString();
+                "corePoolSize=" + corePoolSize + //
+                ", name='" + name + '\'' + //
+                "} " + super.toString();
     }
 }

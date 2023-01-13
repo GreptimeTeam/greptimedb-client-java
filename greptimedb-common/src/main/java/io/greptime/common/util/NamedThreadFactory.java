@@ -18,7 +18,6 @@ package io.greptime.common.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,15 +29,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 @SuppressWarnings("unused")
 public class NamedThreadFactory implements ThreadFactory {
 
-    private static final Logger        LOG        = LoggerFactory.getLogger(NamedThreadFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NamedThreadFactory.class);
 
     private static final AtomicInteger FACTORY_ID = new AtomicInteger(0);
 
-    private final AtomicInteger        id         = new AtomicInteger(0);
-    private final String               name;
-    private final boolean              daemon;
-    private final int                  priority;
-    private final ThreadGroup          group;
+    private final AtomicInteger id = new AtomicInteger(0);
+    private final String name;
+    private final boolean daemon;
+    private final int priority;
+    private final ThreadGroup group;
 
     public NamedThreadFactory(String name) {
         this(name, false, Thread.NORM_PRIORITY);

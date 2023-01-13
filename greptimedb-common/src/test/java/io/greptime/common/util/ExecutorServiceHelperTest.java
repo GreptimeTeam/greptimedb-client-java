@@ -18,7 +18,6 @@ package io.greptime.common.util;
 
 import org.junit.Assert;
 import org.junit.Test;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.SynchronousQueue;
 
@@ -35,13 +34,13 @@ public class ExecutorServiceHelperTest {
     @Test
     public void shutdownNotStart() {
         ExecutorService e = ThreadPoolUtil.newBuilder().poolName("test_shutdown") //
-            .coreThreads(1) //
-            .maximumThreads(1) //
-            .keepAliveSeconds(100L) //
-            .workQueue(new SynchronousQueue<>()) //
-            .enableMetric(false) //
-            .threadFactory(new NamedThreadFactory("test_shutdown")) //
-            .build();
+                .coreThreads(1) //
+                .maximumThreads(1) //
+                .keepAliveSeconds(100L) //
+                .workQueue(new SynchronousQueue<>()) //
+                .enableMetric(false) //
+                .threadFactory(new NamedThreadFactory("test_shutdown")) //
+                .build();
         Assert.assertTrue(ExecutorServiceHelper.shutdownAndAwaitTermination(e));
     }
 }

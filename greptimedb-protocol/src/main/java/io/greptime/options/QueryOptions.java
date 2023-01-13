@@ -18,7 +18,6 @@ package io.greptime.options;
 
 import io.greptime.RouterClient;
 import io.greptime.common.Copiable;
-
 import java.util.concurrent.Executor;
 
 /**
@@ -26,8 +25,8 @@ import java.util.concurrent.Executor;
  */
 public class QueryOptions implements Copiable<QueryOptions> {
     private RouterClient routerClient;
-    private Executor     asyncPool;
-    private int          maxRetries = 1;
+    private Executor asyncPool;
+    private int maxRetries = 1;
 
     public RouterClient getRouterClient() {
         return routerClient;
@@ -65,9 +64,9 @@ public class QueryOptions implements Copiable<QueryOptions> {
     @Override
     public String toString() {
         return "QueryOptions{" + //
-               "routerClient=" + routerClient + //
-               ", asyncPool=" + asyncPool + //
-               ", maxRetries=" + maxRetries + //
-               '}';
+                "routerClient=" + routerClient + //
+                ", asyncPool=" + asyncPool + //
+                ", maxRetries=" + maxRetries + //
+                '}';
     }
 }

@@ -20,7 +20,6 @@ import io.greptime.common.Copiable;
 import io.greptime.common.Endpoint;
 import io.greptime.common.util.Ensures;
 import io.greptime.rpc.RpcOptions;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,12 +33,12 @@ import java.util.stream.Collectors;
  */
 public class GreptimeOptions implements Copiable<GreptimeOptions> {
     private List<Endpoint> endpoints;
-    private Executor       asyncWritePool;
-    private Executor       asyncReadPool;
-    private RpcOptions     rpcOptions;
-    private RouterOptions  routerOptions;
-    private WriteOptions   writeOptions;
-    private QueryOptions   queryOptions;
+    private Executor asyncWritePool;
+    private Executor asyncReadPool;
+    private RpcOptions rpcOptions;
+    private RouterOptions routerOptions;
+    private WriteOptions writeOptions;
+    private QueryOptions queryOptions;
 
     public List<Endpoint> getEndpoints() {
         return endpoints;
@@ -121,14 +120,14 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
     @Override
     public String toString() {
         return "GreptimeOptions{" + //
-               "endpoints=" + endpoints + //
-               ", asyncWritePool=" + asyncWritePool + //
-               ", asyncReadPool=" + asyncReadPool + //
-               ", rpcOptions=" + rpcOptions + //
-               ", routerOptions=" + routerOptions + //
-               ", writeOptions=" + writeOptions + //
-               ", queryOptions=" + queryOptions + //
-               '}';
+                "endpoints=" + endpoints + //
+                ", asyncWritePool=" + asyncWritePool + //
+                ", asyncReadPool=" + asyncReadPool + //
+                ", rpcOptions=" + rpcOptions + //
+                ", routerOptions=" + routerOptions + //
+                ", writeOptions=" + writeOptions + //
+                ", queryOptions=" + queryOptions + //
+                '}';
     }
 
     public static GreptimeOptions checkSelf(GreptimeOptions opts) {
@@ -155,19 +154,19 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
     }
 
     public static final class Builder {
-        private final List<Endpoint> endpoints                      = new ArrayList<>();
+        private final List<Endpoint> endpoints = new ArrayList<>();
 
         // Asynchronous thread pool, which is used to handle various asynchronous tasks in the SDK.
-        private Executor             asyncWritePool;
-        private Executor             asyncReadPool;
+        private Executor asyncWritePool;
+        private Executor asyncReadPool;
         // Rpc options, in general the default configuration is fine.
-        private RpcOptions           rpcOptions                     = RpcOptions.newDefault();
-        private int                  writeMaxRetries                = 1;
+        private RpcOptions rpcOptions = RpcOptions.newDefault();
+        private int writeMaxRetries = 1;
         // In some case of failure, a retry of the read is attempted.
-        private int                  readMaxRetries                 = 1;
+        private int readMaxRetries = 1;
         // Refresh frequency of route tables. The background refreshes all route tables periodically. By default,
         // all route tables are refreshed every 30 seconds.
-        private long                 routeTableRefreshPeriodSeconds = 30;
+        private long routeTableRefreshPeriodSeconds = 30;
 
         public Builder(List<Endpoint> endpoints) {
             this.endpoints.addAll(endpoints);

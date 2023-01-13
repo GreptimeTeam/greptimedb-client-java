@@ -20,7 +20,6 @@ import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
@@ -35,19 +34,18 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class SerializingExecutor implements Executor {
 
-    private static final Logger                   LOG                  = LoggerFactory
-                                                                           .getLogger(SerializingExecutor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SerializingExecutor.class);
 
-    private static final int                      QUEUE_SIZE_THRESHOLD = 512;
+    private static final int QUEUE_SIZE_THRESHOLD = 512;
 
-    private final String                          name;
-    private final Timer                           singleTaskTimer;
-    private final Timer                           drainTimer;
-    private final Histogram                       drainNumHis;
+    private final String name;
+    private final Timer singleTaskTimer;
+    private final Timer drainTimer;
+    private final Histogram drainNumHis;
     private final Thread.UncaughtExceptionHandler uncaughtExceptionHandler;
 
-    private final Queue<Runnable>                 queue                = new ConcurrentLinkedQueue<>();
-    private final AtomicReference<Thread>         drainingThread       = new AtomicReference<>();
+    private final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();
+    private final AtomicReference<Thread> drainingThread = new AtomicReference<>();
 
     public SerializingExecutor(String name) {
         this(name, LogUncaughtExceptionHandler.INSTANCE);

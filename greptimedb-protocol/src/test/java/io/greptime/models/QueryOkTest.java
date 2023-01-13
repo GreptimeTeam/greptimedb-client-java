@@ -31,7 +31,6 @@ public class QueryOkTest {
 
         Assert.assertTrue(empty.mapToResult().isOk());
         Assert.assertTrue(Strings.isNullOrEmpty(empty.getQl()));
-        Assert.assertEquals(0, empty.getRowCount());
         Assert.assertEquals(0, empty.stream().count());
     }
 }

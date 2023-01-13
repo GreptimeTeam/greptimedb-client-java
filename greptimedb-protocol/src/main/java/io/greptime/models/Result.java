@@ -17,7 +17,6 @@
 package io.greptime.models;
 
 import io.greptime.common.util.Ensures;
-
 import java.util.function.Function;
 
 /**
@@ -27,7 +26,7 @@ import java.util.function.Function;
  */
 public final class Result<Ok, Err> {
 
-    private final Ok  ok;
+    private final Ok ok;
     private final Err err;
 
     public static <Ok, Err> Result<Ok, Err> ok(Ok ok) {

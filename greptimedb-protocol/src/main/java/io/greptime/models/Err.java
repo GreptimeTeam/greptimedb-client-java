@@ -26,21 +26,21 @@ import io.greptime.common.util.Strings;
  */
 public class Err {
     // error code from server
-    private int       code;
+    private int code;
     // error message
-    private String    error;
+    private Throwable error;
     // the server address where the error occurred
-    private Endpoint  errTo;
+    private Endpoint errTo;
     // the data of wrote failed, can be used to retry
     private WriteRows rowsFailed;
     // the QL failed to query
-    private String    failedQl;
+    private String failedQl;
 
     public int getCode() {
         return code;
     }
 
-    public String getError() {
+    public Throwable getError() {
         return error;
     }
 
@@ -62,24 +62,21 @@ public class Err {
 
     private String tableNameFailed() {
         return this.rowsFailed == null ? "" //
-            : Strings.toString(this.rowsFailed.tableName());
+                : Strings.toString(this.rowsFailed.tableName());
     }
 
     @Override
     public String toString() {
         return "Err{" + //
-               "code=" + code + //
-               ", error='" + error + '\'' + //
-               ", errTo=" + errTo + //
-               ", tableNameFailed=" + tableNameFailed() + //
-               ", failedQl=" + failedQl + //
-               '}';
+                "code=" + code + //
+                ", error='" + error + '\'' + //
+                ", errTo=" + errTo + //
+                ", tableNameFailed=" + tableNameFailed() + //
+                ", failedQl=" + failedQl + //
+                '}';
     }
 
-    public static Err writeErr(int code, //
-                               String error, //
-                               Endpoint errTo, //
-                               WriteRows rowsFailed) {
+    public static Err writeErr(int code, Throwable error, Endpoint errTo, WriteRows rowsFailed) {
         Err err = new Err();
         err.code = code;
         err.error = error;
@@ -88,10 +85,7 @@ public class Err {
         return err;
     }
 
-    public static Err queryErr(int code, //
-                               String error, //
-                               Endpoint errTo, //
-                               String failedQl) {
+    public static Err queryErr(int code, Throwable error, Endpoint errTo, String failedQl) {
         Err err = new Err();
         err.code = code;
         err.error = error;

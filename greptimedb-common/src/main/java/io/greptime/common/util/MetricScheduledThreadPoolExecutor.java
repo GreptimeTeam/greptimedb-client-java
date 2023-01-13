@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 public class MetricScheduledThreadPoolExecutor extends LogScheduledThreadPoolExecutor {
 
     public MetricScheduledThreadPoolExecutor(int corePoolSize, ThreadFactory threadFactory,
-                                             RejectedExecutionHandler handler, String name) {
+            RejectedExecutionHandler handler, String name) {
         super(corePoolSize, threadFactory, handler, name);
     }
 
@@ -43,8 +43,8 @@ public class MetricScheduledThreadPoolExecutor extends LogScheduledThreadPoolExe
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
         ThreadPoolMetricRegistry.metricRegistry() //
-            .timer("scheduled_thread_pool." + getName()) //
-            .update(ThreadPoolMetricRegistry.finish(), TimeUnit.MILLISECONDS);
+                .timer("scheduled_thread_pool." + getName()) //
+                .update(ThreadPoolMetricRegistry.finish(), TimeUnit.MILLISECONDS);
         super.afterExecute(r, t);
     }
 }

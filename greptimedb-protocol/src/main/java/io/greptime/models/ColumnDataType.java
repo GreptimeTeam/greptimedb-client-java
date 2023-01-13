@@ -17,12 +17,14 @@
 package io.greptime.models;
 
 import io.greptime.v1.Columns;
+import org.apache.arrow.vector.types.pojo.ArrowType;
+import static org.apache.arrow.vector.types.pojo.ArrowType.Timestamp;
 
 /**
  * @author jiachun.fjc
  */
 public enum ColumnDataType {
-    Bool, Int8, Int16, Int32, Int64, UInt8, UInt16, UInt32, UInt64, Float32, Float64, Binary, String, Date, DateTime;
+    Bool, Int8, Int16, Int32, Int64, UInt8, UInt16, UInt32, UInt64, Float32, Float64, Binary, String, Date, DateTime, TimestampSecond, TimestampMillisecond, TimestampMicrosecond, TimestampNanosecond;
 
     public Columns.ColumnDataType toProtoValue() {
         switch (this) {
@@ -56,43 +58,57 @@ public enum ColumnDataType {
                 return Columns.ColumnDataType.DATE;
             case DateTime:
                 return Columns.ColumnDataType.DATETIME;
+            case TimestampSecond:
+                return Columns.ColumnDataType.TIMESTAMP_SECOND;
+            case TimestampMillisecond:
+                return Columns.ColumnDataType.TIMESTAMP_MILLISECOND;
+            case TimestampMicrosecond:
+                return Columns.ColumnDataType.TIMESTAMP_MICROSECOND;
+            case TimestampNanosecond:
+                return Columns.ColumnDataType.TIMESTAMP_NANOSECOND;
             default:
                 return null;
         }
     }
 
-    public static ColumnDataType fromProtoValue(Columns.ColumnDataType t) {
-        switch (t) {
-            case BOOLEAN:
+    public static ColumnDataType fromArrowType(ArrowType t) {
+        switch (t.getTypeID()) {
+            case Bool:
                 return Bool;
-            case INT8:
-                return Int8;
-            case INT16:
-                return Int16;
-            case INT32:
+            case Int:
                 return Int32;
-            case INT64:
-                return Int64;
-            case UINT8:
-                return UInt8;
-            case UINT16:
-                return UInt16;
-            case UINT32:
-                return UInt32;
-            case UINT64:
-                return UInt64;
-            case FLOAT32:
-                return Float32;
-            case FLOAT64:
+            case FloatingPoint:
                 return Float64;
-            case BINARY:
+            case Binary:
+            case LargeBinary:
                 return Binary;
-            case STRING:
+            case Utf8:
+            case LargeUtf8:
                 return String;
-            case DATE:
-                return Date;
-            case DATETIME:
-                return DateTime;
+            case Date:
+                ArrowType.Date dateType = (ArrowType.Date) t;
+                switch (dateType.getUnit()) {
+                    case DAY:
+                        return Date;
+                    case MILLISECOND:
+                        return DateTime;
+                    default:
+                        return null;
+                }
+            case Timestamp:
+                Timestamp timestampType = (Timestamp) t;
+                switch (timestampType.getUnit()) {
+                    case SECOND:
+                        return TimestampSecond;
+                    case MILLISECOND:
+                        return TimestampMillisecond;
+                    case MICROSECOND:
+                        return TimestampMicrosecond;
+                    case NANOSECOND:
+                        return TimestampNanosecond;
+                    default:
+                        return null;
+                }
             default:
                 return null;
         }

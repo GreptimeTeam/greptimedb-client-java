@@ -19,7 +19,6 @@ package io.greptime.common.signal;
 import io.greptime.common.util.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ import java.util.List;
  */
 public final class SignalHelper {
 
-    private static final Logger         LOG             = LoggerFactory.getLogger(SignalHelper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SignalHelper.class);
 
     private static final SignalAccessor SIGNAL_ACCESSOR = getSignalAccessor0();
 
@@ -69,8 +68,7 @@ public final class SignalHelper {
         return false;
     }
 
-    private SignalHelper() {
-    }
+    private SignalHelper() {}
 
     static class SignalAccessor {
 
@@ -82,7 +80,7 @@ public final class SignalHelper {
 
     static class SignalHandlerAdapter implements sun.misc.SignalHandler {
 
-        private final sun.misc.Signal     target;
+        private final sun.misc.Signal target;
         private final List<SignalHandler> handlers;
 
         public static void addSignal(SignalHandlerAdapter adapter) {
