@@ -35,7 +35,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
@@ -74,7 +73,7 @@ public class WriteClientTest {
         }
     }
 
-    private WriteClient  writeClient;
+    private WriteClient writeClient;
     private RouterClient routerClient;
 
     @Before
@@ -101,15 +100,16 @@ public class WriteClientTest {
 
     @Test
     public void testWriteSuccess() throws ExecutionException, InterruptedException, IOException {
-        FlightServer flightServer = FlightServer.builder(new RootAllocator(Integer.MAX_VALUE),
-            Location.forGrpcInsecure("127.0.0.1", 44444), new TestFlightProducer()).build();
+        FlightServer flightServer =
+                FlightServer.builder(new RootAllocator(Integer.MAX_VALUE),
+                        Location.forGrpcInsecure("127.0.0.1", 44444), new TestFlightProducer()).build();
         flightServer.start();
 
         WriteRows rows = WriteRows.newBuilder(TableName.with("", "test_table")) //
-            .columnNames("test_tag", "test_ts", "test_field") //
-            .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field) //
-            .dataTypes(ColumnDataType.String, ColumnDataType.Int64, ColumnDataType.Float64) //
-            .build();
+                .columnNames("test_tag", "test_ts", "test_field") //
+                .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field) //
+                .dataTypes(ColumnDataType.String, ColumnDataType.Int64, ColumnDataType.Float64) //
+                .build();
 
         rows.insert("tag1", System.currentTimeMillis(), 0.1);
         rows.insert("tag2", System.currentTimeMillis(), 0.2);

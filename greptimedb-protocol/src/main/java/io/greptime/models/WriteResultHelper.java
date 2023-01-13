@@ -26,8 +26,8 @@ import io.greptime.rpc.Observer;
  */
 public final class WriteResultHelper implements Observer<FlightMessage> {
 
-    private final Endpoint       endpoint;
-    private final WriteRows      writeRows;
+    private final Endpoint endpoint;
+    private final WriteRows writeRows;
     private Result<WriteOk, Err> result;
 
     public WriteResultHelper(Endpoint endpoint, WriteRows writeRows) {
@@ -38,8 +38,9 @@ public final class WriteResultHelper implements Observer<FlightMessage> {
     @Override
     public void onNext(FlightMessage message) {
         if (message.getType() != FlightMessage.Type.AffectedRows) {
-            IllegalStateException error = new IllegalStateException(
-                "Expect server returns affected rows message, actual: " + message.getType().name());
+            IllegalStateException error =
+                    new IllegalStateException("Expect server returns affected rows message, actual: "
+                            + message.getType().name());
             result = Err.writeErr(Status.Unexpected.getStatusCode(), error, endpoint, writeRows).mapToResult();
         } else {
             result = WriteOk.ok(message.getAffectedRows(), 0, writeRows.tableName()).mapToResult();

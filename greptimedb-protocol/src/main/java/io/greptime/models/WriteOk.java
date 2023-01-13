@@ -23,8 +23,8 @@ package io.greptime.models;
  */
 public class WriteOk {
 
-    private int       success;
-    private int       failure;
+    private int success;
+    private int failure;
     private TableName tableName;
 
     public int getSuccess() {
@@ -46,10 +46,10 @@ public class WriteOk {
     @Override
     public String toString() {
         return "WriteOk{" + //
-               "success=" + success + //
-               ", failure=" + failure + //
-               ", tableName=" + tableName + //
-               '}';
+                "success=" + success + //
+                ", failure=" + failure + //
+                ", tableName=" + tableName + //
+                '}';
     }
 
     public static WriteOk emptyOk() {

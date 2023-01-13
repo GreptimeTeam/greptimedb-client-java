@@ -121,6 +121,5 @@ public final class Ensures {
         }
     }
 
-    private Ensures() {
-    }
+    private Ensures() {}
 }

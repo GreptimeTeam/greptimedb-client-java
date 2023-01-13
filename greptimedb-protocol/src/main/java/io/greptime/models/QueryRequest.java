@@ -27,7 +27,7 @@ import io.greptime.v1.Database;
  */
 public class QueryRequest implements Into<Database.GreptimeRequest> {
     private SelectExprType exprType;
-    private String         ql;
+    private String ql;
 
     public SelectExprType getExprType() {
         return exprType;
@@ -40,9 +40,9 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
     @Override
     public String toString() {
         return "QueryRequest{" + //
-               "exprType=" + exprType + //
-               ", ql='" + ql + '\'' + //
-               '}';
+                "exprType=" + exprType + //
+                ", ql='" + ql + '\'' + //
+                '}';
     }
 
     public static Builder newBuilder() {
@@ -64,7 +64,7 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
 
     public static class Builder {
         private SelectExprType exprType;
-        private String         ql;
+        private String ql;
 
         /**
          * Sets select expression type, such as sql, promql, etc.

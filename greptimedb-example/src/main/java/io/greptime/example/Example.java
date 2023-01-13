@@ -23,7 +23,6 @@ import io.greptime.options.GreptimeOptions;
 import io.greptime.rpc.RpcOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 
@@ -93,24 +92,25 @@ public class Example {
     }
 
     private static Result<WriteOk, Err> runInsert(GreptimeDB greptimeDB) throws Exception {
-        WriteRows rows = WriteRows
-            .newBuilder(TableName.with("public", "monitor"))
-            .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field)
-            .dataTypes(ColumnDataType.String, ColumnDataType.TimestampMillisecond, ColumnDataType.Float64,
-                ColumnDataType.Float64).columnNames("host", "ts", "cpu", "memory").build();
+        WriteRows rows =
+                WriteRows
+                        .newBuilder(TableName.with("public", "monitor"))
+                        .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field)
+                        .dataTypes(ColumnDataType.String, ColumnDataType.TimestampMillisecond, ColumnDataType.Float64,
+                                ColumnDataType.Float64).columnNames("host", "ts", "cpu", "memory").build();
 
         rows.insert("127.0.0.1", System.currentTimeMillis(), 0.1, null) //
-            .insert("127.0.0.2", System.currentTimeMillis(), 0.3, 0.5) //
-            .finish();
+                .insert("127.0.0.2", System.currentTimeMillis(), 0.3, 0.5) //
+                .finish();
 
         return greptimeDB.write(rows).get();
     }
 
     private static Result<QueryOk, Err> runQuery(GreptimeDB greptimeDB) throws Exception {
         QueryRequest request = QueryRequest.newBuilder() //
-            .exprType(SelectExprType.Sql) //
-            .ql("SELECT * FROM monitor;") //
-            .build();
+                .exprType(SelectExprType.Sql) //
+                .ql("SELECT * FROM monitor;") //
+                .build();
 
         return greptimeDB.query(request).get();
     }

@@ -18,7 +18,6 @@ package io.greptime.models;
 
 import io.greptime.v1.Columns;
 import org.apache.arrow.vector.types.pojo.ArrowType;
-
 import static org.apache.arrow.vector.types.pojo.ArrowType.Timestamp;
 
 /**

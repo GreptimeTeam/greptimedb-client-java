@@ -18,7 +18,6 @@ package io.greptime.models;
 
 import io.greptime.common.Streamable;
 import io.greptime.rpc.Context;
-
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -29,7 +28,7 @@ import java.util.stream.StreamSupport;
  */
 public class QueryOk implements Streamable<Row> {
 
-    private String     ql;
+    private String ql;
     private SelectRows rows;
 
     public String getQl() {
@@ -53,8 +52,8 @@ public class QueryOk implements Streamable<Row> {
     @Override
     public String toString() {
         return "QueryOk{" + //
-               "ql='" + ql + '\'' + //
-               '}';
+                "ql='" + ql + '\'' + //
+                '}';
     }
 
     public static QueryOk emptyOk() {

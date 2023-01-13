@@ -18,7 +18,6 @@ package io.greptime.flight;
 
 import io.grpc.stub.AbstractStub;
 import org.apache.arrow.flight.CallOptions;
-
 import java.util.concurrent.Executor;
 
 public class AsyncExecCallOption implements CallOptions.GrpcCallOption {

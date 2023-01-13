@@ -21,7 +21,6 @@ import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Columns;
 import io.greptime.v1.Database;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -49,10 +48,10 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
     }
 
     class Builder {
-        private final TableName                   tableName;
-        private List<String>                      columnNames;
+        private final TableName tableName;
+        private List<String> columnNames;
         private List<Columns.Column.SemanticType> semanticTypes;
-        private List<Columns.ColumnDataType>      dataTypes;
+        private List<Columns.ColumnDataType> dataTypes;
 
         public Builder(TableName tableName) {
             this.tableName = tableName;
@@ -93,8 +92,8 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
             for (int i = 0; i < columnCount; i++) {
                 Columns.Column.Builder builder = Columns.Column.newBuilder();
                 builder.setColumnName(this.columnNames.get(i)) //
-                    .setSemanticType(this.semanticTypes.get(i)) //
-                    .setDatatype(this.dataTypes.get(i));
+                        .setSemanticType(this.semanticTypes.get(i)) //
+                        .setDatatype(this.dataTypes.get(i));
                 rows.builders.add(builder);
             }
             rows.nullMasks = new BitSet[columnCount];
@@ -103,12 +102,12 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
     }
 
     class DefaultWriteRows implements WriteRows {
-        private TableName                    tableName;
-        private int                          columnCount;
+        private TableName tableName;
+        private int columnCount;
         private List<Columns.Column.Builder> builders;
-        private BitSet[]                     nullMasks;
-        private List<Columns.Column>         columns;
-        private int                          rowCount;
+        private BitSet[] nullMasks;
+        private List<Columns.Column> columns;
+        private int rowCount;
 
         public TableName tableName() {
             return tableName;

@@ -28,9 +28,9 @@ import org.apache.arrow.vector.VectorSchemaRoot;
  */
 public final class QueryResultHelper implements Observer<FlightMessage> {
 
-    private final Endpoint       endpoint;
-    private final QueryRequest   query;
-    private final Context        ctx;
+    private final Endpoint endpoint;
+    private final QueryRequest query;
+    private final Context ctx;
     private Result<QueryOk, Err> result;
 
     public QueryResultHelper(Endpoint endpoint, QueryRequest query, Context ctx) {
@@ -42,8 +42,9 @@ public final class QueryResultHelper implements Observer<FlightMessage> {
     @Override
     public void onNext(FlightMessage message) {
         if (message.getType() != FlightMessage.Type.Recordbatch) {
-            IllegalStateException error = new IllegalStateException(
-                "Expect server returns Recordbatch message, actual: " + message.getType().name());
+            IllegalStateException error =
+                    new IllegalStateException("Expect server returns Recordbatch message, actual: "
+                            + message.getType().name());
             result = Err.queryErr(Status.Unexpected.getStatusCode(), error, endpoint, query.getQl()).mapToResult();
             return;
         }

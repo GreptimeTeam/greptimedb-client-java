@@ -28,18 +28,17 @@ import org.apache.arrow.util.AutoCloseables;
 import org.apache.arrow.vector.VectorSchemaRoot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Objects;
 
 public class GreptimeFlightClient implements AutoCloseable {
 
-    private static final Logger          LOG              = LoggerFactory.getLogger(GreptimeFlightClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GreptimeFlightClient.class);
 
     private static final BufferAllocator BUFFER_ALLOCATOR = new RootAllocator(Integer.MAX_VALUE);
 
-    private final Endpoint               endpoint;
-    private final FlightClient           client;
-    private final BufferAllocator        allocator;
+    private final Endpoint endpoint;
+    private final FlightClient client;
+    private final BufferAllocator allocator;
 
     private GreptimeFlightClient(Endpoint endpoint, FlightClient client, BufferAllocator allocator) {
         this.endpoint = Objects.requireNonNull(endpoint);

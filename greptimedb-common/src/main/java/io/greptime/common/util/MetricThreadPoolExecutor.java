@@ -30,13 +30,13 @@ import java.util.concurrent.TimeUnit;
 public class MetricThreadPoolExecutor extends LogThreadPoolExecutor {
 
     public MetricThreadPoolExecutor(int corePoolSize, //
-                                    int maximumPoolSize, //
-                                    long keepAliveTime, //
-                                    TimeUnit unit, //
-                                    BlockingQueue<Runnable> workQueue, //
-                                    ThreadFactory threadFactory, //
-                                    RejectedExecutionHandler handler, //
-                                    String name) {
+            int maximumPoolSize, //
+            long keepAliveTime, //
+            TimeUnit unit, //
+            BlockingQueue<Runnable> workQueue, //
+            ThreadFactory threadFactory, //
+            RejectedExecutionHandler handler, //
+            String name) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler, name);
     }
 
@@ -49,8 +49,8 @@ public class MetricThreadPoolExecutor extends LogThreadPoolExecutor {
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
         ThreadPoolMetricRegistry.metricRegistry() //
-            .timer("thread_pool." + getName()) //
-            .update(ThreadPoolMetricRegistry.finish(), TimeUnit.MILLISECONDS);
+                .timer("thread_pool." + getName()) //
+                .update(ThreadPoolMetricRegistry.finish(), TimeUnit.MILLISECONDS);
         super.afterExecute(r, t);
     }
 }

@@ -24,8 +24,8 @@ public class FlightMessage {
         AffectedRows, Recordbatch,
     }
 
-    private final Type             type;
-    private final Integer          affectedRows;
+    private final Type type;
+    private final Integer affectedRows;
     private final VectorSchemaRoot recordbatch;
 
     FlightMessage(int affectedRows) {

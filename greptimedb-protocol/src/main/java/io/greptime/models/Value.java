@@ -28,9 +28,9 @@ public interface Value {
 
     final class DefaultValue implements Value {
 
-        private final String         name;
+        private final String name;
         private final ColumnDataType dataType;
-        private final Object         value;
+        private final Object value;
 
         public DefaultValue(String name, ColumnDataType dataType, Object value) {
             this.name = name;

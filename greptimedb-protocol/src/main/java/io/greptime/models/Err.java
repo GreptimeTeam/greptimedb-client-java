@@ -26,15 +26,15 @@ import io.greptime.common.util.Strings;
  */
 public class Err {
     // error code from server
-    private int       code;
+    private int code;
     // error message
     private Throwable error;
     // the server address where the error occurred
-    private Endpoint  errTo;
+    private Endpoint errTo;
     // the data of wrote failed, can be used to retry
     private WriteRows rowsFailed;
     // the QL failed to query
-    private String    failedQl;
+    private String failedQl;
 
     public int getCode() {
         return code;
@@ -62,18 +62,18 @@ public class Err {
 
     private String tableNameFailed() {
         return this.rowsFailed == null ? "" //
-            : Strings.toString(this.rowsFailed.tableName());
+                : Strings.toString(this.rowsFailed.tableName());
     }
 
     @Override
     public String toString() {
         return "Err{" + //
-               "code=" + code + //
-               ", error='" + error + '\'' + //
-               ", errTo=" + errTo + //
-               ", tableNameFailed=" + tableNameFailed() + //
-               ", failedQl=" + failedQl + //
-               '}';
+                "code=" + code + //
+                ", error='" + error + '\'' + //
+                ", errTo=" + errTo + //
+                ", tableNameFailed=" + tableNameFailed() + //
+                ", failedQl=" + failedQl + //
+                '}';
     }
 
     public static Err writeErr(int code, Throwable error, Endpoint errTo, WriteRows rowsFailed) {

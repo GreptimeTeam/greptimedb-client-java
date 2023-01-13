@@ -19,7 +19,6 @@ package io.greptime.options;
 import io.greptime.common.Copiable;
 import io.greptime.common.Endpoint;
 import io.greptime.rpc.RpcClient;
-
 import java.util.List;
 
 /**
@@ -29,13 +28,13 @@ import java.util.List;
  */
 public class RouterOptions implements Copiable<RouterOptions> {
 
-    private RpcClient      rpcClient;
+    private RpcClient rpcClient;
     private List<Endpoint> endpoints;
 
     // Refresh frequency of route tables. The background refreshes
     // all route tables periodically. By default, all route tables are
     // refreshed every 30 seconds.
-    private long           refreshPeriodSeconds = 30;
+    private long refreshPeriodSeconds = 30;
 
     public RpcClient getRpcClient() {
         return rpcClient;
@@ -73,9 +72,9 @@ public class RouterOptions implements Copiable<RouterOptions> {
     @Override
     public String toString() {
         return "RouterOptions{" + //
-               "rpcClient=" + rpcClient + //
-               ", endpoints=" + endpoints + //
-               ", refreshPeriodSeconds=" + refreshPeriodSeconds + //
-               '}';
+                "rpcClient=" + rpcClient + //
+                ", endpoints=" + endpoints + //
+                ", refreshPeriodSeconds=" + refreshPeriodSeconds + //
+                '}';
     }
 }

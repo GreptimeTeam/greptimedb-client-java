@@ -41,8 +41,8 @@ public class Files {
             return;
         }
 
-        try (FileChannel fc = FileChannel.open(file.toPath(), isDir ? StandardOpenOption.READ
-            : StandardOpenOption.WRITE)) {
+        try (FileChannel fc =
+                FileChannel.open(file.toPath(), isDir ? StandardOpenOption.READ : StandardOpenOption.WRITE)) {
             fc.force(true);
         }
     }
@@ -57,7 +57,7 @@ public class Files {
         if (dir.exists()) {
             if (!dir.isDirectory()) {
                 throw new IOException("File " + dir + " exists and is "
-                                      + "not a directory. Unable to create directory.");
+                        + "not a directory. Unable to create directory.");
             }
         } else if (!dir.mkdirs() && !dir.isDirectory()) {
             // Double-check that some other thread or process hasn't made

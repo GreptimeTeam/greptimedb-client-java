@@ -17,7 +17,6 @@
 package io.greptime.common.util;
 
 import com.codahale.metrics.Timer;
-
 import java.util.concurrent.Executor;
 
 /**
@@ -28,8 +27,8 @@ import java.util.concurrent.Executor;
  */
 public class MetricExecutor implements Executor {
     private final Executor pool;
-    private final String   name;
-    private final Timer    executeTimer;
+    private final String name;
+    private final Timer executeTimer;
 
     public MetricExecutor(Executor pool, String name) {
         this.pool = Ensures.ensureNonNull(pool, "pool");
@@ -46,8 +45,8 @@ public class MetricExecutor implements Executor {
     @Override
     public String toString() {
         return "MetricExecutor{" + //
-               "pool=" + pool + //
-               ", name='" + name + '\'' + //
-               '}';
+                "pool=" + pool + //
+                ", name='" + name + '\'' + //
+                '}';
     }
 }
