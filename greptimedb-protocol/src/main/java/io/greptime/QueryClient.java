@@ -35,7 +35,6 @@ import io.greptime.rpc.Context;
 import org.apache.arrow.flight.FlightStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicLong;
@@ -47,13 +46,13 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
 
-    private static final Logger     LOG      = LoggerFactory.getLogger(QueryClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(QueryClient.class);
 
     private static final AtomicLong QUERY_ID = new AtomicLong(0);
 
-    private QueryOptions            opts;
-    private RouterClient            routerClient;
-    private Executor                asyncPool;
+    private QueryOptions opts;
+    private RouterClient routerClient;
+    private Executor asyncPool;
 
     @Override
     public boolean init(QueryOptions opts) {
@@ -143,25 +142,25 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
     @Override
     public void display(Printer out) {
         out.println("--- QueryClient ---") //
-            .print("maxRetries=") //
-            .println(this.opts.getMaxRetries()) //
-            .print("asyncPool=") //
-            .println(this.asyncPool);
+                .print("maxRetries=") //
+                .println(this.opts.getMaxRetries()) //
+                .print("asyncPool=") //
+                .println(this.asyncPool);
     }
 
     @Override
     public String toString() {
         return "QueryClient{" + //
-               "opts=" + opts + //
-               ", routerClient=" + routerClient + //
-               ", asyncPool=" + asyncPool + //
-               '}';
+                "opts=" + opts + //
+                ", routerClient=" + routerClient + //
+                ", asyncPool=" + asyncPool + //
+                '}';
     }
 
     public static final class InnerMetricHelper {
-        static final Histogram READ_ROWS_NUM    = MetricsUtil.histogram("read_rows_num");
-        static final Meter     READ_FAILURE_NUM = MetricsUtil.meter("read_failure_num");
-        static final Meter     READ_QPS         = MetricsUtil.meter("read_qps");
+        static final Histogram READ_ROWS_NUM = MetricsUtil.histogram("read_rows_num");
+        static final Meter READ_FAILURE_NUM = MetricsUtil.meter("read_failure_num");
+        static final Meter READ_QPS = MetricsUtil.meter("read_qps");
 
         public static Histogram readRowsNum() {
             return READ_ROWS_NUM;

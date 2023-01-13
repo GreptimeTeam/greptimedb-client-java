@@ -25,7 +25,6 @@ import io.greptime.flight.GreptimeFlightClient;
 import io.greptime.options.RouterOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.*;
@@ -39,14 +38,14 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class RouterClient implements Lifecycle<RouterOptions>, Display {
 
-    private static final Logger              LOG            = LoggerFactory.getLogger(RouterClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RouterClient.class);
 
     private static final SharedScheduledPool REFRESHER_POOL = Util.getSharedScheduledPool("route_cache_refresher", 1);
 
-    private ScheduledExecutorService                                refresher;
-    private RouterOptions                                           opts;
-    private final ConcurrentHashMap<Endpoint, GreptimeFlightClient> flightClients  = new ConcurrentHashMap<>();
-    private InnerRouter                                             inner;
+    private ScheduledExecutorService refresher;
+    private RouterOptions opts;
+    private final ConcurrentHashMap<Endpoint, GreptimeFlightClient> flightClients = new ConcurrentHashMap<>();
+    private InnerRouter inner;
 
     @Override
     public boolean init(RouterOptions opts) {
@@ -99,8 +98,8 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
     @Override
     public void display(Printer out) {
         out.println("--- RouterClient ---") //
-            .print("opts=") //
-            .println(this.opts);
+                .print("opts=") //
+                .println(this.opts);
 
         out.println("");
 
@@ -120,9 +119,9 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
     @Override
     public String toString() {
         return "RouterClient{" + //
-               "refresher=" + refresher + //
-               ", opts=" + opts + //
-               ", flightClients=" + flightClients + '}';
+                "refresher=" + refresher + //
+                ", opts=" + opts + //
+                ", flightClients=" + flightClients + '}';
     }
 
     /**

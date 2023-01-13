@@ -35,7 +35,6 @@ import io.greptime.rpc.Context;
 import org.apache.arrow.flight.FlightStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -48,9 +47,9 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
     private static final Logger LOG = LoggerFactory.getLogger(WriteClient.class);
 
-    private WriteOptions        opts;
-    private RouterClient        routerClient;
-    private Executor            asyncPool;
+    private WriteOptions opts;
+    private RouterClient routerClient;
+    private Executor asyncPool;
 
     @Override
     public boolean init(WriteOptions opts) {
@@ -134,26 +133,26 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     @Override
     public void display(Printer out) {
         out.println("--- WriteClient ---") //
-            .print("maxRetries=") //
-            .println(this.opts.getMaxRetries()) //
-            .print("asyncPool=") //
-            .println(this.asyncPool);
+                .print("maxRetries=") //
+                .println(this.opts.getMaxRetries()) //
+                .print("asyncPool=") //
+                .println(this.asyncPool);
     }
 
     @Override
     public String toString() {
         return "WriteClient{" + //
-               "opts=" + opts + //
-               ", routerClient=" + routerClient + //
-               ", asyncPool=" + asyncPool + //
-               '}';
+                "opts=" + opts + //
+                ", routerClient=" + routerClient + //
+                ", asyncPool=" + asyncPool + //
+                '}';
     }
 
     static final class InnerMetricHelper {
         static final Histogram WRITE_ROWS_SUCCESS_NUM = MetricsUtil.histogram("write_rows_success_num");
         static final Histogram WRITE_ROWS_FAILURE_NUM = MetricsUtil.histogram("write_rows_failure_num");
-        static final Meter     WRITE_FAILURE_NUM      = MetricsUtil.meter("write_failure_num");
-        static final Meter     WRITE_QPS              = MetricsUtil.meter("write_qps");
+        static final Meter WRITE_FAILURE_NUM = MetricsUtil.meter("write_failure_num");
+        static final Meter WRITE_QPS = MetricsUtil.meter("write_qps");
 
         static Histogram writeRowsSuccessNum() {
             return WRITE_ROWS_SUCCESS_NUM;

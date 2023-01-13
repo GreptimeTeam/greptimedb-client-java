@@ -153,6 +153,7 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <excludes>
                         <exclude>**/v1/**</exclude>
+                        <exclude>**/greptime/rpc/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

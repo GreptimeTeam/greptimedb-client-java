@@ -39,14 +39,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
-
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -97,7 +95,7 @@ public class QueryClientTest {
         }
     }
 
-    private QueryClient  queryClient;
+    private QueryClient queryClient;
     private RouterClient routerClient;
 
     @Before
@@ -124,14 +122,15 @@ public class QueryClientTest {
 
     @Test
     public void testQueryOk() throws ExecutionException, InterruptedException, IOException {
-        FlightServer flightServer = FlightServer.builder(new RootAllocator(Integer.MAX_VALUE),
-            Location.forGrpcInsecure("127.0.0.1", 33333), new TestFlightProducer()).build();
+        FlightServer flightServer =
+                FlightServer.builder(new RootAllocator(Integer.MAX_VALUE),
+                        Location.forGrpcInsecure("127.0.0.1", 33333), new TestFlightProducer()).build();
         flightServer.start();
 
         QueryRequest req = QueryRequest.newBuilder() //
-            .exprType(SelectExprType.Sql) //
-            .ql("select * from test") //
-            .build();
+                .exprType(SelectExprType.Sql) //
+                .ql("select * from test") //
+                .build();
         Result<QueryOk, Err> res = this.queryClient.query(req).get();
 
         Assert.assertTrue(res.isOk());
