@@ -29,7 +29,11 @@ import io.greptime.common.util.SerializingExecutor;
 import io.greptime.flight.AsyncExecCallOption;
 import io.greptime.flight.GreptimeFlightClient;
 import io.greptime.flight.GreptimeRequest;
-import io.greptime.models.*;
+import io.greptime.models.Err;
+import io.greptime.models.QueryOk;
+import io.greptime.models.QueryRequest;
+import io.greptime.models.Result;
+import io.greptime.models.SelectRows;
 import io.greptime.options.QueryOptions;
 import io.greptime.rpc.Context;
 import org.apache.arrow.flight.FlightCallHeaders;
@@ -126,10 +130,11 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
         AsyncExecCallOption execOption = new AsyncExecCallOption(asyncPool);
         FlightStream stream = flightClient.doRequest(request, headerOption, execOption);
 
-        QueryResultHelper helper = new QueryResultHelper(endpoint, req, ctx, InnerMetricHelper.readRowsNum());
-        flightClient.consumeStream(stream, helper);
+        ctx.with(Context.KEY_ENDPOINT, endpoint);
 
-        return Util.completedCf(helper.getResult());
+        SelectRows.DefaultSelectRows rows =
+                new SelectRows.DefaultSelectRows(ctx, InnerMetricHelper.readRowsNum(), stream);
+        return Util.completedCf(Result.ok(QueryOk.ok(req.getQl(), rows)));
     }
 
     @Override

@@ -29,7 +29,10 @@ import io.greptime.common.util.SerializingExecutor;
 import io.greptime.flight.AsyncExecCallOption;
 import io.greptime.flight.GreptimeFlightClient;
 import io.greptime.flight.GreptimeRequest;
-import io.greptime.models.*;
+import io.greptime.models.Err;
+import io.greptime.models.Result;
+import io.greptime.models.WriteOk;
+import io.greptime.models.WriteRows;
 import io.greptime.options.WriteOptions;
 import io.greptime.rpc.Context;
 import org.apache.arrow.flight.FlightStream;
@@ -37,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Default Write API impl.
@@ -46,6 +50,8 @@ import java.util.concurrent.Executor;
 public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
     private static final Logger LOG = LoggerFactory.getLogger(WriteClient.class);
+
+    private static final AtomicLong WRITE_ID = new AtomicLong(0);
 
     private WriteOptions opts;
     private RouterClient routerClient;
@@ -69,7 +75,11 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     public CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx) {
         Ensures.ensureNonNull(rows, "rows");
 
+        ctx.with(Context.KEY_WRITE_ID, WRITE_ID.incrementAndGet());
+
         long startCall = Clock.defaultClock().getTick();
+        ctx.with(Context.KEY_WRITE_START, startCall);
+
         return write0(rows, ctx, 0).whenCompleteAsync((r, e) -> {
             InnerMetricHelper.writeQps().mark();
             if (r != null) {
@@ -81,9 +91,6 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                     );
                 }
                 if (r.isOk()) {
-                    WriteOk ok = r.getOk();
-                    InnerMetricHelper.writeRowsSuccessNum().update(ok.getSuccess());
-                    InnerMetricHelper.writeRowsFailureNum().update(ok.getFailure());
                     return;
                 }
             }
@@ -124,10 +131,10 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
         FlightStream stream = flightClient.doRequest(request, new AsyncExecCallOption(asyncPool));
 
-        WriteResultHelper helper = new WriteResultHelper(endpoint, rows);
-        flightClient.consumeStream(stream, helper);
+        ctx.with(Context.KEY_ENDPOINT, endpoint);
 
-        return Util.completedCf(helper.getResult());
+        WriteOk writeOk = new WriteOk(ctx, InnerMetricHelper.writeRowsSuccessNum(), stream);
+        return Util.completedCf(Result.ok(writeOk));
     }
 
     @Override

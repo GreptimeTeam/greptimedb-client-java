@@ -16,6 +16,7 @@
  */
 package io.greptime.models;
 
+import io.greptime.models.SelectRows.DefaultSelectRows;
 import io.greptime.rpc.Context;
 import org.apache.arrow.memory.RootAllocator;
 import org.apache.arrow.vector.IntVector;
@@ -26,7 +27,6 @@ import org.apache.arrow.vector.types.pojo.FieldType;
 import org.junit.Assert;
 import org.junit.Test;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author jiachun.fjc
@@ -34,25 +34,11 @@ import java.util.List;
 public class SelectRowsTest {
 
     @Test
-    public void testSelectRowsCollect() throws InterruptedException {
-        SelectRows rows = new SelectRows.DefaultSelectRows(Context.newDefault(), null);
+    public void testSelectRowsIterator() {
+        DefaultSelectRows rows = new DefaultSelectRows(Context.newDefault(), null, null);
 
-        rows.produce(genRecordbatch());
+        rows.consume(genRecordbatch());
 
-        List<Row> res = rows.collect();
-        Assert.assertEquals(5, res.size());
-        for (Row r : res) {
-            Assert.assertEquals(2, r.values().size());
-        }
-    }
-
-    @Test
-    public void testSelectRowsIterator() throws InterruptedException {
-        SelectRows rows = new SelectRows.DefaultSelectRows(Context.newDefault(), null);
-
-        rows.produce(genRecordbatch());
-
-        Assert.assertTrue(rows.hasNext());
         Row r = rows.next();
         Assert.assertEquals("test_column1", r.values().get(0).name());
         Assert.assertEquals(ColumnDataType.Int32, r.values().get(0).dataType());
@@ -61,27 +47,21 @@ public class SelectRowsTest {
         Assert.assertEquals(ColumnDataType.Int32, r.values().get(1).dataType());
         Assert.assertEquals(1, r.values().get(1).value());
 
-        Assert.assertTrue(rows.hasNext());
         r = rows.next();
         Assert.assertNull(r.values().get(0).value());
         Assert.assertEquals(2, r.values().get(1).value());
 
-        Assert.assertTrue(rows.hasNext());
         r = rows.next();
         Assert.assertEquals(3, r.values().get(0).value());
         Assert.assertEquals(3, r.values().get(1).value());
 
-        Assert.assertTrue(rows.hasNext());
         r = rows.next();
         Assert.assertNull(r.values().get(0).value());
         Assert.assertEquals(4, r.values().get(1).value());
 
-        Assert.assertTrue(rows.hasNext());
         r = rows.next();
         Assert.assertEquals(5, r.values().get(0).value());
         Assert.assertEquals(5, r.values().get(1).value());
-
-        Assert.assertFalse(rows.hasNext());
     }
 
     private VectorSchemaRoot genRecordbatch() {

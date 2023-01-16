@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author jiachun.fjc
@@ -85,6 +86,12 @@ public class Example {
             return;
         }
 
+        WriteOk writeOk = writeResult.getOk();
+        while (!writeOk.isCompleted()) {
+            LOG.info("Write is not completed, wait for 10 ms ...");
+            TimeUnit.MILLISECONDS.sleep(10);
+        }
+
         Result<QueryOk, Err> queryResult = runQuery(greptimeDB);
 
         LOG.info("Query result: {}", queryResult);
@@ -98,6 +105,10 @@ public class Example {
 
         LOG.info("Selected data:");
 
+        while (!rows.isReady()) {
+            LOG.info("Data is not ready, wait for 10 ms ...");
+            TimeUnit.MILLISECONDS.sleep(10);
+        }
         rows.forEachRemaining(row -> LOG.info("Row: {}", row.values()));
     }
 

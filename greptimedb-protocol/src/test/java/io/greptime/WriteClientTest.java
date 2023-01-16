@@ -18,7 +18,13 @@ package io.greptime;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.greptime.common.Endpoint;
-import io.greptime.models.*;
+import io.greptime.models.ColumnDataType;
+import io.greptime.models.Err;
+import io.greptime.models.Result;
+import io.greptime.models.SemanticType;
+import io.greptime.models.TableName;
+import io.greptime.models.WriteOk;
+import io.greptime.models.WriteRows;
 import io.greptime.options.RouterOptions;
 import io.greptime.options.WriteOptions;
 import io.greptime.v1.Database;
@@ -39,6 +45,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author jiachun.fjc
@@ -119,6 +126,11 @@ public class WriteClientTest {
 
         Result<WriteOk, Err> res = this.writeClient.write(rows).get();
         Assert.assertTrue(res.isOk());
-        Assert.assertEquals(3, res.getOk().getSuccess());
+        WriteOk ok = res.getOk();
+        while (!ok.isCompleted()) {
+            System.out.println("Write is not completed, wait for 100 ms ...");
+            TimeUnit.MILLISECONDS.sleep(100);
+        }
+        Assert.assertEquals(3, ok.getSuccess());
     }
 }

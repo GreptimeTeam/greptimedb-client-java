@@ -18,8 +18,10 @@ package io.greptime.models;
 
 import com.codahale.metrics.Histogram;
 import io.greptime.Util;
+import io.greptime.common.Endpoint;
 import io.greptime.common.util.Clock;
 import io.greptime.rpc.Context;
+import org.apache.arrow.flight.FlightStream;
 import org.apache.arrow.vector.FieldVector;
 import org.apache.arrow.vector.VectorSchemaRoot;
 import org.apache.arrow.vector.types.pojo.Field;
@@ -29,9 +31,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -42,7 +43,10 @@ import java.util.stream.StreamSupport;
  */
 public interface SelectRows extends Iterator<Row> {
 
-    void produce(VectorSchemaRoot recordbatch) throws InterruptedException;
+    /**
+     * @return true if it's ready to be polled for data (calling `next` for `Row`s).
+     */
+    boolean isReady();
 
     default List<Row> collect() {
         Iterable<Row> iterable = () -> this;
@@ -53,19 +57,18 @@ public interface SelectRows extends Iterator<Row> {
 
         private static final Logger LOG = LoggerFactory.getLogger(DefaultSelectRows.class);
 
-        private static final int MAX_CACHED_ROWS = 1024;
-
         private final Context ctx;
-        private final BlockingQueue<Row> rows = new LinkedBlockingQueue<>(MAX_CACHED_ROWS);
+        private final Queue<Row> rows = new ConcurrentLinkedQueue<>();
         private final Histogram readRowsNum;
+        private final FlightStream flightStream;
 
-        public DefaultSelectRows(Context ctx, Histogram readRowsNum) {
+        public DefaultSelectRows(Context ctx, Histogram readRowsNum, FlightStream flightStream) {
             this.ctx = ctx;
             this.readRowsNum = readRowsNum;
+            this.flightStream = flightStream;
         }
 
-        @Override
-        public void produce(VectorSchemaRoot recordbatch) throws InterruptedException {
+        void consume(VectorSchemaRoot recordbatch) {
             List<Field> fields = recordbatch.getSchema().getFields();
             List<FieldVector> vectors = recordbatch.getFieldVectors();
 
@@ -73,9 +76,9 @@ public interface SelectRows extends Iterator<Row> {
 
             Long queryStart = ctx.get(Context.KEY_QUERY_START);
             if (Util.isRwLogging() && queryStart != null) {
-                LOG.info("[Query-{}] First time received data costs {} ms",
-                        queryId,
-                        Clock.defaultClock().duration(queryStart));
+                Endpoint endpoint = this.ctx.get(Context.KEY_ENDPOINT);
+                LOG.info("[Query-{}] First time consuming data from {}, costs {} ms",
+                        queryId, endpoint, Clock.defaultClock().duration(queryStart));
                 ctx.remove(Context.KEY_QUERY_START);
             }
 
@@ -95,11 +98,7 @@ public interface SelectRows extends Iterator<Row> {
                                 vector.getObject(index)));
                     }
 
-                    if (!rows.offer(new Row.DefaultRow(values), 1, TimeUnit.SECONDS)) {
-                        throw new RuntimeException(String.format(
-                                "[Query-%s] Rows buffer queue is full, please accelerate consumer speed.",
-                                queryId));
-                    }
+                    this.rows.offer(new Row.DefaultRow(values));
 
                     if (this.readRowsNum != null) {
                         this.readRowsNum.update(1);
@@ -109,27 +108,37 @@ public interface SelectRows extends Iterator<Row> {
                 }
             } finally {
                 if (Util.isRwLogging()) {
-                    LOG.info("[Query-{}] Produce {} rows, costs {} ms",
-                            queryId,
-                            index,
-                            Clock.defaultClock().duration(start)
-                    );
+                    Endpoint endpoint = this.ctx.get(Context.KEY_ENDPOINT);
+                    LOG.info("[Query-{}] Consume {} rows from {}, costs {} ms",
+                            queryId, index, endpoint, Clock.defaultClock().duration(start));
                 }
             }
         }
 
         @Override
+        public boolean isReady() {
+            return this.flightStream.hasRoot();
+        }
+
+        @Override
         public boolean hasNext() {
-            return !rows.isEmpty();
+            boolean hasNext = !this.rows.isEmpty();
+            if (hasNext) {
+                return true;
+            }
+
+            hasNext = this.flightStream.next();
+            if (hasNext) {
+                try (VectorSchemaRoot recordbatch = this.flightStream.getRoot()) {
+                    this.consume(recordbatch);
+                }
+            }
+            return hasNext;
         }
 
         @Override
         public Row next() {
-            try {
-                return rows.take();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            return this.rows.poll();
         }
     }
 }

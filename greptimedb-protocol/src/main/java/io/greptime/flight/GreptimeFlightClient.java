@@ -16,16 +16,15 @@
  */
 package io.greptime.flight;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import io.greptime.common.Endpoint;
-import io.greptime.rpc.Observer;
-import io.greptime.v1.Database;
-import org.apache.arrow.flight.*;
-import org.apache.arrow.memory.ArrowBuf;
+import org.apache.arrow.flight.CallOption;
+import org.apache.arrow.flight.FlightClient;
+import org.apache.arrow.flight.FlightStream;
+import org.apache.arrow.flight.Location;
+import org.apache.arrow.flight.Ticket;
 import org.apache.arrow.memory.BufferAllocator;
 import org.apache.arrow.memory.RootAllocator;
 import org.apache.arrow.util.AutoCloseables;
-import org.apache.arrow.vector.VectorSchemaRoot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Objects;
@@ -55,61 +54,14 @@ public class GreptimeFlightClient implements AutoCloseable {
         FlightClient.Builder builder = FlightClient.builder().location(location).allocator(allocator);
         FlightClient client = builder.build();
 
-        return new GreptimeFlightClient(endpoint, client, allocator);
+        GreptimeFlightClient flightClient = new GreptimeFlightClient(endpoint, client, allocator);
+        LOG.info("Created new {}", flightClient);
+        return flightClient;
     }
 
     public FlightStream doRequest(GreptimeRequest request, CallOption... options) {
         Ticket ticket = request.into();
         return client.getStream(ticket, options);
-    }
-
-    // TODO(LFC): Handle errors in FlightStream, extract maybe existed errorCode and errorMsg from GRPC header.
-    // The errorCode and errorMsg could be set by GreptimeDB server, which should be pass to observer's "onError".
-    public void consumeStream(FlightStream flightStream, Observer<FlightMessage> messageObserver) {
-        LOG.debug("Start consuming FlightStream ...");
-
-        if (!flightStream.next()) {
-            return;
-        }
-
-        if (extractAffectedRows(flightStream, messageObserver)) {
-            return;
-        }
-
-        extractRecordbatch(flightStream, messageObserver);
-    }
-
-    private void extractRecordbatch(FlightStream flightStream, Observer<FlightMessage> messageObserver) {
-        try (VectorSchemaRoot recordbatch = flightStream.getRoot()) {
-            do {
-                FlightMessage message = new FlightMessage(recordbatch);
-                messageObserver.onNext(message);
-            } while (flightStream.next());
-        }
-    }
-
-    private boolean extractAffectedRows(FlightStream flightStream, Observer<FlightMessage> messageObserver) {
-        ArrowBuf metadata = flightStream.getLatestMetadata();
-        if (metadata != null) {
-            byte[] buffer = new byte[(int) metadata.readableBytes()];
-            metadata.readBytes(buffer);
-
-            Database.FlightMetadata flightMetadata;
-            try {
-                flightMetadata = Database.FlightMetadata.parseFrom(buffer);
-            } catch (InvalidProtocolBufferException e) {
-                messageObserver.onError(e);
-                return true;
-            }
-
-            if (flightMetadata.hasAffectedRows()) {
-                int affectedRows = flightMetadata.getAffectedRows().getValue();
-                FlightMessage message = new FlightMessage(affectedRows);
-                messageObserver.onNext(message);
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
