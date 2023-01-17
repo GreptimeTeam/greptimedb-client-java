@@ -49,7 +49,7 @@ public class WriteResult {
 
         Endpoint endpoint = this.ctx.get(Context.KEY_ENDPOINT);
 
-        if (Util.isRwLogging() && this.ctx.has(Context.KEY_WRITE_START)) {
+        if (Util.isRwLogging()) {
             Long writeId = this.ctx.get(Context.KEY_WRITE_ID);
 
             Long writeStart = this.ctx.get(Context.KEY_WRITE_START);

@@ -53,13 +53,6 @@ public class Context implements Copiable<Context> {
         return this;
     }
 
-    /**
-     * Light-weight(no synchronization involved) check whether this context contains the provided key.
-     */
-    public boolean has(String key) {
-        return this.ctx.containsKey(key);
-    }
-
     public <T> T get(String key) {
         synchronized (this) {
             return (T) this.ctx.get(key);
