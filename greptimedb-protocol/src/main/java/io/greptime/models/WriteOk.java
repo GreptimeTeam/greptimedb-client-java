@@ -16,23 +16,6 @@
  */
 package io.greptime.models;
 
-import com.codahale.metrics.Histogram;
-import com.google.common.util.concurrent.SettableFuture;
-import com.google.protobuf.InvalidProtocolBufferException;
-import io.greptime.Util;
-import io.greptime.common.Endpoint;
-import io.greptime.common.util.Clock;
-import io.greptime.rpc.Context;
-import io.greptime.v1.Database;
-import org.apache.arrow.flight.FlightStream;
-import org.apache.arrow.memory.ArrowBuf;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import java.lang.reflect.Field;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
-
 /**
  * Contains the success value of write.
  *
@@ -40,116 +23,44 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class WriteOk {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WriteOk.class);
-
-    private final Context ctx;
-    private final Histogram writeRowsSuccess;
-    private final FlightStream flightStream;
-    private final SettableFuture<Integer> affectedRows = SettableFuture.create();
-
-    public WriteOk(Context ctx, Histogram writeRowsSuccess, FlightStream flightStream) {
-        this.ctx = ctx;
-        this.writeRowsSuccess = writeRowsSuccess;
-        this.flightStream = flightStream;
-    }
+    private int success;
+    private int failure;
+    private TableName tableName;
 
     public int getSuccess() {
-        try {
-            return affectedRows.get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return success;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean isCompleted() {
-        if (isFlightStreamCompleted()) {
-            return true;
-        }
-
-        if (isFlightStreamQueueEmpty()) {
-            return false;
-        }
-
-        if (!this.flightStream.next()) {
-            return true;
-        }
-
-        Long writeId = ctx.get(Context.KEY_WRITE_ID);
-
-        Long writeStart = ctx.get(Context.KEY_WRITE_START);
-        if (Util.isRwLogging() && writeStart != null) {
-            Endpoint endpoint = this.ctx.get(Context.KEY_ENDPOINT);
-            LOG.info("[Write-{}] First time consuming data from {}, costs {} ms", writeId, endpoint, Clock
-                    .defaultClock().duration(writeStart));
-            ctx.remove(Context.KEY_WRITE_START);
-        }
-
-        ArrowBuf metadata = flightStream.getLatestMetadata();
-        if (metadata == null) {
-            this.affectedRows.setException(new IllegalStateException(
-                    "Expecting server returns non-empty metadata as AffectedRows"));
-            return true;
-        }
-
-        byte[] buffer = new byte[(int) metadata.readableBytes()];
-        metadata.readBytes(buffer);
-
-        Database.FlightMetadata flightMetadata;
-        try {
-            flightMetadata = Database.FlightMetadata.parseFrom(buffer);
-        } catch (InvalidProtocolBufferException e) {
-            this.affectedRows.setException(e);
-            return true;
-        }
-
-        if (flightMetadata.hasAffectedRows()) {
-            int value = flightMetadata.getAffectedRows().getValue();
-            this.writeRowsSuccess.update(value);
-
-            this.affectedRows.set(value);
-            return true;
-        }
-
-        return false;
+    public int getFailure() {
+        return failure;
     }
 
-    private boolean isFlightStreamQueueEmpty() {
-        Field queueField;
-        try {
-            queueField = FlightStream.class.getDeclaredField("queue");
-        } catch (NoSuchFieldException e) {
-            throw new IllegalStateException(e);
-        }
-        queueField.setAccessible(true);
-
-        LinkedBlockingQueue<?> queue;
-        try {
-            queue = (LinkedBlockingQueue<?>) queueField.get(this.flightStream);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        }
-        return queue.isEmpty();
+    public TableName getTableName() {
+        return tableName;
     }
 
-    private boolean isFlightStreamCompleted() {
-        Field completedField;
-        try {
-            completedField = FlightStream.class.getDeclaredField("completed");
-        } catch (NoSuchFieldException e) {
-            throw new IllegalStateException(e);
-        }
-        completedField.setAccessible(true);
+    public Result<WriteOk, Err> mapToResult() {
+        return Result.ok(this);
+    }
 
-        CompletableFuture<?> completed;
-        try {
-            completed = (CompletableFuture<?>) completedField.get(this.flightStream);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        }
-        return completed.isDone();
+    @Override
+    public String toString() {
+        return "WriteOk{" + //
+                "success=" + success + //
+                ", failure=" + failure + //
+                ", tableName=" + tableName + //
+                '}';
+    }
+
+    public static WriteOk emptyOk() {
+        return ok(0, 0, null);
+    }
+
+    public static WriteOk ok(int success, int failure, TableName tableName) {
+        WriteOk ok = new WriteOk();
+        ok.success = success;
+        ok.failure = failure;
+        ok.tableName = tableName;
+        return ok;
     }
 }

@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author jiachun.fjc
@@ -126,11 +125,6 @@ public class WriteClientTest {
 
         Result<WriteOk, Err> res = this.writeClient.write(rows).get();
         Assert.assertTrue(res.isOk());
-        WriteOk ok = res.getOk();
-        while (!ok.isCompleted()) {
-            System.out.println("Write is not completed, wait for 100 ms ...");
-            TimeUnit.MILLISECONDS.sleep(100);
-        }
-        Assert.assertEquals(3, ok.getSuccess());
+        Assert.assertEquals(3, res.getOk().getSuccess());
     }
 }

@@ -31,11 +31,14 @@ import io.greptime.flight.GreptimeFlightClient;
 import io.greptime.flight.GreptimeRequest;
 import io.greptime.models.Err;
 import io.greptime.models.Result;
+import io.greptime.models.WriteResult;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
 import io.greptime.options.WriteOptions;
 import io.greptime.rpc.Context;
+import org.apache.arrow.flight.FlightCallHeaders;
 import org.apache.arrow.flight.FlightStream;
+import org.apache.arrow.flight.HeaderCallOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.concurrent.CompletableFuture;
@@ -91,6 +94,8 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                     );
                 }
                 if (r.isOk()) {
+                    WriteOk ok = r.getOk();
+                    InnerMetricHelper.writeRowsSuccessNum().update(ok.getSuccess());
                     return;
                 }
             }
@@ -102,7 +107,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
         InnerMetricHelper.writeByRetries(retries).mark();
 
         return this.routerClient.route()
-                .thenComposeAsync(endpoint -> writeTo(endpoint, rows, ctx), this.asyncPool)
+            .thenComposeAsync(endpoint -> writeTo(endpoint, rows, ctx, retries), this.asyncPool)
             .thenComposeAsync(r -> {
                 if (r.isOk()) {
                     LOG.debug("Success to write to {}, ok={}.", Keys.DB_NAME, r.getOk());
@@ -120,21 +125,26 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                     return Util.completedCf(r);
                 }
 
-                    return write0(rows, ctx, retries + 1);
+                return write0(rows, ctx, retries + 1);
             }, this.asyncPool);
     }
 
-    private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, WriteRows rows, Context ctx) {
+    private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, WriteRows rows, Context ctx, int retries) {
         GreptimeFlightClient flightClient = routerClient.getFlightClient(endpoint);
 
         GreptimeRequest request = new GreptimeRequest(rows.into());
 
-        FlightStream stream = flightClient.doRequest(request, new AsyncExecCallOption(asyncPool));
+        FlightCallHeaders headers = new FlightCallHeaders();
+        headers.insert("retries", String.valueOf(retries));
+        HeaderCallOption headerOption = new HeaderCallOption(headers);
+
+        AsyncExecCallOption execOption = new AsyncExecCallOption(asyncPool);
+
+        FlightStream stream = flightClient.doRequest(request, headerOption, execOption);
 
         ctx.with(Context.KEY_ENDPOINT, endpoint);
 
-        WriteOk writeOk = new WriteOk(ctx, InnerMetricHelper.writeRowsSuccessNum(), stream);
-        return Util.completedCf(Result.ok(writeOk));
+        return CompletableFuture.supplyAsync(() -> new WriteResult(ctx, stream, rows).get(), this.asyncPool);
     }
 
     @Override

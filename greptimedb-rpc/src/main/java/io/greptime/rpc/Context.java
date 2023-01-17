@@ -34,7 +34,7 @@ public class Context implements Copiable<Context> {
     public static final String KEY_QUERY_START = "QueryStart";
     public static final String KEY_WRITE_ID = "WriteId";
     public static final String KEY_WRITE_START = "WriteStart";
-    public static final String KEY_ENDPOINT = "EndPoint";
+    public static final String KEY_ENDPOINT = "Endpoint";
 
     private final Map<String, Object> ctx             = new HashMap<>();
 
@@ -51,6 +51,13 @@ public class Context implements Copiable<Context> {
             this.ctx.put(key, value);
         }
         return this;
+    }
+
+    /**
+     * Light-weight(no synchronization involved) check whether this context contains the provided key.
+     */
+    public boolean has(String key) {
+        return this.ctx.containsKey(key);
     }
 
     public <T> T get(String key) {
