@@ -14,26 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime;
+package io.greptime.flight;
 
-import io.greptime.rpc.MethodDescriptor;
-import io.greptime.rpc.RpcFactoryProvider;
-import io.greptime.v1.GreptimeDB;
+import io.grpc.stub.AbstractStub;
+import org.apache.arrow.flight.CallOptions;
+import java.util.concurrent.Executor;
 
-/**
- *
- * @author jiachun.fjc
- */
-public class RpcServiceRegister {
+public class AsyncExecCallOption implements CallOptions.GrpcCallOption {
 
-    private static final String METHOD_TEMPLATE = "greptime.v1.Greptime/%s";
+    private final Executor executor;
 
-    public static void registerAllService() {
-        // register protobuf serializer
-        RpcFactoryProvider.getRpcFactory().register(
-            MethodDescriptor.of(String.format(METHOD_TEMPLATE, "Batch"), MethodDescriptor.MethodType.UNARY, 1), //
-            GreptimeDB.BatchRequest.class, //
-            GreptimeDB.BatchRequest.getDefaultInstance(), //
-            GreptimeDB.BatchResponse.getDefaultInstance());
+    public AsyncExecCallOption(Executor executor) {
+        this.executor = executor;
+    }
+
+    @Override
+    public <T extends AbstractStub<T>> T wrapStub(T stub) {
+        return stub.withExecutor(executor);
     }
 }

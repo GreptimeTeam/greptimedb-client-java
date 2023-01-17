@@ -408,79 +408,6 @@ public final class Columns {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private Column(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              columnName_ = s;
-              break;
-            }
-            case 16: {
-              int rawValue = input.readEnum();
-
-              semanticType_ = rawValue;
-              break;
-            }
-            case 26: {
-              io.greptime.v1.Columns.Column.Values.Builder subBuilder = null;
-              if (values_ != null) {
-                subBuilder = values_.toBuilder();
-              }
-              values_ = input.readMessage(io.greptime.v1.Columns.Column.Values.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(values_);
-                values_ = subBuilder.buildPartial();
-              }
-
-              break;
-            }
-            case 34: {
-
-              nullMask_ = input.readBytes();
-              break;
-            }
-            case 40: {
-              int rawValue = input.readEnum();
-
-              datatype_ = rawValue;
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return io.greptime.v1.Columns.internal_static_greptime_v1_Column_descriptor;
@@ -991,475 +918,6 @@ public final class Columns {
       public final com.google.protobuf.UnknownFieldSet
       getUnknownFields() {
         return this.unknownFields;
-      }
-      private Values(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        if (extensionRegistry == null) {
-          throw new java.lang.NullPointerException();
-        }
-        int mutable_bitField0_ = 0;
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              case 8: {
-                if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                  i8Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000001;
-                }
-                i8Values_.addInt(input.readInt32());
-                break;
-              }
-              case 10: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
-                  i8Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000001;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  i8Values_.addInt(input.readInt32());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 16: {
-                if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                  i16Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000002;
-                }
-                i16Values_.addInt(input.readInt32());
-                break;
-              }
-              case 18: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000002) != 0) && input.getBytesUntilLimit() > 0) {
-                  i16Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000002;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  i16Values_.addInt(input.readInt32());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 24: {
-                if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-                  i32Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000004;
-                }
-                i32Values_.addInt(input.readInt32());
-                break;
-              }
-              case 26: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000004) != 0) && input.getBytesUntilLimit() > 0) {
-                  i32Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000004;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  i32Values_.addInt(input.readInt32());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 32: {
-                if (!((mutable_bitField0_ & 0x00000008) != 0)) {
-                  i64Values_ = newLongList();
-                  mutable_bitField0_ |= 0x00000008;
-                }
-                i64Values_.addLong(input.readInt64());
-                break;
-              }
-              case 34: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000008) != 0) && input.getBytesUntilLimit() > 0) {
-                  i64Values_ = newLongList();
-                  mutable_bitField0_ |= 0x00000008;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  i64Values_.addLong(input.readInt64());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 40: {
-                if (!((mutable_bitField0_ & 0x00000010) != 0)) {
-                  u8Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000010;
-                }
-                u8Values_.addInt(input.readUInt32());
-                break;
-              }
-              case 42: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000010) != 0) && input.getBytesUntilLimit() > 0) {
-                  u8Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000010;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  u8Values_.addInt(input.readUInt32());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 48: {
-                if (!((mutable_bitField0_ & 0x00000020) != 0)) {
-                  u16Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000020;
-                }
-                u16Values_.addInt(input.readUInt32());
-                break;
-              }
-              case 50: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000020) != 0) && input.getBytesUntilLimit() > 0) {
-                  u16Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000020;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  u16Values_.addInt(input.readUInt32());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 56: {
-                if (!((mutable_bitField0_ & 0x00000040) != 0)) {
-                  u32Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000040;
-                }
-                u32Values_.addInt(input.readUInt32());
-                break;
-              }
-              case 58: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000040) != 0) && input.getBytesUntilLimit() > 0) {
-                  u32Values_ = newIntList();
-                  mutable_bitField0_ |= 0x00000040;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  u32Values_.addInt(input.readUInt32());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 64: {
-                if (!((mutable_bitField0_ & 0x00000080) != 0)) {
-                  u64Values_ = newLongList();
-                  mutable_bitField0_ |= 0x00000080;
-                }
-                u64Values_.addLong(input.readUInt64());
-                break;
-              }
-              case 66: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000080) != 0) && input.getBytesUntilLimit() > 0) {
-                  u64Values_ = newLongList();
-                  mutable_bitField0_ |= 0x00000080;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  u64Values_.addLong(input.readUInt64());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 77: {
-                if (!((mutable_bitField0_ & 0x00000100) != 0)) {
-                  f32Values_ = newFloatList();
-                  mutable_bitField0_ |= 0x00000100;
-                }
-                f32Values_.addFloat(input.readFloat());
-                break;
-              }
-              case 74: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000100) != 0) && input.getBytesUntilLimit() > 0) {
-                  f32Values_ = newFloatList();
-                  mutable_bitField0_ |= 0x00000100;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  f32Values_.addFloat(input.readFloat());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 81: {
-                if (!((mutable_bitField0_ & 0x00000200) != 0)) {
-                  f64Values_ = newDoubleList();
-                  mutable_bitField0_ |= 0x00000200;
-                }
-                f64Values_.addDouble(input.readDouble());
-                break;
-              }
-              case 82: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000200) != 0) && input.getBytesUntilLimit() > 0) {
-                  f64Values_ = newDoubleList();
-                  mutable_bitField0_ |= 0x00000200;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  f64Values_.addDouble(input.readDouble());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 88: {
-                if (!((mutable_bitField0_ & 0x00000400) != 0)) {
-                  boolValues_ = newBooleanList();
-                  mutable_bitField0_ |= 0x00000400;
-                }
-                boolValues_.addBoolean(input.readBool());
-                break;
-              }
-              case 90: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00000400) != 0) && input.getBytesUntilLimit() > 0) {
-                  boolValues_ = newBooleanList();
-                  mutable_bitField0_ |= 0x00000400;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  boolValues_.addBoolean(input.readBool());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 98: {
-                if (!((mutable_bitField0_ & 0x00000800) != 0)) {
-                  binaryValues_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
-                  mutable_bitField0_ |= 0x00000800;
-                }
-                binaryValues_.add(input.readBytes());
-                break;
-              }
-              case 106: {
-                java.lang.String s = input.readStringRequireUtf8();
-                if (!((mutable_bitField0_ & 0x00001000) != 0)) {
-                  stringValues_ = new com.google.protobuf.LazyStringArrayList();
-                  mutable_bitField0_ |= 0x00001000;
-                }
-                stringValues_.add(s);
-                break;
-              }
-              case 112: {
-                if (!((mutable_bitField0_ & 0x00002000) != 0)) {
-                  dateValues_ = newIntList();
-                  mutable_bitField0_ |= 0x00002000;
-                }
-                dateValues_.addInt(input.readInt32());
-                break;
-              }
-              case 114: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00002000) != 0) && input.getBytesUntilLimit() > 0) {
-                  dateValues_ = newIntList();
-                  mutable_bitField0_ |= 0x00002000;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  dateValues_.addInt(input.readInt32());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 120: {
-                if (!((mutable_bitField0_ & 0x00004000) != 0)) {
-                  datetimeValues_ = newLongList();
-                  mutable_bitField0_ |= 0x00004000;
-                }
-                datetimeValues_.addLong(input.readInt64());
-                break;
-              }
-              case 122: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00004000) != 0) && input.getBytesUntilLimit() > 0) {
-                  datetimeValues_ = newLongList();
-                  mutable_bitField0_ |= 0x00004000;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  datetimeValues_.addLong(input.readInt64());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 128: {
-                if (!((mutable_bitField0_ & 0x00008000) != 0)) {
-                  tsSecondValues_ = newLongList();
-                  mutable_bitField0_ |= 0x00008000;
-                }
-                tsSecondValues_.addLong(input.readInt64());
-                break;
-              }
-              case 130: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00008000) != 0) && input.getBytesUntilLimit() > 0) {
-                  tsSecondValues_ = newLongList();
-                  mutable_bitField0_ |= 0x00008000;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  tsSecondValues_.addLong(input.readInt64());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 136: {
-                if (!((mutable_bitField0_ & 0x00010000) != 0)) {
-                  tsMillisecondValues_ = newLongList();
-                  mutable_bitField0_ |= 0x00010000;
-                }
-                tsMillisecondValues_.addLong(input.readInt64());
-                break;
-              }
-              case 138: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00010000) != 0) && input.getBytesUntilLimit() > 0) {
-                  tsMillisecondValues_ = newLongList();
-                  mutable_bitField0_ |= 0x00010000;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  tsMillisecondValues_.addLong(input.readInt64());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 144: {
-                if (!((mutable_bitField0_ & 0x00020000) != 0)) {
-                  tsMicrosecondValues_ = newLongList();
-                  mutable_bitField0_ |= 0x00020000;
-                }
-                tsMicrosecondValues_.addLong(input.readInt64());
-                break;
-              }
-              case 146: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00020000) != 0) && input.getBytesUntilLimit() > 0) {
-                  tsMicrosecondValues_ = newLongList();
-                  mutable_bitField0_ |= 0x00020000;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  tsMicrosecondValues_.addLong(input.readInt64());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              case 152: {
-                if (!((mutable_bitField0_ & 0x00040000) != 0)) {
-                  tsNanosecondValues_ = newLongList();
-                  mutable_bitField0_ |= 0x00040000;
-                }
-                tsNanosecondValues_.addLong(input.readInt64());
-                break;
-              }
-              case 154: {
-                int length = input.readRawVarint32();
-                int limit = input.pushLimit(length);
-                if (!((mutable_bitField0_ & 0x00040000) != 0) && input.getBytesUntilLimit() > 0) {
-                  tsNanosecondValues_ = newLongList();
-                  mutable_bitField0_ |= 0x00040000;
-                }
-                while (input.getBytesUntilLimit() > 0) {
-                  tsNanosecondValues_.addLong(input.readInt64());
-                }
-                input.popLimit(limit);
-                break;
-              }
-              default: {
-                if (!parseUnknownField(
-                    input, unknownFields, extensionRegistry, tag)) {
-                  done = true;
-                }
-                break;
-              }
-            }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-          throw new com.google.protobuf.InvalidProtocolBufferException(
-              e).setUnfinishedMessage(this);
-        } finally {
-          if (((mutable_bitField0_ & 0x00000001) != 0)) {
-            i8Values_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00000002) != 0)) {
-            i16Values_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00000004) != 0)) {
-            i32Values_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00000008) != 0)) {
-            i64Values_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00000010) != 0)) {
-            u8Values_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00000020) != 0)) {
-            u16Values_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00000040) != 0)) {
-            u32Values_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00000080) != 0)) {
-            u64Values_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00000100) != 0)) {
-            f32Values_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00000200) != 0)) {
-            f64Values_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00000400) != 0)) {
-            boolValues_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00000800) != 0)) {
-            binaryValues_ = java.util.Collections.unmodifiableList(binaryValues_); // C
-          }
-          if (((mutable_bitField0_ & 0x00001000) != 0)) {
-            stringValues_ = stringValues_.getUnmodifiableView();
-          }
-          if (((mutable_bitField0_ & 0x00002000) != 0)) {
-            dateValues_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00004000) != 0)) {
-            datetimeValues_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00008000) != 0)) {
-            tsSecondValues_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00010000) != 0)) {
-            tsMillisecondValues_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00020000) != 0)) {
-            tsMicrosecondValues_.makeImmutable(); // C
-          }
-          if (((mutable_bitField0_ & 0x00040000) != 0)) {
-            tsNanosecondValues_.makeImmutable(); // C
-          }
-          this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
-        }
       }
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
@@ -2152,7 +1610,7 @@ public final class Columns {
         for (int i = 0; i < tsNanosecondValues_.size(); i++) {
           output.writeInt64NoTag(tsNanosecondValues_.getLong(i));
         }
-        unknownFields.writeTo(output);
+        getUnknownFields().writeTo(output);
       }
 
       @java.lang.Override
@@ -2407,7 +1865,7 @@ public final class Columns {
           }
           tsNanosecondValuesMemoizedSerializedSize = dataSize;
         }
-        size += unknownFields.getSerializedSize();
+        size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
         return size;
       }
@@ -2460,7 +1918,7 @@ public final class Columns {
             .equals(other.getTsMicrosecondValuesList())) return false;
         if (!getTsNanosecondValuesList()
             .equals(other.getTsNanosecondValuesList())) return false;
-        if (!unknownFields.equals(other.unknownFields)) return false;
+        if (!getUnknownFields().equals(other.getUnknownFields())) return false;
         return true;
       }
 
@@ -2547,7 +2005,7 @@ public final class Columns {
           hash = (37 * hash) + TS_NANOSECOND_VALUES_FIELD_NUMBER;
           hash = (53 * hash) + getTsNanosecondValuesList().hashCode();
         }
-        hash = (29 * hash) + unknownFields.hashCode();
+        hash = (29 * hash) + getUnknownFields().hashCode();
         memoizedHashCode = hash;
         return hash;
       }
@@ -2664,18 +2122,13 @@ public final class Columns {
 
         // Construct using io.greptime.v1.Columns.Column.Values.newBuilder()
         private Builder() {
-          maybeForceBuilderInitialization();
+
         }
 
         private Builder(
             com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
           super(parent);
-          maybeForceBuilderInitialization();
-        }
-        private void maybeForceBuilderInitialization() {
-          if (com.google.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
-          }
+
         }
         @java.lang.Override
         public Builder clear() {
@@ -3078,7 +2531,7 @@ public final class Columns {
             }
             onChanged();
           }
-          this.mergeUnknownFields(other.unknownFields);
+          this.mergeUnknownFields(other.getUnknownFields());
           onChanged();
           return this;
         }
@@ -3093,17 +2546,314 @@ public final class Columns {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-          io.greptime.v1.Columns.Column.Values parsedMessage = null;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
-            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+            boolean done = false;
+            while (!done) {
+              int tag = input.readTag();
+              switch (tag) {
+                case 0:
+                  done = true;
+                  break;
+                case 8: {
+                  int v = input.readInt32();
+                  ensureI8ValuesIsMutable();
+                  i8Values_.addInt(v);
+                  break;
+                } // case 8
+                case 10: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureI8ValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    i8Values_.addInt(input.readInt32());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 10
+                case 16: {
+                  int v = input.readInt32();
+                  ensureI16ValuesIsMutable();
+                  i16Values_.addInt(v);
+                  break;
+                } // case 16
+                case 18: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureI16ValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    i16Values_.addInt(input.readInt32());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 18
+                case 24: {
+                  int v = input.readInt32();
+                  ensureI32ValuesIsMutable();
+                  i32Values_.addInt(v);
+                  break;
+                } // case 24
+                case 26: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureI32ValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    i32Values_.addInt(input.readInt32());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 26
+                case 32: {
+                  long v = input.readInt64();
+                  ensureI64ValuesIsMutable();
+                  i64Values_.addLong(v);
+                  break;
+                } // case 32
+                case 34: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureI64ValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    i64Values_.addLong(input.readInt64());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 34
+                case 40: {
+                  int v = input.readUInt32();
+                  ensureU8ValuesIsMutable();
+                  u8Values_.addInt(v);
+                  break;
+                } // case 40
+                case 42: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureU8ValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    u8Values_.addInt(input.readUInt32());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 42
+                case 48: {
+                  int v = input.readUInt32();
+                  ensureU16ValuesIsMutable();
+                  u16Values_.addInt(v);
+                  break;
+                } // case 48
+                case 50: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureU16ValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    u16Values_.addInt(input.readUInt32());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 50
+                case 56: {
+                  int v = input.readUInt32();
+                  ensureU32ValuesIsMutable();
+                  u32Values_.addInt(v);
+                  break;
+                } // case 56
+                case 58: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureU32ValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    u32Values_.addInt(input.readUInt32());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 58
+                case 64: {
+                  long v = input.readUInt64();
+                  ensureU64ValuesIsMutable();
+                  u64Values_.addLong(v);
+                  break;
+                } // case 64
+                case 66: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureU64ValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    u64Values_.addLong(input.readUInt64());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 66
+                case 77: {
+                  float v = input.readFloat();
+                  ensureF32ValuesIsMutable();
+                  f32Values_.addFloat(v);
+                  break;
+                } // case 77
+                case 74: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureF32ValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    f32Values_.addFloat(input.readFloat());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 74
+                case 81: {
+                  double v = input.readDouble();
+                  ensureF64ValuesIsMutable();
+                  f64Values_.addDouble(v);
+                  break;
+                } // case 81
+                case 82: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureF64ValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    f64Values_.addDouble(input.readDouble());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 82
+                case 88: {
+                  boolean v = input.readBool();
+                  ensureBoolValuesIsMutable();
+                  boolValues_.addBoolean(v);
+                  break;
+                } // case 88
+                case 90: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureBoolValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    boolValues_.addBoolean(input.readBool());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 90
+                case 98: {
+                  com.google.protobuf.ByteString v = input.readBytes();
+                  ensureBinaryValuesIsMutable();
+                  binaryValues_.add(v);
+                  break;
+                } // case 98
+                case 106: {
+                  java.lang.String s = input.readStringRequireUtf8();
+                  ensureStringValuesIsMutable();
+                  stringValues_.add(s);
+                  break;
+                } // case 106
+                case 112: {
+                  int v = input.readInt32();
+                  ensureDateValuesIsMutable();
+                  dateValues_.addInt(v);
+                  break;
+                } // case 112
+                case 114: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureDateValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    dateValues_.addInt(input.readInt32());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 114
+                case 120: {
+                  long v = input.readInt64();
+                  ensureDatetimeValuesIsMutable();
+                  datetimeValues_.addLong(v);
+                  break;
+                } // case 120
+                case 122: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureDatetimeValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    datetimeValues_.addLong(input.readInt64());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 122
+                case 128: {
+                  long v = input.readInt64();
+                  ensureTsSecondValuesIsMutable();
+                  tsSecondValues_.addLong(v);
+                  break;
+                } // case 128
+                case 130: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureTsSecondValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    tsSecondValues_.addLong(input.readInt64());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 130
+                case 136: {
+                  long v = input.readInt64();
+                  ensureTsMillisecondValuesIsMutable();
+                  tsMillisecondValues_.addLong(v);
+                  break;
+                } // case 136
+                case 138: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureTsMillisecondValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    tsMillisecondValues_.addLong(input.readInt64());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 138
+                case 144: {
+                  long v = input.readInt64();
+                  ensureTsMicrosecondValuesIsMutable();
+                  tsMicrosecondValues_.addLong(v);
+                  break;
+                } // case 144
+                case 146: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureTsMicrosecondValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    tsMicrosecondValues_.addLong(input.readInt64());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 146
+                case 152: {
+                  long v = input.readInt64();
+                  ensureTsNanosecondValuesIsMutable();
+                  tsNanosecondValues_.addLong(v);
+                  break;
+                } // case 152
+                case 154: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  ensureTsNanosecondValuesIsMutable();
+                  while (input.getBytesUntilLimit() > 0) {
+                    tsNanosecondValues_.addLong(input.readInt64());
+                  }
+                  input.popLimit(limit);
+                  break;
+                } // case 154
+                default: {
+                  if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                    done = true; // was an endgroup tag
+                  }
+                  break;
+                } // default:
+              } // switch (tag)
+            } // while (!done)
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (io.greptime.v1.Columns.Column.Values) e.getUnfinishedMessage();
             throw e.unwrapIOException();
           } finally {
-            if (parsedMessage != null) {
-              mergeFrom(parsedMessage);
-            }
-          }
+            onChanged();
+          } // finally
           return this;
         }
         private int bitField0_;
@@ -4678,7 +4428,18 @@ public final class Columns {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
-          return new Values(input, extensionRegistry);
+          Builder builder = newBuilder();
+          try {
+            builder.mergeFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(builder.buildPartial());
+          } catch (com.google.protobuf.UninitializedMessageException e) {
+            throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+          } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                .setUnfinishedMessage(builder.buildPartial());
+          }
+          return builder.buildPartial();
         }
       };
 
@@ -4883,7 +4644,7 @@ public final class Columns {
       if (datatype_ != io.greptime.v1.Columns.ColumnDataType.BOOLEAN.getNumber()) {
         output.writeEnum(5, datatype_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -4911,7 +4672,7 @@ public final class Columns {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(5, datatype_);
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -4937,7 +4698,7 @@ public final class Columns {
       if (!getNullMask()
           .equals(other.getNullMask())) return false;
       if (datatype_ != other.datatype_) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -4960,7 +4721,7 @@ public final class Columns {
       hash = (53 * hash) + getNullMask().hashCode();
       hash = (37 * hash) + DATATYPE_FIELD_NUMBER;
       hash = (53 * hash) + datatype_;
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -5077,18 +4838,13 @@ public final class Columns {
 
       // Construct using io.greptime.v1.Columns.Column.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
@@ -5206,7 +4962,7 @@ public final class Columns {
         if (other.datatype_ != 0) {
           setDatatypeValue(other.getDatatypeValue());
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -5221,17 +4977,57 @@ public final class Columns {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        io.greptime.v1.Columns.Column parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                columnName_ = input.readStringRequireUtf8();
+
+                break;
+              } // case 10
+              case 16: {
+                semanticType_ = input.readEnum();
+
+                break;
+              } // case 16
+              case 26: {
+                input.readMessage(
+                    getValuesFieldBuilder().getBuilder(),
+                    extensionRegistry);
+
+                break;
+              } // case 26
+              case 34: {
+                nullMask_ = input.readBytes();
+
+                break;
+              } // case 34
+              case 40: {
+                datatype_ = input.readEnum();
+
+                break;
+              } // case 40
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (io.greptime.v1.Columns.Column) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
 
@@ -5729,7 +5525,18 @@ public final class Columns {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Column(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 
@@ -5817,65 +5624,6 @@ public final class Columns {
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
-    }
-    private ColumnDef(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      this();
-      if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
-      }
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              name_ = s;
-              break;
-            }
-            case 16: {
-              int rawValue = input.readEnum();
-
-              datatype_ = rawValue;
-              break;
-            }
-            case 24: {
-
-              isNullable_ = input.readBool();
-              break;
-            }
-            case 34: {
-
-              defaultConstraint_ = input.readBytes();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
@@ -5995,7 +5743,7 @@ public final class Columns {
       if (!defaultConstraint_.isEmpty()) {
         output.writeBytes(4, defaultConstraint_);
       }
-      unknownFields.writeTo(output);
+      getUnknownFields().writeTo(output);
     }
 
     @java.lang.Override
@@ -6019,7 +5767,7 @@ public final class Columns {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, defaultConstraint_);
       }
-      size += unknownFields.getSerializedSize();
+      size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
     }
@@ -6041,7 +5789,7 @@ public final class Columns {
           != other.getIsNullable()) return false;
       if (!getDefaultConstraint()
           .equals(other.getDefaultConstraint())) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
+      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
 
@@ -6061,7 +5809,7 @@ public final class Columns {
           getIsNullable());
       hash = (37 * hash) + DEFAULT_CONSTRAINT_FIELD_NUMBER;
       hash = (53 * hash) + getDefaultConstraint().hashCode();
-      hash = (29 * hash) + unknownFields.hashCode();
+      hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
@@ -6178,18 +5926,13 @@ public final class Columns {
 
       // Construct using io.greptime.v1.Columns.ColumnDef.newBuilder()
       private Builder() {
-        maybeForceBuilderInitialization();
+
       }
 
       private Builder(
           com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+
       }
       @java.lang.Override
       public Builder clear() {
@@ -6293,7 +6036,7 @@ public final class Columns {
         if (other.getDefaultConstraint() != com.google.protobuf.ByteString.EMPTY) {
           setDefaultConstraint(other.getDefaultConstraint());
         }
-        this.mergeUnknownFields(other.unknownFields);
+        this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
       }
@@ -6308,17 +6051,50 @@ public final class Columns {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        io.greptime.v1.Columns.ColumnDef parsedMessage = null;
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
         try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                name_ = input.readStringRequireUtf8();
+
+                break;
+              } // case 10
+              case 16: {
+                datatype_ = input.readEnum();
+
+                break;
+              } // case 16
+              case 24: {
+                isNullable_ = input.readBool();
+
+                break;
+              } // case 24
+              case 34: {
+                defaultConstraint_ = input.readBytes();
+
+                break;
+              } // case 34
+              default: {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+            } // switch (tag)
+          } // while (!done)
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (io.greptime.v1.Columns.ColumnDef) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
+          onChanged();
+        } // finally
         return this;
       }
 
@@ -6549,7 +6325,18 @@ public final class Columns {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ColumnDef(input, extensionRegistry);
+        Builder builder = newBuilder();
+        try {
+          builder.mergeFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(builder.buildPartial());
+        } catch (com.google.protobuf.UninitializedMessageException e) {
+          throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(e)
+              .setUnfinishedMessage(builder.buildPartial());
+        }
+        return builder.buildPartial();
       }
     };
 

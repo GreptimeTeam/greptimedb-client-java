@@ -19,7 +19,6 @@ package io.greptime.common.util;
 import io.greptime.common.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Locale;
 
 /**
@@ -28,13 +27,13 @@ import java.util.Locale;
  */
 public class Platform {
 
-    private static final Logger  LOG        = LoggerFactory.getLogger(Platform.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Platform.class);
 
-    private static final String  WIN_KEY    = "win";
-    private static final String  MAC_KEY    = "mac os x";
+    private static final String WIN_KEY = "win";
+    private static final String MAC_KEY = "mac os x";
 
     private static final boolean IS_WINDOWS = isWindows0();
-    private static final boolean IS_MAC     = isMac0();
+    private static final boolean IS_MAC = isMac0();
 
     /**
      * Return {@code true} if the JVM is running on Windows
@@ -69,7 +68,7 @@ public class Platform {
 
     private static boolean checkOS(String osKey) {
         return SystemPropertyUtil.get(Keys.OS_NAME, "") //
-            .toLowerCase(Locale.US) //
-            .contains(osKey);
+                .toLowerCase(Locale.US) //
+                .contains(osKey);
     }
 }

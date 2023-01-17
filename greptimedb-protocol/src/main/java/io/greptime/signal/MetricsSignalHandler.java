@@ -25,7 +25,6 @@ import io.greptime.common.util.MetricReporter;
 import io.greptime.common.util.MetricsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,7 +38,7 @@ import java.io.PrintStream;
 @SPI(priority = 97)
 public class MetricsSignalHandler implements SignalHandler {
 
-    private static final Logger LOG       = LoggerFactory.getLogger(MetricsSignalHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MetricsSignalHandler.class);
 
     private static final String BASE_NAME = "greptimedb_client_metrics.log";
 
@@ -53,13 +52,13 @@ public class MetricsSignalHandler implements SignalHandler {
             File file = FileOutputHelper.getOutputFile(BASE_NAME);
 
             LOG.info("Printing GreptimeDB client metrics triggered by signal: {} to file: {}.", signalName,
-                file.getAbsoluteFile());
+                    file.getAbsoluteFile());
 
             try (PrintStream out = new PrintStream(new FileOutputStream(file, true))) {
                 MetricReporter reporter = MetricReporter.forRegistry(MetricsUtil.metricRegistry()) //
-                    .outputTo(out) //
-                    .prefixedWith("-- GreptimeDB") //
-                    .build();
+                        .outputTo(out) //
+                        .prefixedWith("-- GreptimeDB") //
+                        .build();
                 reporter.report();
                 out.flush();
             }

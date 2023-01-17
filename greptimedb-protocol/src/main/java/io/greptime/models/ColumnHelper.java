@@ -20,7 +20,6 @@ import com.google.protobuf.ByteStringHelper;
 import com.google.protobuf.Descriptors;
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Columns;
-
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -102,6 +101,5 @@ public final class ColumnHelper {
         return column.getValues().getDescriptorForType().findFieldByName(fieldName);
     }
 
-    private ColumnHelper() {
-    }
+    private ColumnHelper() {}
 }

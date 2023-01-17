@@ -19,7 +19,6 @@ package io.greptime.common.signal;
 import io.greptime.common.Keys;
 import io.greptime.common.util.Files;
 import io.greptime.common.util.SystemPropertyUtil;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -49,6 +48,5 @@ public final class FileOutputHelper {
         return Paths.get(OUT_DIR).toAbsolutePath().toString();
     }
 
-    private FileOutputHelper() {
-    }
+    private FileOutputHelper() {}
 }

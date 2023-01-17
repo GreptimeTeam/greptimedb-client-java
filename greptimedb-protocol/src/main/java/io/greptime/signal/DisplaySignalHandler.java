@@ -25,7 +25,6 @@ import io.greptime.common.signal.SignalHandler;
 import io.greptime.common.util.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,7 +41,7 @@ import java.util.List;
 @SPI(priority = 98)
 public class DisplaySignalHandler implements SignalHandler {
 
-    private static final Logger LOG       = LoggerFactory.getLogger(DisplaySignalHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DisplaySignalHandler.class);
 
     private static final String BASE_NAME = "greptimedb_client_display.log";
 
@@ -61,10 +60,10 @@ public class DisplaySignalHandler implements SignalHandler {
             File file = FileOutputHelper.getOutputFile(BASE_NAME);
 
             LOG.info("Displaying GreptimeDB clients triggered by signal: {} to file: {}.", signalName,
-                file.getAbsoluteFile());
+                    file.getAbsoluteFile());
 
-            try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file, true),
-                StandardCharsets.UTF_8))) {
+            try (PrintWriter out =
+                    new PrintWriter(new OutputStreamWriter(new FileOutputStream(file, true), StandardCharsets.UTF_8))) {
                 Display.Printer printer = new Display.DefaultPrinter(out);
                 for (GreptimeDB ins : instances) {
                     ins.display(printer);

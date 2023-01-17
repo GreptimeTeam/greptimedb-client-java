@@ -71,20 +71,20 @@ public final class ThreadPoolUtil {
      *         or {@code threadFactory} or {@code handler} is null
      */
     public static ThreadPoolExecutor newThreadPool(String poolName, //
-                                                   boolean enableMetric, //
-                                                   int coreThreads, //
-                                                   int maximumThreads, //
-                                                   long keepAliveSeconds, //
-                                                   BlockingQueue<Runnable> workQueue, //
-                                                   ThreadFactory threadFactory, //
-                                                   RejectedExecutionHandler rejectedHandler) {
+            boolean enableMetric, //
+            int coreThreads, //
+            int maximumThreads, //
+            long keepAliveSeconds, //
+            BlockingQueue<Runnable> workQueue, //
+            ThreadFactory threadFactory, //
+            RejectedExecutionHandler rejectedHandler) {
         TimeUnit unit = TimeUnit.SECONDS;
         if (enableMetric) {
             return new MetricThreadPoolExecutor(coreThreads, maximumThreads, keepAliveSeconds, unit, workQueue,
-                threadFactory, rejectedHandler, poolName);
+                    threadFactory, rejectedHandler, poolName);
         } else {
             return new LogThreadPoolExecutor(coreThreads, maximumThreads, keepAliveSeconds, unit, workQueue,
-                threadFactory, rejectedHandler, poolName);
+                    threadFactory, rejectedHandler, poolName);
         }
     }
 
@@ -107,10 +107,10 @@ public final class ThreadPoolUtil {
      * @return a new ScheduledThreadPoolExecutor
      */
     public static ScheduledThreadPoolExecutor newScheduledThreadPool(String poolName, //
-                                                                     boolean enableMetric, //
-                                                                     int coreThreads, //
-                                                                     ThreadFactory threadFactory, //
-                                                                     RejectedExecutionHandler rejectedHandler) {
+            boolean enableMetric, //
+            int coreThreads, //
+            ThreadFactory threadFactory, //
+            RejectedExecutionHandler rejectedHandler) {
         if (enableMetric) {
             return new MetricScheduledThreadPoolExecutor(coreThreads, threadFactory, rejectedHandler, poolName);
         } else {
@@ -118,17 +118,16 @@ public final class ThreadPoolUtil {
         }
     }
 
-    private ThreadPoolUtil() {
-    }
+    private ThreadPoolUtil() {}
 
     public static class PoolBuilder {
-        private String                   poolName;
-        private Boolean                  enableMetric;
-        private Integer                  coreThreads;
-        private Integer                  maximumThreads;
-        private Long                     keepAliveSeconds;
-        private BlockingQueue<Runnable>  workQueue;
-        private ThreadFactory            threadFactory;
+        private String poolName;
+        private Boolean enableMetric;
+        private Integer coreThreads;
+        private Integer maximumThreads;
+        private Long keepAliveSeconds;
+        private BlockingQueue<Runnable> workQueue;
+        private ThreadFactory threadFactory;
         private RejectedExecutionHandler handler = ThreadPoolUtil.defaultHandler;
 
         public PoolBuilder poolName(String poolName) {
@@ -182,15 +181,15 @@ public final class ThreadPoolUtil {
             Ensures.ensureNonNull(this.handler, "handler");
 
             return ThreadPoolUtil.newThreadPool(this.poolName, this.enableMetric, this.coreThreads,
-                this.maximumThreads, this.keepAliveSeconds, this.workQueue, this.threadFactory, this.handler);
+                    this.maximumThreads, this.keepAliveSeconds, this.workQueue, this.threadFactory, this.handler);
         }
     }
 
     public static class ScheduledPoolBuilder {
-        private String                   poolName;
-        private Boolean                  enableMetric;
-        private Integer                  coreThreads;
-        private ThreadFactory            threadFactory;
+        private String poolName;
+        private Boolean enableMetric;
+        private Integer coreThreads;
+        private ThreadFactory threadFactory;
         private RejectedExecutionHandler handler = ThreadPoolUtil.defaultHandler;
 
         public ScheduledPoolBuilder poolName(String poolName) {
@@ -226,7 +225,7 @@ public final class ThreadPoolUtil {
             Ensures.ensureNonNull(this.handler, "handler");
 
             return ThreadPoolUtil.newScheduledThreadPool(this.poolName, this.enableMetric, this.coreThreads,
-                this.threadFactory, this.handler);
+                    this.threadFactory, this.handler);
         }
     }
 }

@@ -36,11 +36,8 @@ import io.greptime.options.RouterOptions;
 import io.greptime.options.WriteOptions;
 import io.greptime.rpc.Context;
 import io.greptime.rpc.RpcClient;
-import io.greptime.rpc.RpcFactoryProvider;
-import io.greptime.rpc.RpcOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,23 +55,23 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Display {
 
-    private static final Logger                   LOG         = LoggerFactory.getLogger(GreptimeDB.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GreptimeDB.class);
 
-    private static final Map<Integer, GreptimeDB> INSTANCES   = new ConcurrentHashMap<>();
-    private static final AtomicInteger            ID          = new AtomicInteger(0);
-    private static final String                   ID_KEY      = "greptimedb.client.id";
-    private static final String                   VERSION_KEY = "greptimedb.client.version";
-    private static final String                   VERSION     = Util.clientVersion();
+    private static final Map<Integer, GreptimeDB> INSTANCES = new ConcurrentHashMap<>();
+    private static final AtomicInteger ID = new AtomicInteger(0);
+    private static final String ID_KEY = "greptimedb.client.id";
+    private static final String VERSION_KEY = "greptimedb.client.version";
+    private static final String VERSION = Util.clientVersion();
 
-    private final int                             id;
-    private final AtomicBoolean                   started     = new AtomicBoolean(false);
+    private final int id;
+    private final AtomicBoolean started = new AtomicBoolean(false);
 
-    private GreptimeOptions                       opts;
-    private RouterClient                          routerClient;
-    private WriteClient                           writeClient;
-    private QueryClient                           queryClient;
-    private Executor                              asyncWritePool;
-    private Executor                              asyncReadPool;
+    private GreptimeOptions opts;
+    private RouterClient routerClient;
+    private WriteClient writeClient;
+    private QueryClient queryClient;
+    private Executor asyncWritePool;
+    private Executor asyncReadPool;
 
     public static List<GreptimeDB> instances() {
         return new ArrayList<>(INSTANCES.values());
@@ -92,8 +89,7 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
 
         this.opts = GreptimeOptions.checkSelf(opts).copy();
 
-        RpcClient rpcClient = makeRpcClient(opts);
-        this.routerClient = makeRouteClient(opts, rpcClient);
+        this.routerClient = makeRouteClient(opts);
         this.asyncWritePool = makeMetricPool(this.opts.getAsyncWritePool(), "async_write_pool.time");
         this.asyncReadPool = makeMetricPool(this.opts.getAsyncReadPool(), "async_read_pool.time");
         this.writeClient = makeWriteClient(opts, this.routerClient, this.asyncWritePool);
@@ -150,16 +146,16 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
     @Override
     public void display(Printer out) {
         out.println("--- GreptimeDB Client ---") //
-            .print("id=") //
-            .println(this.id) //
-            .print("version=") //
-            .println(VERSION) //
-            .print("endpoints=") //
-            .println(this.opts.getEndpoints()) //
-            .print("userAsyncWritePool=") //
-            .println(this.opts.getAsyncWritePool()) //
-            .print("userAsyncReadPool=") //
-            .println(this.opts.getAsyncReadPool());
+                .print("id=") //
+                .println(this.id) //
+                .print("version=") //
+                .println(VERSION) //
+                .print("endpoints=") //
+                .println(this.opts.getEndpoints()) //
+                .print("userAsyncWritePool=") //
+                .println(this.opts.getAsyncWritePool()) //
+                .print("userAsyncReadPool=") //
+                .println(this.opts.getAsyncReadPool());
 
         if (this.routerClient != null) {
             out.println("");
@@ -182,40 +178,29 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
     @Override
     public String toString() {
         return "GreptimeDB{" + //
-               "id=" + id + //
-               "version=" + VERSION + //
-               ", opts=" + opts + //
-               ", routerClient=" + routerClient + //
-               ", writeClient=" + writeClient + //
-               ", queryClient=" + queryClient + //
-               ", asyncWritePool=" + asyncWritePool + //
-               ", asyncReadPool=" + asyncReadPool + //
-               '}';
+                "id=" + id + //
+                "version=" + VERSION + //
+                ", opts=" + opts + //
+                ", routerClient=" + routerClient + //
+                ", writeClient=" + writeClient + //
+                ", queryClient=" + queryClient + //
+                ", asyncWritePool=" + asyncWritePool + //
+                ", asyncReadPool=" + asyncReadPool + //
+                '}';
     }
 
     private Context attachCtx(Context ctx) {
         Context newCtx = ctx == null ? Context.newDefault() : ctx;
         return newCtx.with(ID_KEY, this.id) //
-            .with(VERSION_KEY, VERSION);
+                .with(VERSION_KEY, VERSION);
     }
 
     private static Executor makeMetricPool(Executor pool, String name) {
         return pool == null ? null : new MetricExecutor(pool, name);
     }
 
-    private static RpcClient makeRpcClient(GreptimeOptions opts) {
-        RpcOptions rpcOpts = opts.getRpcOptions();
-        RpcClient rpcClient = RpcFactoryProvider.getRpcFactory().createRpcClient();
-        if (!rpcClient.init(rpcOpts)) {
-            throw new IllegalStateException("Fail to start RPC client");
-        }
-        rpcClient.registerConnectionObserver(new RpcConnectionObserver());
-        return rpcClient;
-    }
-
-    private static RouterClient makeRouteClient(GreptimeOptions opts, RpcClient rpcClient) {
+    private static RouterClient makeRouteClient(GreptimeOptions opts) {
         RouterOptions routerOpts = opts.getRouterOptions();
-        routerOpts.setRpcClient(rpcClient);
         RouterClient routerClient = new RouterClient();
         if (!routerClient.init(routerOpts)) {
             throw new IllegalStateException("Fail to start router client");
@@ -248,7 +233,7 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
     static final class RpcConnectionObserver implements RpcClient.ConnectionObserver {
 
         static final Counter CONN_COUNTER = MetricsUtil.counter("connection_counter");
-        static final Meter   CONN_FAILURE = MetricsUtil.meter("connection_failure");
+        static final Meter CONN_FAILURE = MetricsUtil.meter("connection_failure");
 
         @Override
         public void onReady(Endpoint endpoint) {
@@ -281,9 +266,9 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
 
         private static final int MAX_BUF_SIZE = 1024 << 3;
 
-        private final Logger     logger;
+        private final Logger logger;
 
-        private StringBuilder    buf          = new StringBuilder();
+        private StringBuilder buf = new StringBuilder();
 
         LogPrinter(Logger logger) {
             this.logger = logger;
@@ -316,8 +301,6 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
     private static void doGlobalInitializeWorks() {
         // load all signal handlers
         SignalHandlersLoader.load();
-        // register all rpc service
-        RpcServiceRegister.registerAllService();
         // start scheduled metric reporter
         MetricsUtil.startScheduledReporter(Util.autoReportPeriodMin(), TimeUnit.MINUTES);
         Runtime.getRuntime().addShutdownHook(new Thread(MetricsUtil::stopScheduledReporterAndDestroy));

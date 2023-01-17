@@ -1,40 +1,28 @@
 syntax = "proto3";
 package greptime.v1;
 
-option java_package="io.greptime.v1";
+option java_package = "io.greptime.v1";
 option java_outer_classname = "Database";
 
-import "common.proto";
+import "ddl.proto";
 import "column.proto";
 
-message DatabaseRequest {
-  string name = 1;
-  repeated ObjectExpr exprs = 2;
-}
-
-message DatabaseResponse {
-  repeated ObjectResult results = 1;
-}
-
-message ObjectExpr {
-  ExprHeader header = 1;
-  oneof expr {
-    InsertExpr insert = 2;
-    SelectExpr select = 3;
-    UpdateExpr update = 4;
-    DeleteExpr delete = 5;
+message GreptimeRequest {
+  oneof request {
+    InsertRequest insert = 1;
+    QueryRequest query = 2;
+    DdlRequest ddl = 3;
   }
 }
 
-// TODO(fys): Only support sql now, and will support promql etc in the future
-message SelectExpr {
-  oneof expr {
+message QueryRequest {
+  oneof query {
     string sql = 1;
     bytes logical_plan = 2;
   }
 }
 
-message InsertExpr {
+message InsertRequest {
   string schema_name = 1;
   string table_name = 2;
 
@@ -43,26 +31,17 @@ message InsertExpr {
 
   // The row_count of all columns, which include null and non-null values.
   //
-  // Note: the row_count of all columns in a InsertExpr must be same.
+  // Note: the row_count of all columns in a InsertRequest must be same.
   uint32 row_count = 4;
 
   // The region number of current insert request.
   uint32 region_number = 5;
 }
 
-// TODO(jiachun)
-message UpdateExpr {}
-// TODO(jiachun)
-message DeleteExpr {}
-
-message ObjectResult {
-  ResultHeader header = 1;
-  oneof result {
-    SelectResult select = 2;
-    MutateResult mutate = 3;
-  }
+message AffectedRows {
+  uint32 value = 1;
 }
 
-message SelectResult {
-  bytes raw_data = 1;
+message FlightMetadata {
+  AffectedRows affected_rows = 1;
 }

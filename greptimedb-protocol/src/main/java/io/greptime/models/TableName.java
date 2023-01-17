@@ -54,8 +54,8 @@ public class TableName {
     @Override
     public String toString() {
         return "TableName{" + //
-               "databaseName='" + databaseName + '\'' + //
-               ", tableName='" + tableName + '\'' + //
-               '}';
+                "databaseName='" + databaseName + '\'' + //
+                ", tableName='" + tableName + '\'' + //
+                '}';
     }
 }

@@ -18,18 +18,16 @@ package io.greptime.models;
 
 import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
-import io.greptime.v1.Common;
 import io.greptime.v1.Database;
-import io.greptime.v1.GreptimeDB;
 
 /**
  * The query request condition.
  *
  * @author jiachun.fjc
  */
-public class QueryRequest implements Into<GreptimeDB.BatchRequest> {
+public class QueryRequest implements Into<Database.GreptimeRequest> {
     private SelectExprType exprType;
-    private String         ql;
+    private String ql;
 
     public SelectExprType getExprType() {
         return exprType;
@@ -42,9 +40,9 @@ public class QueryRequest implements Into<GreptimeDB.BatchRequest> {
     @Override
     public String toString() {
         return "QueryRequest{" + //
-               "exprType=" + exprType + //
-               ", ql='" + ql + '\'' + //
-               '}';
+                "exprType=" + exprType + //
+                ", ql='" + ql + '\'' + //
+                '}';
     }
 
     public static Builder newBuilder() {
@@ -52,39 +50,21 @@ public class QueryRequest implements Into<GreptimeDB.BatchRequest> {
     }
 
     @Override
-    public GreptimeDB.BatchRequest into() {
-        Common.ExprHeader header = Common.ExprHeader.newBuilder() //
-            .setVersion(0) // TODO version
-            .build();
-
-        Database.SelectExpr.Builder selectB = Database.SelectExpr.newBuilder();
+    public Database.GreptimeRequest into() {
+        Database.QueryRequest.Builder builder = Database.QueryRequest.newBuilder();
         switch (getExprType()) {
             case Sql:
-                selectB.setSql(getQl());
+                builder.setSql(getQl());
                 break;
             case Promql:
                 throw new UnsupportedOperationException("Promql unsupported yet!");
         }
-        Database.SelectExpr select = selectB.build();
-
-        Database.ObjectExpr obj = Database.ObjectExpr.newBuilder() //
-            .setHeader(header) //
-            .setSelect(select) //
-            .build();
-
-        Database.DatabaseRequest databaseReq = Database.DatabaseRequest.newBuilder() //
-            .setName("") // TODO db name
-            .addExprs(obj) //
-            .build();
-
-        return GreptimeDB.BatchRequest.newBuilder() //
-            .addDatabases(databaseReq) //
-            .build();
+        return Database.GreptimeRequest.newBuilder().setQuery(builder.build()).build();
     }
 
     public static class Builder {
         private SelectExprType exprType;
-        private String         ql;
+        private String ql;
 
         /**
          * Sets select expression type, such as sql, promql, etc.

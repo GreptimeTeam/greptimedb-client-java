@@ -26,19 +26,24 @@ import io.greptime.common.util.Clock;
 import io.greptime.common.util.Ensures;
 import io.greptime.common.util.MetricsUtil;
 import io.greptime.common.util.SerializingExecutor;
+import io.greptime.flight.AsyncExecCallOption;
+import io.greptime.flight.GreptimeFlightClient;
+import io.greptime.flight.GreptimeRequest;
 import io.greptime.models.Err;
-import io.greptime.models.WriteResultHelper;
 import io.greptime.models.Result;
+import io.greptime.models.WriteResult;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
 import io.greptime.options.WriteOptions;
 import io.greptime.rpc.Context;
-import io.greptime.v1.GreptimeDB;
+import org.apache.arrow.flight.FlightCallHeaders;
+import org.apache.arrow.flight.FlightStream;
+import org.apache.arrow.flight.HeaderCallOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Default Write API impl.
@@ -49,9 +54,11 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
     private static final Logger LOG = LoggerFactory.getLogger(WriteClient.class);
 
-    private WriteOptions        opts;
-    private RouterClient        routerClient;
-    private Executor            asyncPool;
+    private static final AtomicLong WRITE_ID = new AtomicLong(0);
+
+    private WriteOptions opts;
+    private RouterClient routerClient;
+    private Executor asyncPool;
 
     @Override
     public boolean init(WriteOptions opts) {
@@ -71,7 +78,11 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     public CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx) {
         Ensures.ensureNonNull(rows, "rows");
 
+        ctx.with(Context.KEY_WRITE_ID, WRITE_ID.incrementAndGet());
+
         long startCall = Clock.defaultClock().getTick();
+        ctx.with(Context.KEY_WRITE_START, startCall);
+
         return write0(rows, ctx, 0).whenCompleteAsync((r, e) -> {
             InnerMetricHelper.writeQps().mark();
             if (r != null) {
@@ -85,7 +96,6 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                 if (r.isOk()) {
                     WriteOk ok = r.getOk();
                     InnerMetricHelper.writeRowsSuccessNum().update(ok.getSuccess());
-                    InnerMetricHelper.writeRowsFailureNum().update(ok.getFailure());
                     return;
                 }
             }
@@ -119,42 +129,47 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
             }, this.asyncPool);
     }
 
-    private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, //
-                                                            WriteRows rows, //
-                                                            Context ctx, //
-                                                            int retries) {
-        CompletableFuture<GreptimeDB.BatchResponse> f = this.routerClient.invoke(
-                endpoint, //
-                rows.into(), //
-                ctx.with("retries", retries) // server can use this in metrics
-        );
+    private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, WriteRows rows, Context ctx, int retries) {
+        GreptimeFlightClient flightClient = routerClient.getFlightClient(endpoint);
 
-        return f.thenApplyAsync(res -> WriteResultHelper.from(res, endpoint, rows), this.asyncPool);
+        GreptimeRequest request = new GreptimeRequest(rows.into());
+
+        FlightCallHeaders headers = new FlightCallHeaders();
+        headers.insert("retries", String.valueOf(retries));
+        HeaderCallOption headerOption = new HeaderCallOption(headers);
+
+        AsyncExecCallOption execOption = new AsyncExecCallOption(asyncPool);
+
+        FlightStream stream = flightClient.doRequest(request, headerOption, execOption);
+
+        ctx.with(Context.KEY_ENDPOINT, endpoint);
+
+        return CompletableFuture.supplyAsync(() -> new WriteResult(ctx, stream, rows).get(), this.asyncPool);
     }
 
     @Override
     public void display(Printer out) {
         out.println("--- WriteClient ---") //
-            .print("maxRetries=") //
-            .println(this.opts.getMaxRetries()) //
-            .print("asyncPool=") //
-            .println(this.asyncPool);
+                .print("maxRetries=") //
+                .println(this.opts.getMaxRetries()) //
+                .print("asyncPool=") //
+                .println(this.asyncPool);
     }
 
     @Override
     public String toString() {
         return "WriteClient{" + //
-               "opts=" + opts + //
-               ", routerClient=" + routerClient + //
-               ", asyncPool=" + asyncPool + //
-               '}';
+                "opts=" + opts + //
+                ", routerClient=" + routerClient + //
+                ", asyncPool=" + asyncPool + //
+                '}';
     }
 
     static final class InnerMetricHelper {
         static final Histogram WRITE_ROWS_SUCCESS_NUM = MetricsUtil.histogram("write_rows_success_num");
         static final Histogram WRITE_ROWS_FAILURE_NUM = MetricsUtil.histogram("write_rows_failure_num");
-        static final Meter     WRITE_FAILURE_NUM      = MetricsUtil.meter("write_failure_num");
-        static final Meter     WRITE_QPS              = MetricsUtil.meter("write_qps");
+        static final Meter WRITE_FAILURE_NUM = MetricsUtil.meter("write_failure_num");
+        static final Meter WRITE_QPS = MetricsUtil.meter("write_qps");
 
         static Histogram writeRowsSuccessNum() {
             return WRITE_ROWS_SUCCESS_NUM;

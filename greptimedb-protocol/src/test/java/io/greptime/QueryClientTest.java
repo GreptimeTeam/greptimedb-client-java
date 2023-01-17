@@ -17,40 +17,95 @@
 package io.greptime;
 
 import io.greptime.common.Endpoint;
-import io.greptime.models.Err;
-import io.greptime.models.QueryOk;
-import io.greptime.models.QueryRequest;
-import io.greptime.models.Result;
-import io.greptime.models.SelectExprType;
+import io.greptime.models.*;
 import io.greptime.options.QueryOptions;
-import io.greptime.v1.Columns;
-import io.greptime.v1.Common;
-import io.greptime.v1.Database;
-import io.greptime.v1.GreptimeDB;
-import io.greptime.v1.codec.Select;
+import io.greptime.options.RouterOptions;
+import org.apache.arrow.flight.FlightServer;
+import org.apache.arrow.flight.Location;
+import org.apache.arrow.flight.NoOpFlightProducer;
+import org.apache.arrow.flight.Ticket;
+import org.apache.arrow.memory.BufferAllocator;
+import org.apache.arrow.memory.RootAllocator;
+import org.apache.arrow.vector.*;
+import org.apache.arrow.vector.ipc.message.ArrowRecordBatch;
+import org.apache.arrow.vector.types.pojo.ArrowType;
+import org.apache.arrow.vector.types.pojo.Field;
+import org.apache.arrow.vector.types.pojo.FieldType;
+import org.apache.arrow.vector.types.pojo.Schema;
+import org.apache.arrow.vector.util.Text;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author jiachun.fjc
  */
 @RunWith(value = MockitoJUnitRunner.class)
 public class QueryClientTest {
-    private QueryClient  queryClient;
-    @Mock
+
+    static class TestFlightProducer extends NoOpFlightProducer {
+
+        @Override
+        public void getStream(CallContext context, Ticket ticket, ServerStreamListener listener) {
+            BufferAllocator allocator = new RootAllocator(Integer.MAX_VALUE);
+
+            Field field1 = new Field("test_column1", FieldType.nullable(new ArrowType.Utf8()), null);
+            Field field2 = new Field("test_column2", FieldType.nullable(new ArrowType.Int(32, true)), null);
+            Schema schema = new Schema(Arrays.asList(field1, field2));
+
+            VectorSchemaRoot root = VectorSchemaRoot.create(schema, allocator);
+            VectorLoader loader = new VectorLoader(root);
+            listener.start(root);
+
+            VectorSchemaRoot vectors = getTestingVectors(allocator, schema);
+            ArrowRecordBatch recordbatch = new VectorUnloader(vectors).getRecordBatch();
+            loader.load(recordbatch);
+
+            listener.putNext();
+            listener.completed();
+        }
+
+        VectorSchemaRoot getTestingVectors(BufferAllocator allocator, Schema schema) {
+            VectorSchemaRoot vectors = VectorSchemaRoot.create(schema, allocator);
+
+            VarCharVector column1 = (VarCharVector) vectors.getVector("test_column1");
+            column1.allocateNew(3);
+            column1.set(0, new Text("tag1"));
+            column1.set(1, new Text("tag2"));
+            column1.set(2, new Text("tag3"));
+
+            IntVector column2 = (IntVector) vectors.getVector("test_column2");
+            column2.allocateNew(3);
+            for (int i = 0; i < 3; i++) {
+                column2.set(i, i + 1);
+            }
+
+            vectors.setRowCount(3);
+            return vectors;
+        }
+    }
+
+    private QueryClient queryClient;
     private RouterClient routerClient;
 
     @Before
     public void before() {
+        RouterOptions opts = new RouterOptions();
+        opts.setEndpoints(Collections.singletonList(Endpoint.of("127.0.0.1", 33333)));
+
+        routerClient = new RouterClient();
+        routerClient.init(opts);
+
         QueryOptions queryOpts = new QueryOptions();
         queryOpts.setAsyncPool(ForkJoinPool.commonPool());
         queryOpts.setRouterClient(this.routerClient);
@@ -66,49 +121,35 @@ public class QueryClientTest {
     }
 
     @Test
-    public void testQueryOk() throws ExecutionException, InterruptedException {
-        Endpoint addr = Endpoint.parse("127.0.0.1:8081");
-        Select.SelectResult select = Select.SelectResult.newBuilder() //
-            .addColumns(Columns.Column.newBuilder() //
-                .setSemanticType(Columns.Column.SemanticType.TAG) //
-                .setDatatype(Columns.ColumnDataType.STRING) //
-                .setValues(Columns.Column.Values.newBuilder() //
-                    .addStringValues("tag1") //
-                    .addStringValues("tag2") //
-                    .addStringValues("tag3") //
-                ) //
-            ) //
-            .addColumns(Columns.Column.newBuilder() //
-                .setSemanticType(Columns.Column.SemanticType.FIELD) //
-                .setDatatype(Columns.ColumnDataType.INT32) //
-                .setValues(Columns.Column.Values.newBuilder() //
-                    .addI32Values(1) //
-                    .addI32Values(2) //
-                    .addI32Values(3) //
-                ) //
-            ) //
-            .setRowCount(3) //
-            .build();
-        GreptimeDB.BatchResponse response = GreptimeDB.BatchResponse.newBuilder() //
-            .addDatabases(Database.DatabaseResponse.newBuilder() //
-                .addResults(Database.ObjectResult.newBuilder() //
-                    .setHeader(Common.ResultHeader.newBuilder().setCode(Status.Success.getStatusCode())) //
-                    .setSelect(Database.SelectResult.newBuilder().setRawData(select.toByteString())) //
-                )) //
-            .build();
-
-        Mockito.when(this.routerClient.route()) //
-            .thenReturn(Util.completedCf(addr));
-        Mockito.when(this.routerClient.invoke(Mockito.eq(addr), Mockito.any(), Mockito.any())) //
-            .thenReturn(Util.completedCf(response));
+    public void testQueryOk() throws ExecutionException, InterruptedException, IOException {
+        FlightServer flightServer =
+                FlightServer.builder(new RootAllocator(Integer.MAX_VALUE),
+                        Location.forGrpcInsecure("127.0.0.1", 33333), new TestFlightProducer()).build();
+        flightServer.start();
 
         QueryRequest req = QueryRequest.newBuilder() //
-            .exprType(SelectExprType.Sql) //
-            .ql("select * from test") //
-            .build();
+                .exprType(SelectExprType.Sql) //
+                .ql("select * from test") //
+                .build();
         Result<QueryOk, Err> res = this.queryClient.query(req).get();
 
         Assert.assertTrue(res.isOk());
-        Assert.assertEquals(3, res.getOk().getRowCount());
+        List<Row> rows = res.getOk().getRows().collect();
+        assertEquals(3, rows.size());
+
+        Row row1 = rows.get(0);
+        assertEquals(
+                "[Value{name='test_column1', dataType=String, value=tag1}, Value{name='test_column2', dataType=Int32, value=1}]",
+                row1.values().toString());
+
+        Row row2 = rows.get(1);
+        assertEquals(
+                "[Value{name='test_column1', dataType=String, value=tag2}, Value{name='test_column2', dataType=Int32, value=2}]",
+                row2.values().toString());
+
+        Row row3 = rows.get(2);
+        assertEquals(
+                "[Value{name='test_column1', dataType=String, value=tag3}, Value{name='test_column2', dataType=Int32, value=3}]",
+                row3.values().toString());
     }
 }

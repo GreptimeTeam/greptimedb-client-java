@@ -19,9 +19,22 @@ package io.greptime.models;
 import java.util.List;
 
 /**
- *
  * @author jiachun.fjc
  */
 public interface Row {
     List<Value> values();
+
+    final class DefaultRow implements Row {
+
+        private final List<Value> values;
+
+        public DefaultRow(List<Value> values) {
+            this.values = values;
+        }
+
+        @Override
+        public List<Value> values() {
+            return values;
+        }
+    }
 }

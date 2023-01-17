@@ -18,7 +18,6 @@ package io.greptime.common.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -38,13 +37,13 @@ public class LogThreadPoolExecutor extends ThreadPoolExecutor {
 
     private static final Logger LOG = LoggerFactory.getLogger(LogThreadPoolExecutor.class);
 
-    private final int           corePoolSize;
-    private final int           maximumPoolSize;
-    private final String        name;
+    private final int corePoolSize;
+    private final int maximumPoolSize;
+    private final String name;
 
     public LogThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
-                                 BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory,
-                                 RejectedExecutionHandler handler, String name) {
+            BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler,
+            String name) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
         this.corePoolSize = corePoolSize;
         this.maximumPoolSize = maximumPoolSize;
@@ -86,9 +85,9 @@ public class LogThreadPoolExecutor extends ThreadPoolExecutor {
     @Override
     public String toString() {
         return "ThreadPoolExecutor{" + //
-               "corePoolSize=" + corePoolSize + //
-               ", maximumPoolSize=" + maximumPoolSize + //
-               ", name='" + name + '\'' + //
-               "} " + super.toString();
+                "corePoolSize=" + corePoolSize + //
+                ", maximumPoolSize=" + maximumPoolSize + //
+                ", name='" + name + '\'' + //
+                "} " + super.toString();
     }
 }

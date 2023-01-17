@@ -22,18 +22,17 @@ package io.greptime.common;
  * @author jiachun.fjc
  */
 public final class Keys {
-    public static final String DB_NAME                   = "GreptimeDB";
-    public static final String VERSION_KEY               = "client.version";
-    public static final String OS_NAME                   = "os.name";
-    public static final String USE_OS_SIGNAL             = "greptimedb.use_os_signal";
-    public static final String AVAILABLE_CPUS            = "greptimedb.available_cpus";
-    public static final String SIG_OUT_DIR               = "greptimedb.signal.out_dir";
-    public static final String REPORT_PERIOD             = "greptimedb.reporter.period_minutes";
+    public static final String DB_NAME = "GreptimeDB";
+    public static final String VERSION_KEY = "client.version";
+    public static final String OS_NAME = "os.name";
+    public static final String USE_OS_SIGNAL = "greptimedb.use_os_signal";
+    public static final String AVAILABLE_CPUS = "greptimedb.available_cpus";
+    public static final String SIG_OUT_DIR = "greptimedb.signal.out_dir";
+    public static final String REPORT_PERIOD = "greptimedb.reporter.period_minutes";
     public static final String GRPC_CONN_RESET_THRESHOLD = "greptimedb.grpc.conn.failures.reset_threshold";
-    public static final String GRPC_POOL_CORE_WORKERS    = "greptimedb.grpc.pool.core_workers";
+    public static final String GRPC_POOL_CORE_WORKERS = "greptimedb.grpc.pool.core_workers";
     public static final String GRPC_POOL_MAXIMUM_WORKERS = "greptimedb.grpc.pool.maximum_works";
-    public static final String RW_LOGGING                = "greptimedb.read.write.rw_logging";
+    public static final String RW_LOGGING = "greptimedb.read.write.rw_logging";
 
-    private Keys() {
-    }
+    private Keys() {}
 }

@@ -27,16 +27,16 @@ public class QueryRequestTest {
     @Test(expected = NullPointerException.class)
     public void testBuildRequestWithNullExprType() {
         QueryRequest.newBuilder() //
-            .ql("select * from test_table") //
-            .build();
+                .ql("select * from test_table") //
+                .build();
     }
 
     @Test
     public void testBuildRequestWithArgsQl() {
         QueryRequest req = QueryRequest.newBuilder() //
-            .exprType(SelectExprType.Sql) //
-            .ql("select %s from %s", "a", "test_table") //
-            .build();
+                .exprType(SelectExprType.Sql) //
+                .ql("select %s from %s", "a", "test_table") //
+                .build();
 
         Assert.assertEquals(SelectExprType.Sql, req.getExprType());
         Assert.assertEquals("select a from test_table", req.getQl());

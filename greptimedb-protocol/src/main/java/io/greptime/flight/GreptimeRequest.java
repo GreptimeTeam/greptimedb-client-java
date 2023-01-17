@@ -14,24 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime.models;
+package io.greptime.flight;
 
-import io.greptime.common.util.Strings;
-import org.junit.Assert;
-import org.junit.Test;
+import com.google.protobuf.MessageLite;
+import io.greptime.common.Into;
+import org.apache.arrow.flight.Ticket;
 
-/**
- * @author jiachun.fjc
- */
-public class QueryOkTest {
+public class GreptimeRequest implements Into<Ticket> {
 
-    @Test
-    public void testEmptyQuery() {
-        QueryOk empty = QueryOk.emptyOk();
+    private final MessageLite message;
 
-        Assert.assertTrue(empty.mapToResult().isOk());
-        Assert.assertTrue(Strings.isNullOrEmpty(empty.getQl()));
-        Assert.assertEquals(0, empty.getRowCount());
-        Assert.assertEquals(0, empty.stream().count());
+    public GreptimeRequest(MessageLite message) {
+        this.message = message;
+    }
+
+    @Override
+    public Ticket into() {
+        return new Ticket(message.toByteArray());
     }
 }
