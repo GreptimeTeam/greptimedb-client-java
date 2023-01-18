@@ -48,6 +48,8 @@ public interface SelectRows extends Iterator<Row> {
      */
     boolean isReady();
 
+    void close();
+
     default List<Row> collect() {
         Iterable<Row> iterable = () -> this;
         return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
@@ -68,25 +70,23 @@ public interface SelectRows extends Iterator<Row> {
             this.flightStream = flightStream;
         }
 
-        void consume(VectorSchemaRoot recordbatch) {
-            List<Field> fields = recordbatch.getSchema().getFields();
-            List<FieldVector> vectors = recordbatch.getFieldVectors();
+        void consume(VectorSchemaRoot recordBatch) {
+            List<Field> fields = recordBatch.getSchema().getFields();
+            List<FieldVector> vectors = recordBatch.getFieldVectors();
 
-            Long queryId = ctx.get(Context.KEY_QUERY_ID);
-
-            Long queryStart = ctx.get(Context.KEY_QUERY_START);
+            Long queryId = this.ctx.get(Context.KEY_QUERY_ID);
+            Long queryStart = this.ctx.remove(Context.KEY_QUERY_START);
             if (Util.isRwLogging() && queryStart != null) {
                 Endpoint endpoint = this.ctx.get(Context.KEY_ENDPOINT);
                 LOG.info("[Query-{}] First time consuming data from {}, costs {} ms",
                         queryId, endpoint, Clock.defaultClock().duration(queryStart));
-                ctx.remove(Context.KEY_QUERY_START);
             }
 
             long start = Clock.defaultClock().getTick();
 
             int index = 0;
             try {
-                while (index < recordbatch.getRowCount()) {
+                while (index < recordBatch.getRowCount()) {
                     List<Value> values = new ArrayList<>(vectors.size());
                     for (int i = 0; i < vectors.size(); i++) {
                         Field field = fields.get(i);
@@ -100,13 +100,12 @@ public interface SelectRows extends Iterator<Row> {
 
                     this.rows.offer(new Row.DefaultRow(values));
 
-                    if (this.readRowsNum != null) {
-                        this.readRowsNum.update(1);
-                    }
-
                     index += 1;
                 }
             } finally {
+                if (this.readRowsNum != null) {
+                    this.readRowsNum.update(index);
+                }
                 if (Util.isRwLogging()) {
                     Endpoint endpoint = this.ctx.get(Context.KEY_ENDPOINT);
                     LOG.info("[Query-{}] Consume {} rows from {}, costs {} ms",
@@ -127,10 +126,16 @@ public interface SelectRows extends Iterator<Row> {
                 return true;
             }
 
-            hasNext = this.flightStream.next();
-            if (hasNext) {
-                try (VectorSchemaRoot recordbatch = this.flightStream.getRoot()) {
-                    this.consume(recordbatch);
+            try {
+                hasNext = this.flightStream.next();
+                if (hasNext) {
+                    try (VectorSchemaRoot recordBatch = this.flightStream.getRoot()) {
+                        consume(recordBatch);
+                    }
+                }
+            } finally {
+                if (!hasNext) {
+                    close();
                 }
             }
             return hasNext;
@@ -139,6 +144,15 @@ public interface SelectRows extends Iterator<Row> {
         @Override
         public Row next() {
             return this.rows.poll();
+        }
+
+        @Override
+        public void close() {
+            try {
+                this.flightStream.close();
+            } catch (Exception e) {
+                LOG.error("Failed to close `FlightStream`", e);
+            }
         }
     }
 }
