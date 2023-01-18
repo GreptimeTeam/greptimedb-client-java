@@ -44,7 +44,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -67,11 +66,14 @@ public class QueryClientTest {
             VectorLoader loader = new VectorLoader(root);
             listener.start(root);
 
-            VectorSchemaRoot vectors = getTestingVectors(allocator, schema);
-            ArrowRecordBatch recordbatch = new VectorUnloader(vectors).getRecordBatch();
-            loader.load(recordbatch);
+            for (int i = 0; i < 2; i++) {
+                VectorSchemaRoot vectors = getTestingVectors(allocator, schema);
+                ArrowRecordBatch recordBatch = new VectorUnloader(vectors).getRecordBatch();
+                loader.load(recordBatch);
 
-            listener.putNext();
+                listener.putNext();
+            }
+
             listener.completed();
         }
 
@@ -103,11 +105,10 @@ public class QueryClientTest {
         RouterOptions opts = new RouterOptions();
         opts.setEndpoints(Collections.singletonList(Endpoint.of("127.0.0.1", 33333)));
 
-        routerClient = new RouterClient();
-        routerClient.init(opts);
+        this.routerClient = new RouterClient();
+        this.routerClient.init(opts);
 
         QueryOptions queryOpts = new QueryOptions();
-        queryOpts.setAsyncPool(ForkJoinPool.commonPool());
         queryOpts.setRouterClient(this.routerClient);
 
         this.queryClient = new QueryClient();
@@ -122,34 +123,35 @@ public class QueryClientTest {
 
     @Test
     public void testQueryOk() throws ExecutionException, InterruptedException, IOException {
-        FlightServer flightServer =
+        try (FlightServer flightServer =
                 FlightServer.builder(new RootAllocator(Integer.MAX_VALUE),
-                        Location.forGrpcInsecure("127.0.0.1", 33333), new TestFlightProducer()).build();
-        flightServer.start();
+                        Location.forGrpcInsecure("127.0.0.1", 33333), new TestFlightProducer()).build()) {
+            flightServer.start();
 
-        QueryRequest req = QueryRequest.newBuilder() //
-                .exprType(SelectExprType.Sql) //
-                .ql("select * from test") //
-                .build();
-        Result<QueryOk, Err> res = this.queryClient.query(req).get();
+            QueryRequest req = QueryRequest.newBuilder() //
+                    .exprType(SelectExprType.Sql) //
+                    .ql("select * from test") //
+                    .build();
+            Result<QueryOk, Err> res = this.queryClient.query(req).get();
 
-        Assert.assertTrue(res.isOk());
-        List<Row> rows = res.getOk().getRows().collect();
-        assertEquals(3, rows.size());
+            Assert.assertTrue(res.isOk());
+            List<Row> rows = res.getOk().getRows().collect();
+            assertEquals(6, rows.size());
 
-        Row row1 = rows.get(0);
-        assertEquals(
-                "[Value{name='test_column1', dataType=String, value=tag1}, Value{name='test_column2', dataType=Int32, value=1}]",
-                row1.values().toString());
+            Row row1 = rows.get(0);
+            assertEquals(
+                    "[Value{name='test_column1', dataType=String, value=tag1}, Value{name='test_column2', dataType=Int32, value=1}]",
+                    row1.values().toString());
 
-        Row row2 = rows.get(1);
-        assertEquals(
-                "[Value{name='test_column1', dataType=String, value=tag2}, Value{name='test_column2', dataType=Int32, value=2}]",
-                row2.values().toString());
+            Row row2 = rows.get(1);
+            assertEquals(
+                    "[Value{name='test_column1', dataType=String, value=tag2}, Value{name='test_column2', dataType=Int32, value=2}]",
+                    row2.values().toString());
 
-        Row row3 = rows.get(2);
-        assertEquals(
-                "[Value{name='test_column1', dataType=String, value=tag3}, Value{name='test_column2', dataType=Int32, value=3}]",
-                row3.values().toString());
+            Row row3 = rows.get(2);
+            assertEquals(
+                    "[Value{name='test_column1', dataType=String, value=tag3}, Value{name='test_column2', dataType=Int32, value=3}]",
+                    row3.values().toString());
+        }
     }
 }

@@ -85,7 +85,7 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
 
         return query0(req, ctx, 0).whenCompleteAsync((r, e) -> {
             InnerMetricHelper.readQps().mark();
-            if (!r.isOk()) {
+            if (r == null || !r.isOk()) {
                 InnerMetricHelper.readFailureNum().mark();
             }
         }, this.asyncPool);
