@@ -31,19 +31,17 @@ import io.greptime.flight.GreptimeFlightClient;
 import io.greptime.flight.GreptimeRequest;
 import io.greptime.models.Err;
 import io.greptime.models.Result;
-import io.greptime.models.WriteResult;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
 import io.greptime.options.WriteOptions;
 import io.greptime.rpc.Context;
 import org.apache.arrow.flight.FlightCallHeaders;
-import org.apache.arrow.flight.FlightStream;
 import org.apache.arrow.flight.HeaderCallOption;
+import org.apache.arrow.flight.InternalFlightStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Default Write API impl.
@@ -53,8 +51,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
     private static final Logger LOG = LoggerFactory.getLogger(WriteClient.class);
-
-    private static final AtomicLong WRITE_ID = new AtomicLong(0);
 
     private WriteOptions opts;
     private RouterClient routerClient;
@@ -78,10 +74,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     public CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx) {
         Ensures.ensureNonNull(rows, "rows");
 
-        ctx.with(Context.KEY_WRITE_ID, WRITE_ID.incrementAndGet());
-
         long startCall = Clock.defaultClock().getTick();
-        ctx.with(Context.KEY_WRITE_START, startCall);
 
         return write0(rows, ctx, 0).whenCompleteAsync((r, e) -> {
             InnerMetricHelper.writeQps().mark();
@@ -96,6 +89,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                 if (r.isOk()) {
                     WriteOk ok = r.getOk();
                     InnerMetricHelper.writeRowsSuccessNum().update(ok.getSuccess());
+                    InnerMetricHelper.writeRowsFailureNum().update(ok.getFailure());
                     return;
                 }
             }
@@ -130,21 +124,22 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     }
 
     private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, WriteRows rows, Context ctx, int retries) {
-        GreptimeFlightClient flightClient = routerClient.getFlightClient(endpoint);
+        GreptimeFlightClient flightClient = this.routerClient.getFlightClient(endpoint);
 
         GreptimeRequest request = new GreptimeRequest(rows.into());
 
         FlightCallHeaders headers = new FlightCallHeaders();
         headers.insert("retries", String.valueOf(retries));
+        if (ctx != null) {
+            ctx.entrySet().forEach(e -> headers.insert(e.getKey(), String.valueOf(e.getValue())));
+        }
         HeaderCallOption headerOption = new HeaderCallOption(headers);
 
-        AsyncExecCallOption execOption = new AsyncExecCallOption(asyncPool);
+        AsyncExecCallOption execOption = new AsyncExecCallOption(this.asyncPool);
 
-        FlightStream stream = flightClient.doRequest(request, headerOption, execOption);
+        InternalFlightStream stream = flightClient.doRequest(request, headerOption, execOption);
 
-        ctx.with(Context.KEY_ENDPOINT, endpoint);
-
-        return CompletableFuture.supplyAsync(() -> new WriteResult(ctx, stream, rows).get(), this.asyncPool);
+        return new CompletableWriteFuture(rows.tableName(), stream);
     }
 
     @Override

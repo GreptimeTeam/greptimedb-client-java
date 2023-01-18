@@ -92,10 +92,10 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
     }
 
     private CompletableFuture<Result<QueryOk, Err>> query0(QueryRequest req,Context ctx, int retries) {
-        InnerMetricHelper.readByRetries(retries).mark();;
+        InnerMetricHelper.readByRetries(retries).mark();
 
         return this.routerClient.route()
-                .thenComposeAsync(endpoint -> queryFrom(endpoint, req, ctx, retries), this.asyncPool)
+            .thenComposeAsync(endpoint -> queryFrom(endpoint, req, ctx, retries), this.asyncPool)
             .thenComposeAsync(r -> {
                 if (r.isOk()) {
                     LOG.debug("Success to read from {}, ok={}.", Keys.DB_NAME, r.getOk());
@@ -119,7 +119,7 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
 
     private CompletableFuture<Result<QueryOk, Err>> queryFrom(Endpoint endpoint, QueryRequest req, Context ctx,
             int retries) {
-        GreptimeFlightClient flightClient = routerClient.getFlightClient(endpoint);
+        GreptimeFlightClient flightClient = this.routerClient.getFlightClient(endpoint);
 
         GreptimeRequest request = new GreptimeRequest(req.into());
 
@@ -127,8 +127,8 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
         headers.insert("retries", String.valueOf(retries));
         HeaderCallOption headerOption = new HeaderCallOption(headers);
 
-        AsyncExecCallOption execOption = new AsyncExecCallOption(asyncPool);
-        FlightStream stream = flightClient.doRequest(request, headerOption, execOption);
+        AsyncExecCallOption execOption = new AsyncExecCallOption(this.asyncPool);
+        FlightStream stream = flightClient.doRequest(request, headerOption, execOption).getStream();
 
         ctx.with(Context.KEY_ENDPOINT, endpoint);
 
