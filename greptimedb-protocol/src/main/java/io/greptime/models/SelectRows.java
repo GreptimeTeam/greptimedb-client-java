@@ -104,7 +104,7 @@ public interface SelectRows extends Iterator<Row> {
                 }
             } finally {
                 if (this.readRowsNum != null) {
-                    this.readRowsNum.update(recordBatch.getRowCount());
+                    this.readRowsNum.update(index);
                 }
                 if (Util.isRwLogging()) {
                     Endpoint endpoint = this.ctx.get(Context.KEY_ENDPOINT);
