@@ -32,8 +32,6 @@ public class Context implements Copiable<Context> {
 
     public static final String KEY_QUERY_ID = "QueryId";
     public static final String KEY_QUERY_START = "QueryStart";
-    public static final String KEY_WRITE_ID = "WriteId";
-    public static final String KEY_WRITE_START = "WriteStart";
     public static final String KEY_ENDPOINT = "Endpoint";
 
     private final Map<String, Object> ctx             = new HashMap<>();

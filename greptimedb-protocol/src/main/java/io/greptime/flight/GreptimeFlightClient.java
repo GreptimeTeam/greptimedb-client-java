@@ -17,9 +17,10 @@
 package io.greptime.flight;
 
 import io.greptime.common.Endpoint;
+import io.greptime.common.util.Ensures;
 import org.apache.arrow.flight.CallOption;
-import org.apache.arrow.flight.FlightClient;
-import org.apache.arrow.flight.FlightStream;
+import org.apache.arrow.flight.InternalFlightClient;
+import org.apache.arrow.flight.InternalFlightStream;
 import org.apache.arrow.flight.Location;
 import org.apache.arrow.flight.Ticket;
 import org.apache.arrow.memory.BufferAllocator;
@@ -27,7 +28,6 @@ import org.apache.arrow.memory.RootAllocator;
 import org.apache.arrow.util.AutoCloseables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.Objects;
 
 public class GreptimeFlightClient implements AutoCloseable {
 
@@ -36,13 +36,13 @@ public class GreptimeFlightClient implements AutoCloseable {
     private static final BufferAllocator BUFFER_ALLOCATOR = new RootAllocator(Integer.MAX_VALUE);
 
     private final Endpoint endpoint;
-    private final FlightClient client;
+    private final InternalFlightClient client;
     private final BufferAllocator allocator;
 
-    private GreptimeFlightClient(Endpoint endpoint, FlightClient client, BufferAllocator allocator) {
-        this.endpoint = Objects.requireNonNull(endpoint);
-        this.client = Objects.requireNonNull(client);
-        this.allocator = Objects.requireNonNull(allocator);
+    private GreptimeFlightClient(Endpoint endpoint, InternalFlightClient client, BufferAllocator allocator) {
+        this.endpoint = Ensures.ensureNonNull(endpoint, "endpoint");
+        this.client = Ensures.ensureNonNull(client, "client");
+        this.allocator = Ensures.ensureNonNull(allocator, "allocator");
     }
 
     public static GreptimeFlightClient createClient(Endpoint endpoint) {
@@ -51,17 +51,17 @@ public class GreptimeFlightClient implements AutoCloseable {
         String allocatorName = String.format("BufferAllocator(%s)", location);
         BufferAllocator allocator = BUFFER_ALLOCATOR.newChildAllocator(allocatorName, 0, Integer.MAX_VALUE);
 
-        FlightClient.Builder builder = FlightClient.builder().location(location).allocator(allocator);
-        FlightClient client = builder.build();
+        InternalFlightClient.Builder builder = InternalFlightClient.builder().location(location).allocator(allocator);
+        InternalFlightClient client = builder.build();
 
         GreptimeFlightClient flightClient = new GreptimeFlightClient(endpoint, client, allocator);
         LOG.info("Created new {}", flightClient);
         return flightClient;
     }
 
-    public FlightStream doRequest(GreptimeRequest request, CallOption... options) {
+    public InternalFlightStream doRequest(GreptimeRequest request, CallOption... options) {
         Ticket ticket = request.into();
-        return client.getStream(ticket, options);
+        return this.client.getStream(ticket, options);
     }
 
     @Override
@@ -71,6 +71,6 @@ public class GreptimeFlightClient implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        AutoCloseables.close(client, allocator);
+        AutoCloseables.close(this.client, this.allocator);
     }
 }

@@ -44,7 +44,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
 
 /**
  * @author jiachun.fjc
@@ -56,26 +55,26 @@ public class WriteClientTest {
 
         @Override
         public void getStream(CallContext context, Ticket ticket, ServerStreamListener listener) {
-            BufferAllocator allocator = new RootAllocator(Integer.MAX_VALUE);
+            try (BufferAllocator allocator = new RootAllocator(Integer.MAX_VALUE)) {
+                byte[] bytes = ticket.getBytes();
+                Database.GreptimeRequest request;
+                try {
+                    request = Database.GreptimeRequest.parseFrom(bytes);
+                } catch (InvalidProtocolBufferException e) {
+                    throw new RuntimeException(e);
+                }
+                Database.InsertRequest insert = request.getInsert();
 
-            byte[] bytes = ticket.getBytes();
-            Database.GreptimeRequest request;
-            try {
-                request = Database.GreptimeRequest.parseFrom(bytes);
-            } catch (InvalidProtocolBufferException e) {
-                throw new RuntimeException(e);
+                Database.FlightMetadata.Builder builder = Database.FlightMetadata.newBuilder();
+                builder.setAffectedRows(Database.AffectedRows.newBuilder().setValue(insert.getRowCount()).build());
+                Database.FlightMetadata flightMetadata = builder.build();
+                byte[] rawMetadata = flightMetadata.toByteArray();
+
+                ArrowBuf buffer = allocator.buffer(rawMetadata.length);
+                buffer.writeBytes(rawMetadata);
+                listener.putMetadata(buffer);
+                listener.completed();
             }
-            Database.InsertRequest insert = request.getInsert();
-
-            Database.FlightMetadata.Builder builder = Database.FlightMetadata.newBuilder();
-            builder.setAffectedRows(Database.AffectedRows.newBuilder().setValue(insert.getRowCount()).build());
-            Database.FlightMetadata flightMetadata = builder.build();
-            byte[] rawMetadata = flightMetadata.toByteArray();
-
-            ArrowBuf buffer = allocator.buffer(rawMetadata.length);
-            buffer.writeBytes(rawMetadata);
-            listener.putMetadata(buffer);
-            listener.completed();
         }
     }
 
@@ -91,7 +90,6 @@ public class WriteClientTest {
         routerClient.init(opts);
 
         WriteOptions writeOpts = new WriteOptions();
-        writeOpts.setAsyncPool(ForkJoinPool.commonPool());
         writeOpts.setRouterClient(this.routerClient);
 
         this.writeClient = new WriteClient();
@@ -106,25 +104,26 @@ public class WriteClientTest {
 
     @Test
     public void testWriteSuccess() throws ExecutionException, InterruptedException, IOException {
-        FlightServer flightServer =
+        try (FlightServer flightServer =
                 FlightServer.builder(new RootAllocator(Integer.MAX_VALUE),
-                        Location.forGrpcInsecure("127.0.0.1", 44444), new TestFlightProducer()).build();
-        flightServer.start();
+                        Location.forGrpcInsecure("127.0.0.1", 44444), new TestFlightProducer()).build()) {
+            flightServer.start();
 
-        WriteRows rows = WriteRows.newBuilder(TableName.with("", "test_table")) //
-                .columnNames("test_tag", "test_ts", "test_field") //
-                .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field) //
-                .dataTypes(ColumnDataType.String, ColumnDataType.Int64, ColumnDataType.Float64) //
-                .build();
+            WriteRows rows = WriteRows.newBuilder(TableName.with("", "test_table")) //
+                    .columnNames("test_tag", "test_ts", "test_field") //
+                    .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field) //
+                    .dataTypes(ColumnDataType.String, ColumnDataType.Int64, ColumnDataType.Float64) //
+                    .build();
 
-        rows.insert("tag1", System.currentTimeMillis(), 0.1);
-        rows.insert("tag2", System.currentTimeMillis(), 0.2);
-        rows.insert("tag3", System.currentTimeMillis(), 0.3);
+            rows.insert("tag1", System.currentTimeMillis(), 0.1);
+            rows.insert("tag2", System.currentTimeMillis(), 0.2);
+            rows.insert("tag3", System.currentTimeMillis(), 0.3);
 
-        rows.finish();
+            rows.finish();
 
-        Result<WriteOk, Err> res = this.writeClient.write(rows).get();
-        Assert.assertTrue(res.isOk());
-        Assert.assertEquals(3, res.getOk().getSuccess());
+            Result<WriteOk, Err> res = this.writeClient.write(rows).get();
+            Assert.assertTrue(res.isOk());
+            Assert.assertEquals(3, res.getOk().getSuccess());
+        }
     }
 }
