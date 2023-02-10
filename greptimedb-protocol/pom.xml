@@ -18,6 +18,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.GreptimeTeam</groupId>
+            <artifactId>greptime-proto</artifactId>
+            <version>328c41f292</version>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>greptimedb-rpc</artifactId>
         </dependency>
@@ -63,4 +68,11 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 </project>

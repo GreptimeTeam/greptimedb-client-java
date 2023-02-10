@@ -33,6 +33,7 @@ import io.greptime.options.GreptimeOptions;
 import io.greptime.rpc.RpcOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
@@ -55,7 +56,7 @@ public class Example {
            ```SQL
             CREATE TABLE monitor (
                 host STRING,
-                ts BIGINT,
+                ts TIMESTAMP,
                 cpu DOUBLE DEFAULT 0,
                 memory DOUBLE NULL,
                 TIME INDEX (ts),
