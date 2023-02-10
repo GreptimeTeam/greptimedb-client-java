@@ -55,7 +55,7 @@ public class Example {
            ```SQL
             CREATE TABLE monitor (
                 host STRING,
-                ts BIGINT,
+                ts TIMESTAMP,
                 cpu DOUBLE DEFAULT 0,
                 memory DOUBLE NULL,
                 TIME INDEX (ts),

@@ -170,13 +170,16 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
 
         @Override
         public Database.GreptimeRequest into() {
+            Database.RequestHeader header =
+                    Database.RequestHeader.newBuilder().setSchema(tableName.getDatabaseName()).build();
+
             Database.InsertRequest.Builder builder = Database.InsertRequest.newBuilder();
-            builder.setSchemaName(tableName().getDatabaseName());
             builder.setTableName(tableName().getTableName());
             builder.addAllColumns(columns());
             builder.setRowCount(rowCount());
             Database.InsertRequest insertRequest = builder.build();
-            return Database.GreptimeRequest.newBuilder().setInsert(insertRequest).build();
+
+            return Database.GreptimeRequest.newBuilder().setHeader(header).setInsert(insertRequest).build();
         }
     }
 }
