@@ -21,7 +21,6 @@ import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Columns;
 import io.greptime.v1.Database;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -171,9 +170,8 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
 
         @Override
         public Database.GreptimeRequest into() {
-            Database.RequestHeader header = Database.RequestHeader.newBuilder()
-                    .setSchema(tableName.getDatabaseName())
-                    .build();
+            Database.RequestHeader header =
+                    Database.RequestHeader.newBuilder().setSchema(tableName.getDatabaseName()).build();
 
             Database.InsertRequest.Builder builder = Database.InsertRequest.newBuilder();
             builder.setTableName(tableName().getTableName());
@@ -181,10 +179,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
             builder.setRowCount(rowCount());
             Database.InsertRequest insertRequest = builder.build();
 
-            return Database.GreptimeRequest.newBuilder()
-                    .setHeader(header)
-                    .setInsert(insertRequest)
-                    .build();
+            return Database.GreptimeRequest.newBuilder().setHeader(header).setInsert(insertRequest).build();
         }
     }
 }
