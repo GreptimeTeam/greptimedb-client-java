@@ -26,6 +26,8 @@ import java.util.function.Function;
  */
 public final class Result<Ok, Err> {
 
+    public static final int FLOW_CONTROL = 503;
+
     private final Ok ok;
     private final Err err;
 

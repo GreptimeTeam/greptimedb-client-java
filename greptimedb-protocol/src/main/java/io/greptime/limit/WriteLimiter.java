@@ -14,19 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime;
+package io.greptime.limit;
 
-import org.junit.Assert;
-import org.junit.Test;
+import io.greptime.models.Err;
+import io.greptime.models.Result;
+import io.greptime.models.WriteOk;
+import io.greptime.models.WriteRows;
 
 /**
+ * Like rust: pub type WriteLimiter = AbstractLimiter<WriteRowsWriteRows, Result<WriteOk, Err>>
+ *
  * @author jiachun.fjc
  */
-public class UtilTest {
+public abstract class WriteLimiter extends AbstractLimiter<WriteRows, Result<WriteOk, Err>> {
 
-    @Test
-    public void testClientVersion() {
-        String ver = Util.clientVersion();
-        Assert.assertEquals("0.1.1-SNAPSHOT", ver);
+    public WriteLimiter(int maxInFlight, LimitedPolicy policy, String metricPrefix) {
+        super(maxInFlight, policy, metricPrefix);
     }
 }

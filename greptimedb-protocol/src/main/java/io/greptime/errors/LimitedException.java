@@ -14,19 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.greptime;
-
-import org.junit.Assert;
-import org.junit.Test;
+package io.greptime.errors;
 
 /**
+ * A flow control exception that can be thrown by AbortPolicy.
+ *
  * @author jiachun.fjc
  */
-public class UtilTest {
+public class LimitedException extends RuntimeException {
 
-    @Test
-    public void testClientVersion() {
-        String ver = Util.clientVersion();
-        Assert.assertEquals("0.1.1-SNAPSHOT", ver);
+    private static final long serialVersionUID = -1L;
+
+    public LimitedException() {}
+
+    public LimitedException(String message) {
+        super(message);
+    }
+
+    public LimitedException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public LimitedException(Throwable cause) {
+        super(cause);
+    }
+
+    public LimitedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }
