@@ -23,6 +23,7 @@ import io.greptime.models.Err;
 import io.greptime.models.Result;
 import io.greptime.models.SemanticType;
 import io.greptime.models.TableName;
+import io.greptime.models.TableSchema;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
 import io.greptime.options.RouterOptions;
@@ -109,12 +110,13 @@ public class WriteClientTest {
                         Location.forGrpcInsecure("127.0.0.1", 44444), new TestFlightProducer()).build()) {
             flightServer.start();
 
-            WriteRows rows = WriteRows.newBuilder(TableName.with("", "test_table")) //
+            TableSchema schema = TableSchema.newBuilder(TableName.with("", "test_table")) //
                     .columnNames("test_tag", "test_ts", "test_field") //
                     .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field) //
                     .dataTypes(ColumnDataType.String, ColumnDataType.Int64, ColumnDataType.Float64) //
                     .build();
 
+            WriteRows rows = WriteRows.newBuilder(schema).build();
             rows.insert("tag1", System.currentTimeMillis(), 0.1);
             rows.insert("tag2", System.currentTimeMillis(), 0.2);
             rows.insert("tag3", System.currentTimeMillis(), 0.3);
