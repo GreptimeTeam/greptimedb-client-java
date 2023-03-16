@@ -29,8 +29,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
@@ -53,6 +55,19 @@ public interface SelectRows extends Iterator<Row> {
     default List<Row> collect() {
         Iterable<Row> iterable = () -> this;
         return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
+    }
+
+    default List<Map<String, Object>> collectToMaps() {
+        Iterable<Row> iterable = () -> this;
+        return StreamSupport.stream(iterable.spliterator(), false)
+                .map(row -> {
+                    Map<String, Object> map = new HashMap<>();
+                    for (Value v: row.values()) {
+                        map.put(v.name(), v.value());
+                    }
+                    return map;
+                })
+                .collect(Collectors.toList());
     }
 
     class DefaultSelectRows implements SelectRows {
