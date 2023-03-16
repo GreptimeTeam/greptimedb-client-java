@@ -32,7 +32,7 @@ public class WriteOptions implements Copiable<WriteOptions> {
     private int maxRetries = 1;
 
     // Write flow limit: maximum number of data rows in-flight.
-    private int maxInFlightWriteRows = 8192;
+    private int maxInFlightWriteRows = 65536;
     private LimitedPolicy limitedPolicy = LimitedPolicy.defaultWriteLimitedPolicy();
 
     public RouterClient getRouterClient() {
