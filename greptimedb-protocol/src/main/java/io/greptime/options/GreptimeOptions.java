@@ -19,6 +19,7 @@ package io.greptime.options;
 import io.greptime.common.Copiable;
 import io.greptime.common.Endpoint;
 import io.greptime.common.util.Ensures;
+import io.greptime.limit.LimitedPolicy;
 import io.greptime.rpc.RpcOptions;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -162,6 +163,9 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
         // Rpc options, in general the default configuration is fine.
         private RpcOptions rpcOptions = RpcOptions.newDefault();
         private int writeMaxRetries = 1;
+        // Write flow limit: maximum number of data rows in-flight.
+        private int maxInFlightWriteRows = 65536;
+        private LimitedPolicy writeLimitedPolicy = LimitedPolicy.defaultWriteLimitedPolicy();
         // In some case of failure, a retry of the read is attempted.
         private int readMaxRetries = 1;
         // Refresh frequency of route tables. The background refreshes all route tables periodically. By default,
@@ -213,6 +217,28 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
         }
 
         /**
+         * Write flow limit: maximum number of data rows in-flight.
+         *
+         * @param maxInFlightWriteRows max in-flight rows
+         * @return this builder
+         */
+        public Builder maxInFlightWriteRows(int maxInFlightWriteRows) {
+            this.maxInFlightWriteRows = maxInFlightWriteRows;
+            return this;
+        }
+
+        /**
+         * Set write limited policy.
+         *
+         * @param writeLimitedPolicy write limited policy
+         * @return this builder
+         */
+        public Builder writeLimitedPolicy(LimitedPolicy writeLimitedPolicy) {
+            this.writeLimitedPolicy = writeLimitedPolicy;
+            return this;
+        }
+
+        /**
          * In some case of failure, a retry of read can be attempted.
          *
          * @param maxRetries max retries times
@@ -255,6 +281,8 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
             WriteOptions writeOpts = new WriteOptions();
             writeOpts.setAsyncPool(this.asyncWritePool);
             writeOpts.setMaxRetries(this.writeMaxRetries);
+            writeOpts.setMaxInFlightWriteRows(this.maxInFlightWriteRows);
+            writeOpts.setLimitedPolicy(this.writeLimitedPolicy);
             opts.setWriteOptions(writeOpts);
 
             QueryOptions queryOpts = new QueryOptions();
