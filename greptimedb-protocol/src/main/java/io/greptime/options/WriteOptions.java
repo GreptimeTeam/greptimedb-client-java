@@ -18,6 +18,7 @@ package io.greptime.options;
 
 import io.greptime.RouterClient;
 import io.greptime.common.Copiable;
+import io.greptime.limit.LimitedPolicy;
 import java.util.concurrent.Executor;
 
 /**
@@ -29,6 +30,10 @@ public class WriteOptions implements Copiable<WriteOptions> {
     private RouterClient routerClient;
     private Executor asyncPool;
     private int maxRetries = 1;
+
+    // Write flow limit: maximum number of data rows in-flight.
+    private int maxInFlightWriteRows = 8192;
+    private LimitedPolicy limitedPolicy = LimitedPolicy.defaultWriteLimitedPolicy();
 
     public RouterClient getRouterClient() {
         return routerClient;
@@ -54,12 +59,30 @@ public class WriteOptions implements Copiable<WriteOptions> {
         this.maxRetries = maxRetries;
     }
 
+    public int getMaxInFlightWriteRows() {
+        return maxInFlightWriteRows;
+    }
+
+    public void setMaxInFlightWriteRows(int maxInFlightWriteRows) {
+        this.maxInFlightWriteRows = maxInFlightWriteRows;
+    }
+
+    public LimitedPolicy getLimitedPolicy() {
+        return limitedPolicy;
+    }
+
+    public void setLimitedPolicy(LimitedPolicy limitedPolicy) {
+        this.limitedPolicy = limitedPolicy;
+    }
+
     @Override
     public WriteOptions copy() {
         WriteOptions opts = new WriteOptions();
         opts.routerClient = this.routerClient;
         opts.asyncPool = this.asyncPool;
         opts.maxRetries = this.maxRetries;
+        opts.maxInFlightWriteRows = this.maxInFlightWriteRows;
+        opts.limitedPolicy = this.limitedPolicy;
         return opts;
     }
 
@@ -69,6 +92,8 @@ public class WriteOptions implements Copiable<WriteOptions> {
                 ", routerClient=" + routerClient + //
                 ", asyncPool=" + asyncPool + //
                 ", maxRetries=" + maxRetries + //
+                ", maxInFlightWriteRows=" + maxInFlightWriteRows + //
+                ", limitedPolicy=" + limitedPolicy + //
                 '}';
     }
 }

@@ -26,9 +26,12 @@ import io.greptime.common.util.Clock;
 import io.greptime.common.util.Ensures;
 import io.greptime.common.util.MetricsUtil;
 import io.greptime.common.util.SerializingExecutor;
+import io.greptime.errors.LimitedException;
 import io.greptime.flight.AsyncExecCallOption;
 import io.greptime.flight.GreptimeFlightClient;
 import io.greptime.flight.GreptimeRequest;
+import io.greptime.limit.LimitedPolicy;
+import io.greptime.limit.WriteLimiter;
 import io.greptime.models.Err;
 import io.greptime.models.Result;
 import io.greptime.models.WriteOk;
@@ -55,6 +58,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     private WriteOptions opts;
     private RouterClient routerClient;
     private Executor asyncPool;
+    private WriteLimiter writeLimiter;
 
     @Override
     public boolean init(WriteOptions opts) {
@@ -62,6 +66,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
         this.routerClient = this.opts.getRouterClient();
         Executor pool = this.opts.getAsyncPool();
         this.asyncPool = pool != null ? pool : new SerializingExecutor("write_client");
+        this.writeLimiter = new DefaultWriteLimiter(this.opts.getMaxInFlightWriteRows(), this.opts.getLimitedPolicy());
         return true;
     }
 
@@ -76,7 +81,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
         long startCall = Clock.defaultClock().getTick();
 
-        return write0(rows, ctx, 0).whenCompleteAsync((r, e) -> {
+        return this.writeLimiter.acquireAndDo(rows, () -> write0(rows, ctx, 0).whenCompleteAsync((r, e) -> {
             InnerMetricHelper.writeQps().mark();
             if (r != null) {
                 if (Util.isRwLogging()) {
@@ -94,7 +99,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                 }
             }
             InnerMetricHelper.writeFailureNum().mark();
-        }, this.asyncPool);
+        }, this.asyncPool));
     }
 
     private CompletableFuture<Result<WriteOk, Err>> write0(WriteRows rows, Context ctx, int retries) {
@@ -185,6 +190,28 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
         static Meter writeByRetries(int retries) {
             // more than 3 retries are classified as the same metric
             return MetricsUtil.meter("write_by_retries", Math.min(3, retries));
+        }
+    }
+
+    static class DefaultWriteLimiter extends WriteLimiter {
+
+        public DefaultWriteLimiter(int maxInFlight, LimitedPolicy policy) {
+            super(maxInFlight, policy, "write_limiter_acquire");
+        }
+
+        @Override
+        public int calculatePermits(WriteRows in) {
+            return in.rowCount();
+        }
+
+        @Override
+        public Result<WriteOk, Err> rejected(WriteRows in, RejectedState state) {
+            final String errMsg =
+                    String.format("Write limited by client, acquirePermits=%d, maxPermits=%d, availablePermits=%d.", //
+                            state.acquirePermits(), //
+                            state.maxPermits(), //
+                            state.availablePermits());
+            return Result.err(Err.writeErr(Result.FLOW_CONTROL, new LimitedException(errMsg), null, in));
         }
     }
 }

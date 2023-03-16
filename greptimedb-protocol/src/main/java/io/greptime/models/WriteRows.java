@@ -43,57 +43,36 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
 
     void finish();
 
-    static WriteRows.Builder newBuilder(TableName tableName) {
-        return new Builder(tableName);
+    static WriteRows.Builder newBuilder(TableSchema tableSchema) {
+        return new Builder(tableSchema);
     }
 
     class Builder {
-        private final TableName tableName;
-        private List<String> columnNames;
-        private List<Columns.Column.SemanticType> semanticTypes;
-        private List<Columns.ColumnDataType> dataTypes;
+        private final TableSchema tableSchema;
 
-        public Builder(TableName tableName) {
-            this.tableName = tableName;
-        }
-
-        public Builder columnNames(String... names) {
-            this.columnNames = Arrays.stream(names).collect(Collectors.toList());
-            return this;
-        }
-
-        public Builder semanticTypes(SemanticType... semanticTypes) {
-            this.semanticTypes = Arrays.stream(semanticTypes) //
-                .map(SemanticType::toProtoValue) //
-                .collect(Collectors.toList());
-            return this;
-        }
-
-        public Builder dataTypes(ColumnDataType... dataTypes) {
-            this.dataTypes = Arrays.stream(dataTypes) //
-                .map(ColumnDataType::toProtoValue) //
-                .collect(Collectors.toList());
-            return this;
+        public Builder(TableSchema tableSchema) {
+            this.tableSchema = tableSchema;
         }
 
         public WriteRows build() {
-            Ensures.ensureNonNull(this.tableName, "Null table name");
+            TableName tableName = this.tableSchema.getTableName();
+            List<String> columnNames = this.tableSchema.getColumnNames();
+            List<Columns.Column.SemanticType> semanticTypes = this.tableSchema.getSemanticTypes();
+            List<Columns.ColumnDataType> dataTypes = this.tableSchema.getDataTypes();
 
-            int columnCount = this.columnNames.size();
+            Ensures.ensureNonNull(tableName, "Null table name");
 
-            Ensures.ensure(columnCount > 0, "Empty column names");
-            Ensures.ensure(columnCount == this.semanticTypes.size(), "Invalid semantic types");
-            Ensures.ensure(columnCount == this.dataTypes.size(), "Invalid data types");
+            int columnCount = columnNames == null ? 0 : columnNames.size();
 
             DefaultWriteRows rows = new DefaultWriteRows();
-            rows.tableName = this.tableName;
+            rows.tableName = tableName;
             rows.columnCount = columnCount;
             rows.builders = new ArrayList<>();
             for (int i = 0; i < columnCount; i++) {
                 Columns.Column.Builder builder = Columns.Column.newBuilder();
-                builder.setColumnName(this.columnNames.get(i)) //
-                        .setSemanticType(this.semanticTypes.get(i)) //
-                        .setDatatype(this.dataTypes.get(i));
+                builder.setColumnName(columnNames.get(i)) //
+                        .setSemanticType(semanticTypes.get(i)) //
+                        .setDatatype(dataTypes.get(i));
                 rows.builders.add(builder);
             }
             rows.nullMasks = new BitSet[columnCount];
@@ -126,7 +105,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
         public WriteRows insert(Object... values) {
             checkValuesNum(values.length);
 
-            for (int i = 0; i < columnCount; i++) {
+            for (int i = 0; i < this.columnCount; i++) {
                 Columns.Column.Builder builder = this.builders.get(i);
                 Object value = values[i];
                 if (value == null) {
@@ -149,7 +128,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
                 return;
             }
 
-            for (int i = 0; i < columnCount; i++) {
+            for (int i = 0; i < this.columnCount; i++) {
                 BitSet bits = this.nullMasks[i];
                 if (bits == null) {
                     continue;
@@ -171,7 +150,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
         @Override
         public Database.GreptimeRequest into() {
             Database.RequestHeader header =
-                    Database.RequestHeader.newBuilder().setSchema(tableName.getDatabaseName()).build();
+                    Database.RequestHeader.newBuilder().setSchema(this.tableName.getDatabaseName()).build();
 
             Database.InsertRequest.Builder builder = Database.InsertRequest.newBuilder();
             builder.setTableName(tableName().getTableName());
