@@ -17,7 +17,6 @@
 package io.greptime.example;
 
 import io.greptime.GreptimeDB;
-import io.greptime.Util;
 import io.greptime.models.ColumnDataType;
 import io.greptime.models.Err;
 import io.greptime.models.QueryOk;
@@ -31,46 +30,26 @@ import io.greptime.models.TableSchema;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
 import io.greptime.options.GreptimeOptions;
-import io.greptime.rpc.RpcOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author jiachun.fjc
  */
-public class Example {
+public class QuickStart {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Example.class);
+    private static final Logger LOG = LoggerFactory.getLogger(QuickStart.class);
 
     public static void main(String[] args) throws Exception {
-        Util.resetRwLogging();
-
-        /*
-           At the time I wrote this, GreptimeDB did not yet support automatic `create table`
-           for the gRPC protocol, so we needed to do it manually. For more details, please
-           refer to [Table Management](https://docs.greptime.com/user-guide/table-management).
-
-           ```SQL
-            CREATE TABLE monitor (
-                host STRING,
-                ts TIMESTAMP,
-                cpu DOUBLE DEFAULT 0,
-                memory DOUBLE NULL,
-                TIME INDEX (ts),
-                PRIMARY KEY(host)) ENGINE=mito WITH(regions=1);
-            ```
-         */
-        Executor asyncPool = ForkJoinPool.commonPool();
-        GreptimeOptions opts = GreptimeOptions.newBuilder("127.0.0.1:4001") //
-            .writeMaxRetries(1) //
-            .readMaxRetries(2) //
-            .asyncPool(asyncPool, asyncPool) //
-            .rpcOptions(RpcOptions.newDefault()) //
-            .routeTableRefreshPeriodSeconds(-1) //
-            .build();
+        String endpoint = "127.0.0.1:4001";
+        GreptimeOptions opts = GreptimeOptions.newBuilder(endpoint) //
+                .writeMaxRetries(1) //
+                .readMaxRetries(2) //
+                .routeTableRefreshPeriodSeconds(-1) //
+                .build();
 
         GreptimeDB greptimeDB = new GreptimeDB();
 
@@ -78,37 +57,13 @@ public class Example {
             throw new RuntimeException("Fail to start GreptimeDB client");
         }
 
-        Result<WriteOk, Err> writeResult = runInsert(greptimeDB);
+        runInsert(greptimeDB);
 
-        LOG.info("Write result: {}", writeResult);
-
-        if (!writeResult.isOk()) {
-            writeResult.getErr().getError().printStackTrace();
-            return;
-        }
-
-        Result<QueryOk, Err> queryResult = runQuery(greptimeDB);
-
-        LOG.info("Query result: {}", queryResult);
-
-        if (!queryResult.isOk()) {
-            queryResult.getErr().getError().printStackTrace();
-            return;
-        }
-
-        SelectRows rows = queryResult.getOk().getRows();
-
-        LOG.info("Selected data:");
-
-        while (!rows.isReady()) {
-            LOG.info("Data is not ready, wait for 10 ms ...");
-            TimeUnit.MILLISECONDS.sleep(10);
-        }
-        rows.forEachRemaining(row -> LOG.info("Row: {}", row.values()));
+        runQuery(greptimeDB);
     }
 
-    private static Result<WriteOk, Err> runInsert(GreptimeDB greptimeDB) throws Exception {
-        TableSchema tableSchema =
+    private static void runInsert(GreptimeDB greptimeDB) throws Exception {
+        TableSchema schema =
                 TableSchema
                         .newBuilder(TableName.with("public", "monitor"))
                         .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field)
@@ -117,20 +72,49 @@ public class Example {
                         .columnNames("host", "ts", "cpu", "memory") //
                         .build();
 
-        WriteRows rows = WriteRows.newBuilder(tableSchema).build();
+        WriteRows rows = WriteRows.newBuilder(schema).build();
         rows.insert("127.0.0.1", System.currentTimeMillis(), 0.1, null) //
                 .insert("127.0.0.2", System.currentTimeMillis(), 0.3, 0.5) //
                 .finish();
 
-        return greptimeDB.write(rows).get();
+        // For performance reasons, the SDK is designed to be purely asynchronous.
+        // The return value is a future object. If you want to immediately obtain
+        // the result, you can call `future.get()`.
+        CompletableFuture<Result<WriteOk, Err>> future = greptimeDB.write(rows);
+
+        Result<WriteOk, Err> result = future.get();
+
+        if (result.isOk()) {
+            LOG.info("Write result: {}", result.getOk());
+        } else {
+            LOG.error("Failed to write: {}", result.getErr());
+        }
     }
 
-    private static Result<QueryOk, Err> runQuery(GreptimeDB greptimeDB) throws Exception {
+    private static void runQuery(GreptimeDB greptimeDB) throws Exception {
         QueryRequest request = QueryRequest.newBuilder() //
                 .exprType(SelectExprType.Sql) //
                 .ql("SELECT * FROM monitor;") //
                 .build();
 
-        return greptimeDB.query(request).get();
+        // For performance reasons, the SDK is designed to be purely asynchronous.
+        // The return value is a future object. If you want to immediately obtain
+        // the result, you can call `future.get()`.
+        CompletableFuture<Result<QueryOk, Err>> future = greptimeDB.query(request);
+
+        Result<QueryOk, Err> result = future.get();
+
+        if (result.isOk()) {
+            QueryOk queryOk = result.getOk();
+            SelectRows rows = queryOk.getRows();
+            // `collectToMaps` will discard type information, if type information is needed,
+            // please use `collect`.
+            List<Map<String, Object>> maps = rows.collectToMaps();
+            for (Map<String, Object> map : maps) {
+                LOG.info("Query row: {}", map);
+            }
+        } else {
+            LOG.error("Failed to query: {}", result.getErr());
+        }
     }
 }
