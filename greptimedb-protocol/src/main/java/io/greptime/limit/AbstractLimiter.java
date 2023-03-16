@@ -61,12 +61,14 @@ public abstract class AbstractLimiter<In, Out> {
             return action.get();
         }
 
-        this.acquireAvailablePermits.update(this.limiter.availablePermits());
-
-        if (this.policy.acquire(this.limiter, permits)) {
-            return action.get().whenComplete((r, e) -> release(permits));
+        try {
+            if (this.policy.acquire(this.limiter, permits)) {
+                return action.get().whenComplete((r, e) -> release(permits));
+            }
+            return Util.completedCf(rejected(in, acquirePermits, maxPermits));
+        } finally {
+            this.acquireAvailablePermits.update(this.limiter.availablePermits());
         }
-        return Util.completedCf(rejected(in, acquirePermits, maxPermits));
     }
 
     public abstract int calculatePermits(In in);
