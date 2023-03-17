@@ -41,6 +41,8 @@ import io.greptime.rpc.Observer;
 import io.greptime.v1.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -79,6 +81,13 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
         long startCall = Clock.defaultClock().getTick();
 
+        long startMillis = System.currentTimeMillis();
+        long startNanos = System.nanoTime();
+        long startMicros = startMillis * 1000 + startNanos / 1000 % 1000;
+        ctx.with("__start_nanos", startNanos);
+        ctx.with("__start_micros", startMicros);
+        ctx.with("client_insert_start", startMicros);
+
         return this.writeLimiter.acquireAndDo(rows, () -> write0(rows, ctx, 0).whenCompleteAsync((r, e) -> {
             InnerMetricHelper.writeQps().mark();
             if (r != null) {
@@ -93,6 +102,23 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                     WriteOk ok = r.getOk();
                     InnerMetricHelper.writeRowsSuccessNum().update(ok.getSuccess());
                     InnerMetricHelper.writeRowsFailureNum().update(ok.getFailure());
+
+                    long offsetMicros = (System.nanoTime() - startNanos) / 1000;
+                    long now = startMicros + offsetMicros;
+                    ctx.with("client_insert_end", now);
+
+                    long clientInsertStart = ctx.get("client_insert_start");
+                    long clientGrpcStart = ctx.get("client_grpc_start");
+                    long serverInsertStart = Long.parseLong(ctx.get("server_insert_start"));
+                    long serverInsertEnd = Long.parseLong(ctx.get("server_insert_end"));
+                    long clientGrpcEnd = ctx.get("client_grpc_end");
+                    long clientInsertEnd = ctx.get("client_insert_end");
+
+                    InnerMetricHelper.TIME_COSTS[0] += (clientGrpcStart - clientInsertStart);
+                    InnerMetricHelper.TIME_COSTS[1] += (serverInsertStart - clientGrpcStart);
+                    InnerMetricHelper.TIME_COSTS[2] += (serverInsertEnd - serverInsertStart);
+                    InnerMetricHelper.TIME_COSTS[3] += (clientGrpcEnd - serverInsertEnd);
+                    InnerMetricHelper.TIME_COSTS[4] += (clientInsertEnd - clientGrpcEnd);
                     return;
                 }
             }
@@ -156,9 +182,22 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
         Database.GreptimeRequest req = rows.into();
         ctx.with("retries", retries);
 
+        long startNanos = ctx.get("__start_nanos");
+        long offsetMicros = (System.nanoTime() - startNanos) / 1000;
+        long startMicros = ctx.get("__start_micros");
+        long now = startMicros + offsetMicros;
+        ctx.with("client_grpc_start", now);
+
         CompletableFuture<Database.GreptimeResponse> future = this.routerClient.invoke(endpoint, req, ctx);
 
         return future.thenApplyAsync(resp -> {
+            long x = startMicros + (System.nanoTime() - startNanos) / 1000;
+            ctx.with("client_grpc_end", x);
+
+            Map<String, String> attr = resp.getHeader().getAttrMap();
+            ctx.with("server_insert_start", attr.get("server_insert_start"));
+            ctx.with("server_insert_end", attr.get("server_insert_end"));
+
             int affectedRows = resp.getAffectedRows().getValue();
             return WriteOk.ok(affectedRows, 0, tableName).mapToResult();
         }, this.asyncPool);
@@ -228,11 +267,13 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                 '}';
     }
 
-    static final class InnerMetricHelper {
+    public static final class InnerMetricHelper {
         static final Histogram WRITE_ROWS_SUCCESS_NUM = MetricsUtil.histogram("write_rows_success_num");
         static final Histogram WRITE_ROWS_FAILURE_NUM = MetricsUtil.histogram("write_rows_failure_num");
         static final Meter WRITE_FAILURE_NUM = MetricsUtil.meter("write_failure_num");
         static final Meter WRITE_QPS = MetricsUtil.meter("write_qps");
+
+        public static final long[] TIME_COSTS = new long[5];
 
         static Histogram writeRowsSuccessNum() {
             return WRITE_ROWS_SUCCESS_NUM;

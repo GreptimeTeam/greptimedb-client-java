@@ -17,6 +17,7 @@
 package io.greptime.example;
 
 import io.greptime.GreptimeDB;
+import io.greptime.WriteClient;
 import io.greptime.models.ColumnDataType;
 import io.greptime.models.Err;
 import io.greptime.models.QueryOk;
@@ -32,6 +33,8 @@ import io.greptime.models.WriteRows;
 import io.greptime.options.GreptimeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -88,6 +91,10 @@ public class QuickStart {
             LOG.info("Write result: {}", result.getOk());
         } else {
             LOG.error("Failed to write: {}", result.getErr());
+        }
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("time costs: {}", Arrays.toString(WriteClient.InnerMetricHelper.TIME_COSTS));
         }
     }
 
