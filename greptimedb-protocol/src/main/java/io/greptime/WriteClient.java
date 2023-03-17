@@ -27,20 +27,16 @@ import io.greptime.common.util.Ensures;
 import io.greptime.common.util.MetricsUtil;
 import io.greptime.common.util.SerializingExecutor;
 import io.greptime.errors.LimitedException;
-import io.greptime.flight.AsyncExecCallOption;
-import io.greptime.flight.GreptimeFlightClient;
-import io.greptime.flight.GreptimeRequest;
 import io.greptime.limit.LimitedPolicy;
 import io.greptime.limit.WriteLimiter;
 import io.greptime.models.Err;
 import io.greptime.models.Result;
+import io.greptime.models.TableName;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
 import io.greptime.options.WriteOptions;
 import io.greptime.rpc.Context;
-import org.apache.arrow.flight.FlightCallHeaders;
-import org.apache.arrow.flight.HeaderCallOption;
-import org.apache.arrow.flight.InternalFlightStream;
+import io.greptime.v1.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.concurrent.CompletableFuture;
@@ -129,22 +125,16 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     }
 
     private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, WriteRows rows, Context ctx, int retries) {
-        GreptimeFlightClient flightClient = this.routerClient.getFlightClient(endpoint);
+        TableName tableName = rows.tableName();
+        Database.GreptimeRequest req = rows.into();
+        ctx.with("retries", retries);
 
-        GreptimeRequest request = new GreptimeRequest(rows.into());
+        CompletableFuture<Database.GreptimeResponse> future = this.routerClient.invoke(endpoint, req, ctx);
 
-        FlightCallHeaders headers = new FlightCallHeaders();
-        headers.insert("retries", String.valueOf(retries));
-        if (ctx != null) {
-            ctx.entrySet().forEach(e -> headers.insert(e.getKey(), String.valueOf(e.getValue())));
-        }
-        HeaderCallOption headerOption = new HeaderCallOption(headers);
-
-        AsyncExecCallOption execOption = new AsyncExecCallOption(this.asyncPool);
-
-        InternalFlightStream stream = flightClient.doRequest(request, headerOption, execOption);
-
-        return new CompletableWriteFuture(rows.tableName(), stream);
+        return future.thenApplyAsync(resp -> {
+            int affectedRows = resp.getAffectedRows().getValue();
+            return WriteOk.ok(affectedRows, 0, tableName).mapToResult();
+        }, this.asyncPool);
     }
 
     @Override

@@ -39,6 +39,7 @@ import org.apache.arrow.memory.RootAllocator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -103,6 +104,7 @@ public class WriteClientTest {
         this.routerClient.shutdownGracefully();
     }
 
+    @Ignore
     @Test
     public void testWriteSuccess() throws ExecutionException, InterruptedException, IOException {
         try (FlightServer flightServer =

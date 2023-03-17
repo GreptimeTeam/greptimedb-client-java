@@ -36,6 +36,8 @@ import io.greptime.options.RouterOptions;
 import io.greptime.options.WriteOptions;
 import io.greptime.rpc.Context;
 import io.greptime.rpc.RpcClient;
+import io.greptime.rpc.RpcFactoryProvider;
+import io.greptime.rpc.RpcOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
@@ -199,8 +201,19 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
         return pool == null ? null : new MetricExecutor(pool, name);
     }
 
+    private static RpcClient makeRpcClient(GreptimeOptions opts) {
+        RpcOptions rpcOpts = opts.getRpcOptions();
+        RpcClient rpcClient = RpcFactoryProvider.getRpcFactory().createRpcClient();
+        if (!rpcClient.init(rpcOpts)) {
+            throw new IllegalStateException("Fail to start RPC client");
+        }
+        rpcClient.registerConnectionObserver(new RpcConnectionObserver());
+        return rpcClient;
+    }
+
     private static RouterClient makeRouteClient(GreptimeOptions opts) {
         RouterOptions routerOpts = opts.getRouterOptions();
+        routerOpts.setRpcClient(makeRpcClient(opts));
         RouterClient routerClient = new RouterClient();
         if (!routerClient.init(routerOpts)) {
             throw new IllegalStateException("Fail to start router client");
@@ -301,6 +314,8 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
     private static void doGlobalInitializeWorks() {
         // load all signal handlers
         SignalHandlersLoader.load();
+        // register all rpc service
+        RpcServiceRegister.registerAllService();
         // start scheduled metric reporter
         MetricsUtil.startScheduledReporter(Util.autoReportPeriodMin(), TimeUnit.MINUTES);
         Runtime.getRuntime().addShutdownHook(new Thread(MetricsUtil::stopScheduledReporterAndDestroy));
