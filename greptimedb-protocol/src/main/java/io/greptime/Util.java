@@ -25,6 +25,7 @@ import io.greptime.common.util.SharedScheduledPool;
 import io.greptime.common.util.SystemPropertyUtil;
 import io.greptime.common.util.ThreadPoolUtil;
 import io.greptime.models.Err;
+import io.greptime.rpc.Observer;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -152,6 +153,21 @@ public final class Util {
         final CompletableFuture<U> err = new CompletableFuture<>();
         err.completeExceptionally(t);
         return err;
+    }
+
+    public static <V> Observer<V> toUnaryObserver(CompletableFuture<V> future) {
+        return new Observer<V>() {
+
+            @Override
+            public void onNext(V value) {
+                future.complete(value);
+            }
+
+            @Override
+            public void onError(Throwable err) {
+                future.completeExceptionally(err);
+            }
+        };
     }
 
     public static long randomInitialDelay(long delay) {

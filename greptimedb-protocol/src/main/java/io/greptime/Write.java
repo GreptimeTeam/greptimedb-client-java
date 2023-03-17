@@ -46,4 +46,16 @@ public interface Write {
      * @return write result
      */
     CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx);
+
+    default StreamWriter<WriteRows, WriteOk> streamWriter() {
+        return streamWriter(Context.newDefault());
+    }
+
+    /**
+     * Create a streaming for write.
+     *
+     * @param ctx invoke context
+     * @return a stream writer instance
+     */
+    StreamWriter<WriteRows, WriteOk> streamWriter(Context ctx);
 }

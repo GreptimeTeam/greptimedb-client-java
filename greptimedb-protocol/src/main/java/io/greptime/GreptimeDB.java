@@ -140,6 +140,11 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
     }
 
     @Override
+    public StreamWriter<WriteRows, WriteOk> streamWriter(Context ctx) {
+        return this.writeClient.streamWriter(attachCtx(ctx));
+    }
+
+    @Override
     public CompletableFuture<Result<QueryOk, Err>> query(QueryRequest req, Context ctx) {
         ensureInitialized();
         return this.queryClient.query(req, attachCtx(ctx));
