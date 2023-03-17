@@ -37,9 +37,9 @@ public class RpcOptions implements Copiable<RpcOptions> {
     /**
      * Sets the maximum message size allowed to be received on a channel.
      */
-    private int       maxInboundMessageSize   = 64 * 1024 * 1024;
+    private int       maxInboundMessageSize   = 256 * 1024 * 1024;
 
-    private int       flowControlWindow       = 64 * 1024 * 1024;
+    private int       flowControlWindow       = 256 * 1024 * 1024;
 
     /**
      * Set the duration without ongoing RPCs before going to idle mode.
@@ -69,7 +69,7 @@ public class RpcOptions implements Copiable<RpcOptions> {
 
     // --- keep-alive options: default will disable keep-alive
 
-    private LimitKind limitKind               = LimitKind.Gradient;
+    private LimitKind limitKind               = LimitKind.None;
 
     /**
      * Initial limit used by the limiter

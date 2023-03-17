@@ -32,6 +32,8 @@ import java.util.concurrent.CompletableFuture;
 /**
  * @author jiachun.fjc
  */
+// Will be removed in next release
+@Deprecated
 public class CompletableWriteFuture extends CompletableFuture<Result<WriteOk, Err>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(CompletableWriteFuture.class);
