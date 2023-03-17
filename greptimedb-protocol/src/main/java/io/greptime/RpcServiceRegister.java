@@ -26,7 +26,7 @@ import io.greptime.v1.Database;
  */
 public class RpcServiceRegister {
 
-    private static final String METHOD_TEMPLATE = "io.greptime.v1.Database.GreptimeDatabase/%s";
+    private static final String METHOD_TEMPLATE = "greptime.v1.GreptimeDatabase/%s";
 
     public static void registerAllService() {
         // register protobuf serializer
