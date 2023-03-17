@@ -18,9 +18,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.GreptimeTeam</groupId>
+            <groupId>com.github.MichaelScofield</groupId>
             <artifactId>greptime-proto</artifactId>
-            <version>328c41f292</version>
+            <version>feat~database-unary-call-38b89f99b7-1</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

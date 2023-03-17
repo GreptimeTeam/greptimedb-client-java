@@ -27,20 +27,18 @@ import io.greptime.common.util.Ensures;
 import io.greptime.common.util.MetricsUtil;
 import io.greptime.common.util.SerializingExecutor;
 import io.greptime.errors.LimitedException;
-import io.greptime.flight.AsyncExecCallOption;
-import io.greptime.flight.GreptimeFlightClient;
-import io.greptime.flight.GreptimeRequest;
+import io.greptime.errors.StreamException;
 import io.greptime.limit.LimitedPolicy;
 import io.greptime.limit.WriteLimiter;
 import io.greptime.models.Err;
 import io.greptime.models.Result;
+import io.greptime.models.TableName;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
 import io.greptime.options.WriteOptions;
 import io.greptime.rpc.Context;
-import org.apache.arrow.flight.FlightCallHeaders;
-import org.apache.arrow.flight.HeaderCallOption;
-import org.apache.arrow.flight.InternalFlightStream;
+import io.greptime.rpc.Observer;
+import io.greptime.v1.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.concurrent.CompletableFuture;
@@ -102,6 +100,31 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
         }, this.asyncPool));
     }
 
+    @Override
+    public StreamWriter<WriteRows, WriteOk> streamWriter(Context ctx) {
+        CompletableFuture<WriteOk> respFuture = new CompletableFuture<>();
+
+        return this.routerClient.route()
+                .thenApply(endpoint -> streamWriteTo(endpoint, ctx, Util.toUnaryObserver(respFuture)))
+                .thenApply(reqObserver -> new StreamWriter<WriteRows, WriteOk>() {
+
+                    @Override
+                    public StreamWriter<WriteRows, WriteOk> write(WriteRows rows) {
+                        if (respFuture.isCompletedExceptionally()) {
+                            respFuture.getNow(null); // throw the exception now
+                        }
+                        reqObserver.onNext(rows);
+                        return this;
+                    }
+
+                    @Override
+                    public CompletableFuture<WriteOk> completed() {
+                        reqObserver.onCompleted();
+                        return respFuture;
+                    }
+                }).join();
+    }
+
     private CompletableFuture<Result<WriteOk, Err>> write0(WriteRows rows, Context ctx, int retries) {
         InnerMetricHelper.writeByRetries(retries).mark();
 
@@ -129,22 +152,62 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     }
 
     private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, WriteRows rows, Context ctx, int retries) {
-        GreptimeFlightClient flightClient = this.routerClient.getFlightClient(endpoint);
+        TableName tableName = rows.tableName();
+        Database.GreptimeRequest req = rows.into();
+        ctx.with("retries", retries);
 
-        GreptimeRequest request = new GreptimeRequest(rows.into());
+        CompletableFuture<Database.GreptimeResponse> future = this.routerClient.invoke(endpoint, req, ctx);
 
-        FlightCallHeaders headers = new FlightCallHeaders();
-        headers.insert("retries", String.valueOf(retries));
-        if (ctx != null) {
-            ctx.entrySet().forEach(e -> headers.insert(e.getKey(), String.valueOf(e.getValue())));
-        }
-        HeaderCallOption headerOption = new HeaderCallOption(headers);
+        return future.thenApplyAsync(resp -> {
+            int affectedRows = resp.getAffectedRows().getValue();
+            return WriteOk.ok(affectedRows, 0, tableName).mapToResult();
+        }, this.asyncPool);
+    }
 
-        AsyncExecCallOption execOption = new AsyncExecCallOption(this.asyncPool);
+    private Observer<WriteRows> streamWriteTo(Endpoint endpoint, Context ctx, Observer<WriteOk> respObserver) {
+        final Observer<Database.GreptimeRequest> rpcObs =
+                this.routerClient.invokeClientStreaming(endpoint, Database.GreptimeRequest.getDefaultInstance(), ctx,
+                        new Observer<Database.GreptimeResponse>() {
 
-        InternalFlightStream stream = flightClient.doRequest(request, headerOption, execOption);
+                            @Override
+                            public void onNext(Database.GreptimeResponse resp) {
+                                int affectedRows = resp.getAffectedRows().getValue();
+                                Result<WriteOk, Err> ret = WriteOk.ok(affectedRows, 0, null).mapToResult();
+                                if (ret.isOk()) {
+                                    respObserver.onNext(ret.getOk());
+                                } else {
+                                    respObserver.onError(new StreamException(String.valueOf(ret.getErr())));
+                                }
+                            }
 
-        return new CompletableWriteFuture(rows.tableName(), stream);
+                            @Override
+                            public void onError(Throwable err) {
+                                respObserver.onError(err);
+                            }
+
+                            @Override
+                            public void onCompleted() {
+                                respObserver.onCompleted();
+                            }
+                        });
+
+        return new Observer<WriteRows>() {
+
+            @Override
+            public void onNext(WriteRows rows) {
+                rpcObs.onNext(rows.into());
+            }
+
+            @Override
+            public void onError(Throwable err) {
+                rpcObs.onError(err);
+            }
+
+            @Override
+            public void onCompleted() {
+                rpcObs.onCompleted();
+            }
+        };
     }
 
     @Override
