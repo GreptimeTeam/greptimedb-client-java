@@ -47,10 +47,16 @@ public interface Write {
      */
     CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx);
 
+    /**
+     * @see #streamWriter(int, Context)
+     */
     default StreamWriter<WriteRows, WriteOk> streamWriter() {
-        return streamWriter(-1, Context.newDefault());
+        return streamWriter(-1);
     }
 
+    /**
+     * @see #streamWriter(int, Context)
+     */
     default StreamWriter<WriteRows, WriteOk> streamWriter(int maxRowsPerSecond) {
         return streamWriter(maxRowsPerSecond, Context.newDefault());
     }

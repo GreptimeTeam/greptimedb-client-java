@@ -22,7 +22,6 @@ import io.greptime.common.util.Ensures;
 import io.greptime.v1.Columns;
 import io.greptime.v1.Database;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -149,16 +148,27 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
 
         @Override
         public Database.GreptimeRequest into() {
-            Database.RequestHeader header =
-                    Database.RequestHeader.newBuilder().setSchema(this.tableName.getDatabaseName()).build();
+            TableName tableName = tableName();
+            int rowCount = rowCount();
+            List<Columns.Column> columns = columns();
 
-            Database.InsertRequest.Builder builder = Database.InsertRequest.newBuilder();
-            builder.setTableName(tableName().getTableName());
-            builder.addAllColumns(columns());
-            builder.setRowCount(rowCount());
-            Database.InsertRequest insertRequest = builder.build();
+            Ensures.ensure(rowCount > 0, "`WriteRows` must contain at least one row of data");
+            Ensures.ensureNonNull(columns, "Forget to call `WriteRows.finish()`?");
 
-            return Database.GreptimeRequest.newBuilder().setHeader(header).setInsert(insertRequest).build();
+            Database.RequestHeader header = Database.RequestHeader.newBuilder() //
+                    .setSchema(tableName.getDatabaseName()) //
+                    .build();
+
+            Database.InsertRequest insertRequest = Database.InsertRequest.newBuilder() //
+                    .setTableName(tableName.getTableName()) //
+                    .addAllColumns(columns) //
+                    .setRowCount(rowCount) //
+                    .build();
+
+            return Database.GreptimeRequest.newBuilder() //
+                    .setHeader(header) //
+                    .setInsert(insertRequest) //
+                    .build();
         }
     }
 }

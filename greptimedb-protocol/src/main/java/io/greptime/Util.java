@@ -155,7 +155,7 @@ public final class Util {
         return err;
     }
 
-    public static <V> Observer<V> toUnaryObserver(CompletableFuture<V> future) {
+    public static <V> Observer<V> toObserver(CompletableFuture<V> future) {
         return new Observer<V>() {
 
             @Override
