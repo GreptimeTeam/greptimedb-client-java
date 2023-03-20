@@ -18,6 +18,7 @@ package io.greptime;
 
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
+import com.google.common.util.concurrent.RateLimiter;
 import io.greptime.common.Display;
 import io.greptime.common.Endpoint;
 import io.greptime.common.Keys;
@@ -101,20 +102,21 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     }
 
     @Override
-    public StreamWriter<WriteRows, WriteOk> streamWriter(Context ctx) {
+    public StreamWriter<WriteRows, WriteOk> streamWriter(int maxRowsPerSecond, Context ctx) {
+        int permitsPerSecond = maxRowsPerSecond > 0 ? maxRowsPerSecond : this.opts.getDefaultStreamMaxWriteRowsPerSecond();
+
         CompletableFuture<WriteOk> respFuture = new CompletableFuture<>();
 
         return this.routerClient.route()
                 .thenApply(endpoint -> streamWriteTo(endpoint, ctx, Util.toUnaryObserver(respFuture)))
-                .thenApply(reqObserver -> new StreamWriter<WriteRows, WriteOk>() {
+                .thenApply(reqObserver -> new RateLimitingStreamWriter(reqObserver, permitsPerSecond) {
 
                     @Override
                     public StreamWriter<WriteRows, WriteOk> write(WriteRows rows) {
                         if (respFuture.isCompletedExceptionally()) {
                             respFuture.getNow(null); // throw the exception now
                         }
-                        reqObserver.onNext(rows);
-                        return this;
+                        return super.write(rows); // may wait
                     }
 
                     @Override
@@ -231,6 +233,8 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     static final class InnerMetricHelper {
         static final Histogram WRITE_ROWS_SUCCESS_NUM = MetricsUtil.histogram("write_rows_success_num");
         static final Histogram WRITE_ROWS_FAILURE_NUM = MetricsUtil.histogram("write_rows_failure_num");
+        static final Histogram WRITE_STREAM_LIMITER_TIME_SPENT = MetricsUtil
+                .histogram("write_stream_limiter_time_spent");
         static final Meter WRITE_FAILURE_NUM = MetricsUtil.meter("write_failure_num");
         static final Meter WRITE_QPS = MetricsUtil.meter("write_qps");
 
@@ -240,6 +244,10 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
         static Histogram writeRowsFailureNum() {
             return WRITE_ROWS_FAILURE_NUM;
+        }
+
+        static Histogram writeStreamLimiterTimeSpent() {
+            return WRITE_STREAM_LIMITER_TIME_SPENT;
         }
 
         static Meter writeFailureNum() {
@@ -275,6 +283,34 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                             state.maxPermits(), //
                             state.availablePermits());
             return Result.err(Err.writeErr(Result.FLOW_CONTROL, new LimitedException(errMsg), null, in));
+        }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    static abstract class RateLimitingStreamWriter implements StreamWriter<WriteRows, WriteOk> {
+
+        private final Observer<WriteRows> observer;
+        private final RateLimiter rateLimiter;
+
+        RateLimitingStreamWriter(Observer<WriteRows> observer, double permitsPerSecond) {
+            this.observer = observer;
+            if (permitsPerSecond > 0) {
+                this.rateLimiter = RateLimiter.create(permitsPerSecond);
+            } else {
+                this.rateLimiter = null;
+            }
+        }
+
+        @Override
+        public StreamWriter<WriteRows, WriteOk> write(WriteRows rows) {
+            if (rows != null) {
+                if (this.rateLimiter != null) {
+                    double timeSpent = this.rateLimiter.acquire(rows.rowCount());
+                    InnerMetricHelper.writeStreamLimiterTimeSpent().update((long) timeSpent);
+                }
+                this.observer.onNext(rows);
+            }
+            return this;
         }
     }
 }

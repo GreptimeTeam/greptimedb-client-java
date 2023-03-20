@@ -35,5 +35,12 @@ public class RpcServiceRegister {
                 Database.GreptimeRequest.class, //
                 Database.GreptimeRequest.getDefaultInstance(), //
                 Database.GreptimeResponse.getDefaultInstance());
+
+        RpcFactoryProvider.getRpcFactory().register(
+                MethodDescriptor.of(String.format(METHOD_TEMPLATE, "HandleRequests"),
+                        MethodDescriptor.MethodType.CLIENT_STREAMING), //
+                Database.GreptimeRequest.class, //
+                Database.GreptimeRequest.getDefaultInstance(), //
+                Database.GreptimeResponse.getDefaultInstance());
     }
 }

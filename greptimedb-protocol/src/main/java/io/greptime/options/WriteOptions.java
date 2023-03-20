@@ -34,6 +34,8 @@ public class WriteOptions implements Copiable<WriteOptions> {
     // Write flow limit: maximum number of data rows in-flight.
     private int maxInFlightWriteRows = 65536;
     private LimitedPolicy limitedPolicy = LimitedPolicy.defaultWriteLimitedPolicy();
+    // Default rate limit for stream writer
+    private int defaultStreamMaxWriteRowsPerSecond = 200000;
 
     public RouterClient getRouterClient() {
         return routerClient;
@@ -75,6 +77,14 @@ public class WriteOptions implements Copiable<WriteOptions> {
         this.limitedPolicy = limitedPolicy;
     }
 
+    public int getDefaultStreamMaxWriteRowsPerSecond() {
+        return defaultStreamMaxWriteRowsPerSecond;
+    }
+
+    public void setDefaultStreamMaxWriteRowsPerSecond(int defaultStreamMaxWriteRowsPerSecond) {
+        this.defaultStreamMaxWriteRowsPerSecond = defaultStreamMaxWriteRowsPerSecond;
+    }
+
     @Override
     public WriteOptions copy() {
         WriteOptions opts = new WriteOptions();
@@ -83,6 +93,7 @@ public class WriteOptions implements Copiable<WriteOptions> {
         opts.maxRetries = this.maxRetries;
         opts.maxInFlightWriteRows = this.maxInFlightWriteRows;
         opts.limitedPolicy = this.limitedPolicy;
+        opts.defaultStreamMaxWriteRowsPerSecond = this.defaultStreamMaxWriteRowsPerSecond;
         return opts;
     }
 
@@ -94,6 +105,7 @@ public class WriteOptions implements Copiable<WriteOptions> {
                 ", maxRetries=" + maxRetries + //
                 ", maxInFlightWriteRows=" + maxInFlightWriteRows + //
                 ", limitedPolicy=" + limitedPolicy + //
+                ", defaultStreamMaxWriteRowsPerSecond=" + defaultStreamMaxWriteRowsPerSecond + //
                 '}';
     }
 }
