@@ -17,6 +17,7 @@
 package io.greptime.example;
 
 import io.greptime.GreptimeDB;
+import io.greptime.StreamWriter;
 import io.greptime.models.ColumnDataType;
 import io.greptime.models.Err;
 import io.greptime.models.QueryOk;
@@ -57,7 +58,11 @@ public class QuickStart {
             throw new RuntimeException("Fail to start GreptimeDB client");
         }
 
+        // normal inset
         runInsert(greptimeDB);
+
+        // streaming insert
+        runInsertWithStream(greptimeDB);
 
         runQuery(greptimeDB);
     }
@@ -89,6 +94,31 @@ public class QuickStart {
         } else {
             LOG.error("Failed to write: {}", result.getErr());
         }
+    }
+
+    private static void runInsertWithStream(GreptimeDB greptimeDB) throws Exception {
+        TableSchema schema =
+                TableSchema
+                        .newBuilder(TableName.with("public", "monitor"))
+                        .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field)
+                        .dataTypes(ColumnDataType.String, ColumnDataType.TimestampMillisecond, ColumnDataType.Float64,
+                                ColumnDataType.Float64) //
+                        .columnNames("host", "ts", "cpu", "memory") //
+                        .build();
+        StreamWriter<WriteRows, WriteOk> streamWriter = greptimeDB.streamWriter();
+
+        for (int i = 0; i < 100; i++) {
+            WriteRows rows = WriteRows.newBuilder(schema).build();
+            rows.insert("127.0.0.1", System.currentTimeMillis(), i, null).finish();
+
+            streamWriter.write(rows);
+        }
+
+        CompletableFuture<WriteOk> future = streamWriter.completed();
+
+        WriteOk result = future.get();
+
+        LOG.info("Write result: {}", result);
     }
 
     private static void runQuery(GreptimeDB greptimeDB) throws Exception {
