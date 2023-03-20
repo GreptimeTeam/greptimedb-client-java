@@ -16,4 +16,4 @@ A Java Client for GreptimeDB, which is compatible with GreptimeDB protocol and l
 - Users can take in-memory snapshots of critical objects, configure them, and write to local files.
   This is helpful when troubleshooting complex issues
 
-## [User Guide](https://docs.greptime.com/user-guide/java-sdk)
+## [User Guide](https://docs.greptime.com/user-guide/java-sdk/java-sdk)
