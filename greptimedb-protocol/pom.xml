@@ -18,9 +18,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.GreptimeTeam</groupId>
+            <groupId>com.github.MichaelScofield</groupId>
             <artifactId>greptime-proto</artifactId>
-            <version>0a7b790ed4</version>
+            <version>feat~grpc-client-stream-7d0358eee4-1</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -49,6 +49,10 @@
             <groupId>org.apache.arrow</groupId>
             <artifactId>flight-grpc</artifactId>
             <version>${arrow.flight.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
 
         <!-- test -->

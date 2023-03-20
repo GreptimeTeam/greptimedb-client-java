@@ -48,14 +48,20 @@ public interface Write {
     CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx);
 
     default StreamWriter<WriteRows, WriteOk> streamWriter() {
-        return streamWriter(Context.newDefault());
+        return streamWriter(-1, Context.newDefault());
+    }
+
+    default StreamWriter<WriteRows, WriteOk> streamWriter(int maxRowsPerSecond) {
+        return streamWriter(maxRowsPerSecond, Context.newDefault());
     }
 
     /**
      * Create a streaming for write.
      *
+     * @param maxRowsPerSecond The max number of rows that can be written per second,
+     *                         exceeding which may cause blockage.
      * @param ctx invoke context
      * @return a stream writer instance
      */
-    StreamWriter<WriteRows, WriteOk> streamWriter(Context ctx);
+    StreamWriter<WriteRows, WriteOk> streamWriter(int maxRowsPerSecond, Context ctx);
 }

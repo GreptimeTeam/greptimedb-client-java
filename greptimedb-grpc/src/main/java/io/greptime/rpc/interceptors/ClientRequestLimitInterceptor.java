@@ -164,7 +164,6 @@ public class ClientRequestLimitInterceptor implements ClientInterceptor {
             return true;
         }
 
-        return methodType != MethodDescriptor.MethodType.UNARY
-               && methodType != MethodDescriptor.MethodType.BIDI_STREAMING;
+        return !methodType.clientSendsOneMessage() || !methodType.serverSendsOneMessage();
     }
 }

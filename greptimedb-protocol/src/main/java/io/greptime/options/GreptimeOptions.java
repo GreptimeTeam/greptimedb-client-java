@@ -166,6 +166,7 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
         // Write flow limit: maximum number of data rows in-flight.
         private int maxInFlightWriteRows = 65536;
         private LimitedPolicy writeLimitedPolicy = LimitedPolicy.defaultWriteLimitedPolicy();
+        private int defaultStreamMaxWriteRowsPerSecond = 200000;
         // In some case of failure, a retry of the read is attempted.
         private int readMaxRetries = 1;
         // Refresh frequency of route tables. The background refreshes all route tables periodically. By default,
@@ -239,6 +240,16 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
         }
 
         /**
+         * The default rate limit for stream writer.
+         * @param defaultStreamMaxWriteRowsPerSecond default max write rows per second
+         * @return this builde
+         */
+        public Builder defaultStreamMaxWriteRowsPerSecond(int defaultStreamMaxWriteRowsPerSecond) {
+            this.defaultStreamMaxWriteRowsPerSecond = defaultStreamMaxWriteRowsPerSecond;
+            return this;
+        }
+
+        /**
          * In some case of failure, a retry of read can be attempted.
          *
          * @param maxRetries max retries times
@@ -283,6 +294,7 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
             writeOpts.setMaxRetries(this.writeMaxRetries);
             writeOpts.setMaxInFlightWriteRows(this.maxInFlightWriteRows);
             writeOpts.setLimitedPolicy(this.writeLimitedPolicy);
+            writeOpts.setDefaultStreamMaxWriteRowsPerSecond(this.defaultStreamMaxWriteRowsPerSecond);
             opts.setWriteOptions(writeOpts);
 
             QueryOptions queryOpts = new QueryOptions();
