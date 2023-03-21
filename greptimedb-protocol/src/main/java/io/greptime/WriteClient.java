@@ -108,7 +108,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
         CompletableFuture<WriteOk> respFuture = new CompletableFuture<>();
 
         return this.routerClient.route()
-                .thenApply(endpoint -> streamWriteTo(endpoint, ctx, Util.toUnaryObserver(respFuture)))
+                .thenApply(endpoint -> streamWriteTo(endpoint, ctx, Util.toObserver(respFuture)))
                 .thenApply(reqObserver -> new RateLimitingStreamWriter(reqObserver, permitsPerSecond) {
 
                     @Override
@@ -167,7 +167,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     }
 
     private Observer<WriteRows> streamWriteTo(Endpoint endpoint, Context ctx, Observer<WriteOk> respObserver) {
-        final Observer<Database.GreptimeRequest> rpcObs =
+        Observer<Database.GreptimeRequest> rpcObserver =
                 this.routerClient.invokeClientStreaming(endpoint, Database.GreptimeRequest.getDefaultInstance(), ctx,
                         new Observer<Database.GreptimeResponse>() {
 
@@ -197,17 +197,17 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
             @Override
             public void onNext(WriteRows rows) {
-                rpcObs.onNext(rows.into());
+                rpcObserver.onNext(rows.into());
             }
 
             @Override
             public void onError(Throwable err) {
-                rpcObs.onError(err);
+                rpcObserver.onError(err);
             }
 
             @Override
             public void onCompleted() {
-                rpcObs.onCompleted();
+                rpcObserver.onCompleted();
             }
         };
     }
@@ -277,7 +277,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
         @Override
         public Result<WriteOk, Err> rejected(WriteRows in, RejectedState state) {
-            final String errMsg =
+            String errMsg =
                     String.format("Write limited by client, acquirePermits=%d, maxPermits=%d, availablePermits=%d.", //
                             state.acquirePermits(), //
                             state.maxPermits(), //
@@ -303,13 +303,13 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
         @Override
         public StreamWriter<WriteRows, WriteOk> write(WriteRows rows) {
-            if (rows != null) {
-                if (this.rateLimiter != null) {
-                    double timeSpent = this.rateLimiter.acquire(rows.rowCount());
-                    InnerMetricHelper.writeStreamLimiterTimeSpent().update((long) timeSpent);
-                }
-                this.observer.onNext(rows);
+            Ensures.ensureNonNull(rows, "Null.WriteRows");
+
+            if (this.rateLimiter != null) {
+                double timeSpent = this.rateLimiter.acquire(rows.rowCount());
+                InnerMetricHelper.writeStreamLimiterTimeSpent().update((long) timeSpent);
             }
+            this.observer.onNext(rows);
             return this;
         }
     }

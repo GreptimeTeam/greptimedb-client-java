@@ -35,7 +35,7 @@ public class WriteOptions implements Copiable<WriteOptions> {
     private int maxInFlightWriteRows = 65536;
     private LimitedPolicy limitedPolicy = LimitedPolicy.defaultWriteLimitedPolicy();
     // Default rate limit for stream writer
-    private int defaultStreamMaxWriteRowsPerSecond = 200000;
+    private int defaultStreamMaxWriteRowsPerSecond = 65536;
 
     public RouterClient getRouterClient() {
         return routerClient;

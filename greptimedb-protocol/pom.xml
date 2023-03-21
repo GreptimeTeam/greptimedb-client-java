@@ -4,7 +4,7 @@
     <parent>
         <artifactId>greptimedb-client</artifactId>
         <groupId>io.greptime</groupId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.1.1</version>
     </parent>
 
     <artifactId>greptimedb-protocol</artifactId>
@@ -18,9 +18,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.MichaelScofield</groupId>
+            <groupId>com.github.GreptimeTeam</groupId>
             <artifactId>greptime-proto</artifactId>
-            <version>feat~grpc-client-stream-7d0358eee4-1</version>
+            <version>0a7b790ed4</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
