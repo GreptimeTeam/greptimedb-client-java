@@ -97,18 +97,18 @@ public class QuickStart {
     }
 
     private static void runInsertWithStream(GreptimeDB greptimeDB) throws Exception {
-        TableSchema schema =
-                TableSchema
-                        .newBuilder(TableName.with("public", "monitor"))
-                        .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field)
-                        .dataTypes(ColumnDataType.String, ColumnDataType.TimestampMillisecond, ColumnDataType.Float64,
-                                ColumnDataType.Float64) //
-                        .columnNames("host", "ts", "cpu", "memory") //
-                        .build();
+        TableName tableName = TableName.with("public", "monitor");
+        TableSchema
+                .newBuilder(tableName)
+                .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field)
+                .dataTypes(ColumnDataType.String, ColumnDataType.TimestampMillisecond, ColumnDataType.Float64,
+                        ColumnDataType.Float64) //
+                .columnNames("host", "ts", "cpu", "memory") //
+                .buildAndCache(); // cache for reuse
         StreamWriter<WriteRows, WriteOk> streamWriter = greptimeDB.streamWriter();
 
         for (int i = 0; i < 100; i++) {
-            WriteRows rows = WriteRows.newBuilder(schema).build();
+            WriteRows rows = WriteRows.newBuilder(TableSchema.findSchema(tableName)).build();
             rows.insert("127.0.0.1", System.currentTimeMillis(), i, null).finish();
 
             streamWriter.write(rows);

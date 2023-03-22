@@ -58,4 +58,28 @@ public class TableName {
                 ", tableName='" + tableName + '\'' + //
                 '}';
     }
+
+    @Override
+    public int hashCode() {
+        int result = databaseName != null ? databaseName.hashCode() : 0;
+        result = 31 * result + (tableName != null ? tableName.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        TableName tableName1 = (TableName) o;
+
+        if (databaseName != null ? !databaseName.equals(tableName1.databaseName) : tableName1.databaseName != null) {
+            return false;
+        }
+        return tableName != null ? tableName.equals(tableName1.tableName) : tableName1.tableName == null;
+    }
 }
