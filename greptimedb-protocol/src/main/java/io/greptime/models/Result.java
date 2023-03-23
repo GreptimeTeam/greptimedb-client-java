@@ -32,12 +32,12 @@ public final class Result<Ok, Err> {
     private final Err err;
 
     public static <Ok, Err> Result<Ok, Err> ok(Ok ok) {
-        Ensures.ensureNonNull(ok, "Null.ok");
+        Ensures.ensureNonNull(ok, "null `ok`");
         return new Result<>(ok, null);
     }
 
     public static <Ok, Err> Result<Ok, Err> err(Err err) {
-        Ensures.ensureNonNull(err, "Null.err");
+        Ensures.ensureNonNull(err, "null `err`");
         return new Result<>(null, err);
     }
 
@@ -51,11 +51,11 @@ public final class Result<Ok, Err> {
     }
 
     public Ok getOk() {
-        return Ensures.ensureNonNull(this.ok, "Null.ok");
+        return Ensures.ensureNonNull(this.ok, "null `ok`");
     }
 
     public Err getErr() {
-        return Ensures.ensureNonNull(this.err, "Null.err");
+        return Ensures.ensureNonNull(this.err, "null `err`");
     }
 
     /**

@@ -40,9 +40,9 @@ public class GreptimeFlightClient implements AutoCloseable {
     private final BufferAllocator allocator;
 
     private GreptimeFlightClient(Endpoint endpoint, InternalFlightClient client, BufferAllocator allocator) {
-        this.endpoint = Ensures.ensureNonNull(endpoint, "endpoint");
-        this.client = Ensures.ensureNonNull(client, "client");
-        this.allocator = Ensures.ensureNonNull(allocator, "allocator");
+        this.endpoint = Ensures.ensureNonNull(endpoint, "null `endpoint`");
+        this.client = Ensures.ensureNonNull(client, "null `client`");
+        this.allocator = Ensures.ensureNonNull(allocator, "null `allocator`");
     }
 
     public static GreptimeFlightClient createClient(Endpoint endpoint) {

@@ -171,14 +171,14 @@ public final class ThreadPoolUtil {
         }
 
         public ThreadPoolExecutor build() {
-            Ensures.ensureNonNull(this.poolName, "poolName");
-            Ensures.ensureNonNull(this.enableMetric, "enableMetric");
-            Ensures.ensureNonNull(this.coreThreads, "coreThreads");
-            Ensures.ensureNonNull(this.maximumThreads, "maximumThreads");
-            Ensures.ensureNonNull(this.keepAliveSeconds, "keepAliveSeconds");
-            Ensures.ensureNonNull(this.workQueue, "workQueue");
-            Ensures.ensureNonNull(this.threadFactory, "threadFactory");
-            Ensures.ensureNonNull(this.handler, "handler");
+            Ensures.ensureNonNull(this.poolName, "null `poolName`");
+            Ensures.ensureNonNull(this.enableMetric, "null `enableMetric`");
+            Ensures.ensureNonNull(this.coreThreads, "null `coreThreads`");
+            Ensures.ensureNonNull(this.maximumThreads, "null `maximumThreads`");
+            Ensures.ensureNonNull(this.keepAliveSeconds, "null `keepAliveSeconds`");
+            Ensures.ensureNonNull(this.workQueue, "null `workQueue`");
+            Ensures.ensureNonNull(this.threadFactory, "null `threadFactory`");
+            Ensures.ensureNonNull(this.handler, "null `handler`");
 
             return ThreadPoolUtil.newThreadPool(this.poolName, this.enableMetric, this.coreThreads,
                     this.maximumThreads, this.keepAliveSeconds, this.workQueue, this.threadFactory, this.handler);
@@ -218,11 +218,11 @@ public final class ThreadPoolUtil {
         }
 
         public ScheduledThreadPoolExecutor build() {
-            Ensures.ensureNonNull(this.poolName, "poolName");
-            Ensures.ensureNonNull(this.enableMetric, "enableMetric");
-            Ensures.ensureNonNull(this.coreThreads, "coreThreads");
-            Ensures.ensureNonNull(this.threadFactory, "threadFactory");
-            Ensures.ensureNonNull(this.handler, "handler");
+            Ensures.ensureNonNull(this.poolName, "null `poolName`");
+            Ensures.ensureNonNull(this.enableMetric, "null `enableMetric`");
+            Ensures.ensureNonNull(this.coreThreads, "null `coreThreads`");
+            Ensures.ensureNonNull(this.threadFactory, "null `threadFactory`");
+            Ensures.ensureNonNull(this.handler, "null `handler`");
 
             return ThreadPoolUtil.newScheduledThreadPool(this.poolName, this.enableMetric, this.coreThreads,
                     this.threadFactory, this.handler);

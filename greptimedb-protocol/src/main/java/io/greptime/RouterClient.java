@@ -55,10 +55,10 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
 
     @Override
     public boolean init(RouterOptions opts) {
-        this.opts = Ensures.ensureNonNull(opts, "Null RouterClient.opts").copy();
+        this.opts = Ensures.ensureNonNull(opts, "null `RouterClient.opts`").copy();
         this.rpcClient = this.opts.getRpcClient();
 
-        List<Endpoint> endpoints = Ensures.ensureNonNull(this.opts.getEndpoints(), "Null endpoints");
+        List<Endpoint> endpoints = Ensures.ensureNonNull(this.opts.getEndpoints(), "null `endpoints`");
 
         this.inner = new InnerRouter();
         this.inner.refreshLocal(endpoints);

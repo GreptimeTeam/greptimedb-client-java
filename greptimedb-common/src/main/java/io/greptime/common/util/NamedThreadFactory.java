@@ -62,7 +62,7 @@ public class NamedThreadFactory implements ThreadFactory {
     @SuppressWarnings("NullableProblems")
     @Override
     public Thread newThread(Runnable r) {
-        Ensures.ensureNonNull(r, "runnable");
+        Ensures.ensureNonNull(r, "null `runnable`");
 
         String name2 = this.name + this.id.getAndIncrement();
         Runnable r2 = wrapRunnable(r);

@@ -28,7 +28,7 @@ public class TableName {
     private String tableName;
 
     public static TableName with(String databaseName, String tableName) {
-        Ensures.ensure(Strings.isNotBlank(tableName), "Blank table name");
+        Ensures.ensure(Strings.isNotBlank(tableName), "blank `tableName`");
         TableName tn = new TableName();
         tn.setDatabaseName(databaseName);
         tn.setTableName(tableName);

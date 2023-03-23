@@ -127,7 +127,7 @@ public class GrpcClient implements RpcClient {
             throw new IllegalStateException("Grpc client has started");
         }
 
-        this.opts = Ensures.ensureNonNull(opts, "GrpcClient.opts").copy();
+        this.opts = Ensures.ensureNonNull(opts, "null `GrpcClient.opts`").copy();
         this.asyncPool = SHARED_ASYNC_POOL.getObject();
 
         initInterceptors();
@@ -154,13 +154,13 @@ public class GrpcClient implements RpcClient {
 
     @Override
     public boolean checkConnection(Endpoint endpoint, boolean createIfAbsent) {
-        Ensures.ensureNonNull(endpoint, "endpoint");
+        Ensures.ensureNonNull(endpoint, "null `endpoint`");
         return checkChannel(endpoint, createIfAbsent);
     }
 
     @Override
     public void closeConnection(Endpoint endpoint) {
-        Ensures.ensureNonNull(endpoint, "endpoint");
+        Ensures.ensureNonNull(endpoint, "null `endpoint`");
         closeChannel(endpoint);
     }
 
@@ -717,10 +717,10 @@ public class GrpcClient implements RpcClient {
                                   Object request, //
                                   Context ctx, //
                                   Observer<?> observer) {
-        Ensures.ensureNonNull(endpoint, "endpoint");
-        Ensures.ensureNonNull(request, "request");
-        Ensures.ensureNonNull(ctx, "ctx");
-        Ensures.ensureNonNull(observer, "observer");
+        Ensures.ensureNonNull(endpoint, "null `endpoint`");
+        Ensures.ensureNonNull(request, "null `request`");
+        Ensures.ensureNonNull(ctx, "null `ctx`");
+        Ensures.ensureNonNull(observer, "null `observer`");
     }
 
     private static ExecutorService newSharedPool() {

@@ -62,7 +62,7 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
 
     @Override
     public boolean init(QueryOptions opts) {
-        this.opts = Ensures.ensureNonNull(opts, "opts");
+        this.opts = Ensures.ensureNonNull(opts, "null `QueryClient.opts`");
         this.routerClient = this.opts.getRouterClient();
         Executor pool = this.opts.getAsyncPool();
         this.asyncPool = pool != null ? pool : new SerializingExecutor("query_client");
@@ -76,7 +76,7 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
 
     @Override
     public CompletableFuture<Result<QueryOk, Err>> query(QueryRequest req, Context ctx) {
-        Ensures.ensureNonNull(req, "req");
+        Ensures.ensureNonNull(req, "null `request");
 
         ctx.with(Context.KEY_QUERY_ID, QUERY_ID.incrementAndGet());
 
