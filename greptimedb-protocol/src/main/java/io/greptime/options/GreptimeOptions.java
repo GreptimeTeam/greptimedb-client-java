@@ -132,13 +132,13 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
     }
 
     public static GreptimeOptions checkSelf(GreptimeOptions opts) {
-        Ensures.ensureNonNull(opts, "opts");
-        Ensures.ensureNonNull(opts.getEndpoints(), "endpoints");
-        Ensures.ensure(!opts.getEndpoints().isEmpty(), "endpoints");
-        Ensures.ensureNonNull(opts.getRpcOptions(), "rpcOptions");
-        Ensures.ensureNonNull(opts.getRouterOptions(), "routerOptions");
-        Ensures.ensureNonNull(opts.getWriteOptions(), "writeOptions");
-        Ensures.ensureNonNull(opts.getQueryOptions(), "queryOptions");
+        Ensures.ensureNonNull(opts, "null `opts (GreptimeOptions)`)`");
+        Ensures.ensureNonNull(opts.getEndpoints(), "null `endpoints`");
+        Ensures.ensure(!opts.getEndpoints().isEmpty(), "empty `endpoints`");
+        Ensures.ensureNonNull(opts.getRpcOptions(), "null `rpcOptions`");
+        Ensures.ensureNonNull(opts.getRouterOptions(), "null `routerOptions`");
+        Ensures.ensureNonNull(opts.getWriteOptions(), "null `writeOptions`");
+        Ensures.ensureNonNull(opts.getQueryOptions(), "null `queryOptions`");
         return opts;
     }
 

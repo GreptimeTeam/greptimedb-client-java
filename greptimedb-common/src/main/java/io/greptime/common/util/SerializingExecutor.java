@@ -68,7 +68,7 @@ public class SerializingExecutor implements Executor {
      * lock, and call {@link #drain} outside the lock.
      */
     public final void executeLater(Runnable task) {
-        this.queue.add(Ensures.ensureNonNull(task, "task"));
+        this.queue.add(Ensures.ensureNonNull(task, "null `task`"));
     }
 
     @SuppressWarnings("NullableProblems")

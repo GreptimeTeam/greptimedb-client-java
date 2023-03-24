@@ -78,7 +78,7 @@ public final class ColumnHelper {
             return values.getRepeatedField(fd, index);
         }
 
-        Ensures.ensure(index < nullMask.size());
+        Ensures.ensure(index < nullMask.size(), "Index out of range: %d", index);
 
         if (nullMask.get(index)) {
             return null;

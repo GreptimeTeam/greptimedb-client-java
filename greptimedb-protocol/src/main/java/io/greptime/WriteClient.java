@@ -61,7 +61,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
     @Override
     public boolean init(WriteOptions opts) {
-        this.opts = Ensures.ensureNonNull(opts, "opts");
+        this.opts = Ensures.ensureNonNull(opts, "null `WriteClient.opts`");
         this.routerClient = this.opts.getRouterClient();
         Executor pool = this.opts.getAsyncPool();
         this.asyncPool = pool != null ? pool : new SerializingExecutor("write_client");
@@ -76,7 +76,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
     @Override
     public CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx) {
-        Ensures.ensureNonNull(rows, "rows");
+        Ensures.ensureNonNull(rows, "null `rows`");
 
         long startCall = Clock.defaultClock().getTick();
 
@@ -303,7 +303,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
         @Override
         public StreamWriter<WriteRows, WriteOk> write(WriteRows rows) {
-            Ensures.ensureNonNull(rows, "Null.WriteRows");
+            Ensures.ensureNonNull(rows, "null `rows`");
 
             if (this.rateLimiter != null) {
                 double timeSpent = this.rateLimiter.acquire(rows.rowCount());

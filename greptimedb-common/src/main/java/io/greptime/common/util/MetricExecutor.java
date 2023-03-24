@@ -31,7 +31,7 @@ public class MetricExecutor implements Executor {
     private final Timer executeTimer;
 
     public MetricExecutor(Executor pool, String name) {
-        this.pool = Ensures.ensureNonNull(pool, "pool");
+        this.pool = Ensures.ensureNonNull(pool, "null `pool`");
         this.name = name;
         this.executeTimer = MetricsUtil.timer(name);
     }

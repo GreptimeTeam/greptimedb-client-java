@@ -60,8 +60,15 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
             List<Columns.ColumnDataType> dataTypes = this.tableSchema.getDataTypes();
 
             Ensures.ensureNonNull(tableName, "Null table name");
+            Ensures.ensureNonNull(columnNames, "Null column names");
+            Ensures.ensureNonNull(semanticTypes, "Null semantic types");
+            Ensures.ensureNonNull(dataTypes, "Null data types");
 
-            int columnCount = columnNames == null ? 0 : columnNames.size();
+            int columnCount = columnNames.size();
+
+            Ensures.ensure(columnCount > 0, "Empty column names");
+            Ensures.ensure(columnCount == semanticTypes.size(), "Column names size not equal to semantic types size");
+            Ensures.ensure(columnCount == dataTypes.size(), "Column names size not equal to data types size");
 
             DefaultWriteRows rows = new DefaultWriteRows();
             rows.tableName = tableName;
@@ -156,6 +163,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
             Ensures.ensureNonNull(columns, "Forget to call `WriteRows.finish()`?");
 
             Database.RequestHeader header = Database.RequestHeader.newBuilder() //
+                    // .setCatalog("") // Maybe this field is no longer needed.
                     .setSchema(tableName.getDatabaseName()) //
                     .build();
 

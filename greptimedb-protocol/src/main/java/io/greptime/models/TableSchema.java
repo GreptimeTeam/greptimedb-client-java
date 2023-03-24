@@ -19,14 +19,20 @@ package io.greptime.models;
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Columns;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
+ * Table scheam for write.
+ * 
  * @author jiachun.fjc
  */
 public class TableSchema {
+
+    private static final Map<TableName, TableSchema> TABLE_SCHEMA_CACHE = new ConcurrentHashMap<>();
+
     private TableName tableName;
     private List<String> columnNames;
     private List<Columns.Column.SemanticType> semanticTypes;
@@ -50,15 +56,27 @@ public class TableSchema {
         return dataTypes;
     }
 
+    public static TableSchema findSchema(TableName tableName) {
+        return TABLE_SCHEMA_CACHE.get(tableName);
+    }
+
+    public static TableSchema removeSchema(TableName tableName) {
+        return TABLE_SCHEMA_CACHE.remove(tableName);
+    }
+
+    public static void clearAllSchemas() {
+        TABLE_SCHEMA_CACHE.clear();
+    }
+
     public static Builder newBuilder(TableName tableName) {
         return new Builder(tableName);
     }
 
     public static class Builder {
         private final TableName tableName;
-        private List<String> columnNames = Collections.emptyList();
-        private List<Columns.Column.SemanticType> semanticTypes = Collections.emptyList();
-        private List<Columns.ColumnDataType> dataTypes = Collections.emptyList();
+        private List<String> columnNames;
+        private List<Columns.Column.SemanticType> semanticTypes;
+        private List<Columns.ColumnDataType> dataTypes;
 
         public Builder(TableName tableName) {
             this.tableName = tableName;
@@ -85,18 +103,27 @@ public class TableSchema {
 
         public TableSchema build() {
             Ensures.ensureNonNull(this.tableName, "Null table name");
+            Ensures.ensureNonNull(this.columnNames, "Null column names");
+            Ensures.ensureNonNull(this.semanticTypes, "Null semantic types");
+            Ensures.ensureNonNull(this.dataTypes, "Null data types");
 
             int columnCount = this.columnNames.size();
 
             Ensures.ensure(columnCount > 0, "Empty column names");
-            Ensures.ensure(columnCount == this.semanticTypes.size(), "Invalid semantic types");
-            Ensures.ensure(columnCount == this.dataTypes.size(), "Invalid data types");
+            Ensures.ensure(columnCount == semanticTypes.size(), "Column names size not equal to semantic types size");
+            Ensures.ensure(columnCount == dataTypes.size(), "Column names size not equal to data types size");
 
             TableSchema tableSchema = new TableSchema();
             tableSchema.tableName = this.tableName;
             tableSchema.columnNames = this.columnNames;
             tableSchema.semanticTypes = this.semanticTypes;
             tableSchema.dataTypes = this.dataTypes;
+            return tableSchema;
+        }
+
+        public TableSchema buildAndCache() {
+            TableSchema tableSchema = build();
+            TABLE_SCHEMA_CACHE.putIfAbsent(tableSchema.tableName, tableSchema);
             return tableSchema;
         }
     }

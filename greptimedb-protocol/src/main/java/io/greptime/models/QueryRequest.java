@@ -105,8 +105,8 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
 
         public QueryRequest build() {
             QueryRequest req = new QueryRequest();
-            req.exprType = Ensures.ensureNonNull(this.exprType, "exprType");
-            req.ql = Ensures.ensureNonNull(this.ql, "ql");
+            req.exprType = Ensures.ensureNonNull(this.exprType, "null `exprType`");
+            req.ql = Ensures.ensureNonNull(this.ql, "null `ql`");
             return req;
         }
     }
