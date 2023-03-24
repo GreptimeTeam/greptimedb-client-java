@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * Table scheam for wirte.
+ * Table scheam for write.
  * 
  * @author jiachun.fjc
  */
