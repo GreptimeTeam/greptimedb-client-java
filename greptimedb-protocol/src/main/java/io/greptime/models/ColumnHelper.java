@@ -17,12 +17,9 @@
 package io.greptime.models;
 
 import com.google.protobuf.ByteStringHelper;
-import com.google.protobuf.Descriptors;
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Columns;
 import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A utility that handles some processing of column data.
@@ -31,51 +28,17 @@ import java.util.Map;
  */
 public final class ColumnHelper {
 
-    private static final Map<Columns.ColumnDataType, String> COLUMN_TYPES_DICT;
-
-    static {
-        COLUMN_TYPES_DICT = new HashMap<>();
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.INT8, "i8_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.INT16, "i16_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.INT32, "i32_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.INT64, "i64_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.UINT8, "u8_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.UINT16, "u16_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.UINT32, "u32_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.UINT64, "u64_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.FLOAT32, "f32_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.FLOAT64, "f64_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.BOOLEAN, "bool_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.BINARY, "binary_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.STRING, "string_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.DATE, "date_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.DATETIME, "datetime_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.TIMESTAMP_SECOND, "ts_second_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.TIMESTAMP_MILLISECOND, "ts_millisecond_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.TIMESTAMP_MICROSECOND, "ts_microsecond_values");
-        COLUMN_TYPES_DICT.put(Columns.ColumnDataType.TIMESTAMP_NANOSECOND, "ts_nanosecond_values");
-    }
-
-    public static Columns.ColumnDataType getValueType(Columns.Column column) {
-        return column.getDatatype();
-    }
-
     public static void addToColumnValuesBuilder(Columns.Column.Builder builder, Object value) {
-        Columns.ColumnDataType dataType = builder.getDatatype();
-        String fieldName = COLUMN_TYPES_DICT.get(dataType);
-
-        Ensures.ensureNonNull(fieldName, "Unsupported `data_type`: %s", dataType);
-
         Columns.Column.Values.Builder valuesBuilder = builder.getValuesBuilder();
-        Descriptors.FieldDescriptor fd = valuesBuilder.getDescriptorForType().findFieldByName(fieldName);
-        valuesBuilder.addRepeatedField(fd, value);
+        Columns.ColumnDataType dataType = builder.getDatatype();
+        addValue(valuesBuilder, dataType, value);
     }
 
     public static Object getValue(Columns.Column column, int index, BitSet nullMask) {
         Columns.Column.Values values = column.getValues();
-        Descriptors.FieldDescriptor fd = getValueFd(column);
+        Columns.ColumnDataType dataType = column.getDatatype();
         if (nullMask.isEmpty()) {
-            return values.getRepeatedField(fd, index);
+            return getValue(values, dataType, index);
         }
 
         Ensures.ensure(index < nullMask.size(), "Index out of range: %d", index);
@@ -85,20 +48,124 @@ public final class ColumnHelper {
         }
 
         int cardinality = nullMask.get(0, index).cardinality();
-        return values.getRepeatedField(fd, index - cardinality);
+        return getValue(values, dataType, index - cardinality);
     }
 
     public static BitSet getNullMaskBits(Columns.Column column) {
         return BitSet.valueOf(ByteStringHelper.sealByteArray(column.getNullMask()));
     }
 
-    private static Descriptors.FieldDescriptor getValueFd(Columns.Column column) {
-        Columns.ColumnDataType dataType = column.getDatatype();
-        String fieldName = COLUMN_TYPES_DICT.get(dataType);
+    private static void addValue(Columns.Column.Values.Builder builder, Columns.ColumnDataType dataType, Object value) {
+        switch (dataType) {
+            case INT8:
+                builder.addI8Values((int) value);
+                break;
+            case INT16:
+                builder.addI16Values((int) value);
+                break;
+            case INT32:
+                builder.addI32Values((int) value);
+                break;
+            case INT64:
+                builder.addI64Values(getLongValue(value));
+                break;
+            case UINT8:
+                builder.addU8Values((int) value);
+                break;
+            case UINT16:
+                builder.addU16Values((int) value);
+                break;
+            case UINT32:
+                builder.addU32Values((int) value);
+                break;
+            case UINT64:
+                builder.addU64Values(getLongValue(value));
+                break;
+            case FLOAT32:
+                builder.addF32Values(((Number) value).floatValue());
+                break;
+            case FLOAT64:
+                builder.addF64Values(((Number) value).doubleValue());
+                break;
+            case BOOLEAN:
+                builder.addBoolValues((boolean) value);
+                break;
+            case BINARY:
+                builder.addBinaryValues(ByteStringHelper.wrap((byte[]) value));
+                break;
+            case STRING:
+                builder.addStringValues((String) value);
+                break;
+            case DATE:
+                builder.addDateValues((int) value);
+                break;
+            case DATETIME:
+                builder.addDatetimeValues(getLongValue(value));
+                break;
+            case TIMESTAMP_SECOND:
+                builder.addTsSecondValues(getLongValue(value));
+                break;
+            case TIMESTAMP_MILLISECOND:
+                builder.addTsMillisecondValues(getLongValue(value));
+                break;
+            case TIMESTAMP_NANOSECOND:
+                builder.addTsNanosecondValues(getLongValue(value));
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));
+        }
+    }
 
-        Ensures.ensureNonNull(fieldName, "Unsupported `data_type`: %s", dataType);
+    private static Object getValue(Columns.Column.Values values, Columns.ColumnDataType dataType, int index) {
+        switch (dataType) {
+            case INT8:
+                return values.getI8Values(index);
+            case INT16:
+                return values.getI16Values(index);
+            case INT32:
+                return values.getI32Values(index);
+            case INT64:
+                return values.getI64Values(index);
+            case UINT8:
+                return values.getU8Values(index);
+            case UINT16:
+                return values.getU16Values(index);
+            case UINT32:
+                return values.getU32Values(index);
+            case UINT64:
+                return values.getU64Values(index);
+            case FLOAT32:
+                return values.getF32Values(index);
+            case FLOAT64:
+                return values.getF64Values(index);
+            case BOOLEAN:
+                return values.getBoolValues(index);
+            case BINARY:
+                return values.getBinaryValues(index);
+            case STRING:
+                return values.getStringValues(index);
+            case DATE:
+                return values.getDateValues(index);
+            case DATETIME:
+                return values.getDatetimeValues(index);
+            case TIMESTAMP_SECOND:
+                return values.getTsSecondValues(index);
+            case TIMESTAMP_MILLISECOND:
+                return values.getTsMillisecondValues(index);
+            case TIMESTAMP_NANOSECOND:
+                return values.getTsNanosecondValues(index);
+            default:
+                throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));
+        }
+    }
 
-        return column.getValues().getDescriptorForType().findFieldByName(fieldName);
+    private static long getLongValue(Object value) {
+        if (value instanceof Integer) {
+            return (int) value;
+        } else if (value instanceof Long) {
+            return (long) value;
+        }
+        return ((Number) value).longValue();
     }
 
     private ColumnHelper() {}

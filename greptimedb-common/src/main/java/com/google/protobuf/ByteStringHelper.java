@@ -24,7 +24,6 @@ import java.nio.ByteBuffer;
  *
  * @author jiachun.fjc
  */
-@SuppressWarnings("unused")
 public class ByteStringHelper {
 
     /**

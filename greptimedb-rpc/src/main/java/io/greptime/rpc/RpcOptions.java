@@ -25,8 +25,9 @@ import java.util.concurrent.TimeUnit;
  *
  * @author jiachun.fjc
  */
-@SuppressWarnings("unused")
 public class RpcOptions implements Copiable<RpcOptions> {
+
+    private boolean  useRpcSharedPool = false;
 
     /**
      * RPC request default timeout in milliseconds
@@ -97,6 +98,14 @@ public class RpcOptions implements Copiable<RpcOptions> {
     private boolean   blockOnLimit            = false;
 
     private boolean   logOnLimitChange        = true;
+
+    public boolean isUseRpcSharedPool() {
+        return useRpcSharedPool;
+    }
+
+    public void setUseRpcSharedPool(boolean useRpcSharedPool) {
+        this.useRpcSharedPool = useRpcSharedPool;
+    }
 
     public int getDefaultRpcTimeout() {
         return defaultRpcTimeout;
@@ -213,6 +222,7 @@ public class RpcOptions implements Copiable<RpcOptions> {
     @Override
     public RpcOptions copy() {
         final RpcOptions opts = new RpcOptions();
+        opts.useRpcSharedPool = this.useRpcSharedPool;
         opts.defaultRpcTimeout = this.defaultRpcTimeout;
         opts.maxInboundMessageSize = this.maxInboundMessageSize;
         opts.flowControlWindow = this.flowControlWindow;
@@ -233,7 +243,8 @@ public class RpcOptions implements Copiable<RpcOptions> {
     @Override
     public String toString() {
         return "RpcOptions{" + //
-               "defaultRpcTimeout=" + defaultRpcTimeout + //
+               "useRpcSharedPool=" + useRpcSharedPool + //
+               ", defaultRpcTimeout=" + defaultRpcTimeout + //
                ", maxInboundMessageSize=" + maxInboundMessageSize + //
                ", flowControlWindow=" + flowControlWindow + //
                ", idleTimeoutSeconds=" + idleTimeoutSeconds + //
@@ -273,5 +284,5 @@ public class RpcOptions implements Copiable<RpcOptions> {
         Gradient,
 
         None
-    }
+    } 
 }
