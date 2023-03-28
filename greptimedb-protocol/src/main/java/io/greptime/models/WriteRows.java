@@ -163,8 +163,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
             Ensures.ensureNonNull(columns, "Forget to call `WriteRows.finish()`?");
 
             Database.RequestHeader header = Database.RequestHeader.newBuilder() //
-                    // .setCatalog("") // Maybe this field is no longer needed.
-                    .setSchema(tableName.getDatabaseName()) //
+                    .setDbname(tableName.getDatabaseName()) //
                     .build();
 
             Database.InsertRequest insertRequest = Database.InsertRequest.newBuilder() //
