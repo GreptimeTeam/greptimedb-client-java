@@ -58,34 +58,34 @@ public final class ColumnHelper {
     private static void addValue(Columns.Column.Values.Builder builder, Columns.ColumnDataType dataType, Object value) {
         switch (dataType) {
             case INT8:
-                builder.addI8Values((int) value);
+                builder.addI8Values(((Number) value).intValue());
                 break;
             case INT16:
-                builder.addI16Values((int) value);
+                builder.addI16Values(((Number) value).intValue());
                 break;
             case INT32:
-                builder.addI32Values((int) value);
+                builder.addI32Values(((Number) value).intValue());
                 break;
             case INT64:
-                builder.addI64Values((long) value);
+                builder.addI64Values(((Number) value).longValue());
                 break;
             case UINT8:
-                builder.addU8Values((int) value);
+                builder.addU8Values(((Number) value).intValue());
                 break;
             case UINT16:
-                builder.addU16Values((int) value);
+                builder.addU16Values(((Number) value).intValue());
                 break;
             case UINT32:
-                builder.addU32Values((int) value);
+                builder.addU32Values(((Number) value).intValue());
                 break;
             case UINT64:
-                builder.addU64Values((int) value);
+                builder.addU64Values(((Number) value).intValue());
                 break;
             case FLOAT32:
-                builder.addF32Values((float) value);
+                builder.addF32Values(((Number) value).floatValue());
                 break;
             case FLOAT64:
-                builder.addF64Values((double) value);
+                builder.addF64Values(((Number) value).doubleValue());
                 break;
             case BOOLEAN:
                 builder.addBoolValues((boolean) value);
@@ -97,19 +97,19 @@ public final class ColumnHelper {
                 builder.addStringValues((String) value);
                 break;
             case DATE:
-                builder.addDateValues((int) value);
+                builder.addDateValues(((Number) value).intValue());
                 break;
             case DATETIME:
-                builder.addDatetimeValues((long) value);
+                builder.addDatetimeValues(((Number) value).longValue());
                 break;
             case TIMESTAMP_SECOND:
-                builder.addTsSecondValues((long) value);
+                builder.addTsSecondValues(((Number) value).longValue());
                 break;
             case TIMESTAMP_MILLISECOND:
-                builder.addTsMillisecondValues((long) value);
+                builder.addTsMillisecondValues(((Number) value).longValue());
                 break;
             case TIMESTAMP_NANOSECOND:
-                builder.addTsNanosecondValues((long) value);
+                builder.addTsNanosecondValues(((Number) value).longValue());
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));
