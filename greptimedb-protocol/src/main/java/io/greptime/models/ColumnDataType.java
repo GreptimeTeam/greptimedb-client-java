@@ -24,7 +24,25 @@ import static org.apache.arrow.vector.types.pojo.ArrowType.Timestamp;
  * @author jiachun.fjc
  */
 public enum ColumnDataType {
-    Bool, Int8, Int16, Int32, Int64, UInt8, UInt16, UInt32, UInt64, Float32, Float64, Binary, String, Date, DateTime, TimestampSecond, TimestampMillisecond, TimestampMicrosecond, TimestampNanosecond;
+    Bool, //
+    Int8, //
+    Int16, //
+    Int32, //
+    Int64, //
+    UInt8, //
+    UInt16, //
+    UInt32, //
+    UInt64, //
+    Float32, //
+    Float64, //
+    Binary, //
+    String, //
+    Date, //
+    DateTime, //
+    TimestampSecond, //
+    TimestampMillisecond, //
+    TimestampMicrosecond, //
+    TimestampNanosecond;
 
     public Columns.ColumnDataType toProtoValue() {
         switch (this) {
