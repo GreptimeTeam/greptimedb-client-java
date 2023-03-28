@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.github.GreptimeTeam</groupId>
             <artifactId>greptime-proto</artifactId>
-            <version>0a7b790ed4</version>
+            <version>0.1.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

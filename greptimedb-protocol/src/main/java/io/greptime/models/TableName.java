@@ -18,6 +18,7 @@ package io.greptime.models;
 
 import io.greptime.common.util.Ensures;
 import io.greptime.common.util.Strings;
+import java.util.Objects;
 
 /**
  *
@@ -60,13 +61,6 @@ public class TableName {
     }
 
     @Override
-    public int hashCode() {
-        int result = databaseName != null ? databaseName.hashCode() : 0;
-        result = 31 * result + (tableName != null ? tableName.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -74,12 +68,13 @@ public class TableName {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         TableName tableName1 = (TableName) o;
+        return Objects.equals(getDatabaseName(), tableName1.getDatabaseName())
+                && Objects.equals(getTableName(), tableName1.getTableName());
+    }
 
-        if (databaseName != null ? !databaseName.equals(tableName1.databaseName) : tableName1.databaseName != null) {
-            return false;
-        }
-        return tableName != null ? tableName.equals(tableName1.tableName) : tableName1.tableName == null;
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDatabaseName(), getTableName());
     }
 }
