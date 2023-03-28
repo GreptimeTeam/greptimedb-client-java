@@ -99,6 +99,8 @@ public class RpcOptions implements Copiable<RpcOptions> {
 
     private boolean   logOnLimitChange        = true;
 
+    private boolean   enableMetricInterceptor = false;
+
     public boolean isUseRpcSharedPool() {
         return useRpcSharedPool;
     }
@@ -219,6 +221,14 @@ public class RpcOptions implements Copiable<RpcOptions> {
         this.logOnLimitChange = logOnLimitChange;
     }
 
+    public boolean isEnableMetricInterceptor() {
+        return enableMetricInterceptor;
+    }
+
+    public void setEnableMetricInterceptor(boolean enableMetricInterceptor) {
+        this.enableMetricInterceptor = enableMetricInterceptor;
+    }
+
     @Override
     public RpcOptions copy() {
         final RpcOptions opts = new RpcOptions();
@@ -237,6 +247,7 @@ public class RpcOptions implements Copiable<RpcOptions> {
         opts.smoothing = this.smoothing;
         opts.blockOnLimit = this.blockOnLimit;
         opts.logOnLimitChange = this.logOnLimitChange;
+        opts.enableMetricInterceptor = this.enableMetricInterceptor;
         return opts;
     }
 
@@ -258,6 +269,7 @@ public class RpcOptions implements Copiable<RpcOptions> {
                ", smoothing=" + smoothing + //
                ", blockOnLimit=" + blockOnLimit + //
                ", logOnLimitChange=" + logOnLimitChange + //
+               ", enableMetricInterceptor=" + enableMetricInterceptor + //
                '}';
     }
 
