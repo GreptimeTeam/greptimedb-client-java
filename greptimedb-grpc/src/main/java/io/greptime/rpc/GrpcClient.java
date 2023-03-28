@@ -403,8 +403,10 @@ public class GrpcClient implements RpcClient {
 
     // Interceptors run in the reverse order in which they are added
     private void initInterceptors() {
-        // the last one
-        addInterceptor(new MetricInterceptor());
+        if (this.opts.isEnableMetricInterceptor()) {
+            // the last one
+            addInterceptor(new MetricInterceptor());
+        }
 
         RpcOptions.LimitKind kind = this.opts.getLimitKind();
         if (kind != null && kind != RpcOptions.LimitKind.None) {
