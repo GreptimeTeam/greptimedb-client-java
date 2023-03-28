@@ -35,7 +35,7 @@ public class WriteOptions implements Copiable<WriteOptions> {
     private int maxInFlightWriteRows = 65536;
     private LimitedPolicy limitedPolicy = LimitedPolicy.defaultWriteLimitedPolicy();
     // Default rate limit for stream writer
-    private int defaultStreamMaxWriteRowsPerSecond = 65536;
+    private int defaultStreamMaxWritePointsPerSecond = 10 * 65536;
 
     public RouterClient getRouterClient() {
         return routerClient;
@@ -77,12 +77,12 @@ public class WriteOptions implements Copiable<WriteOptions> {
         this.limitedPolicy = limitedPolicy;
     }
 
-    public int getDefaultStreamMaxWriteRowsPerSecond() {
-        return defaultStreamMaxWriteRowsPerSecond;
+    public int getDefaultStreamMaxWritePointsPerSecond() {
+        return defaultStreamMaxWritePointsPerSecond;
     }
 
-    public void setDefaultStreamMaxWriteRowsPerSecond(int defaultStreamMaxWriteRowsPerSecond) {
-        this.defaultStreamMaxWriteRowsPerSecond = defaultStreamMaxWriteRowsPerSecond;
+    public void setDefaultStreamMaxWritePointsPerSecond(int defaultStreamMaxWritePointsPerSecond) {
+        this.defaultStreamMaxWritePointsPerSecond = defaultStreamMaxWritePointsPerSecond;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class WriteOptions implements Copiable<WriteOptions> {
         opts.maxRetries = this.maxRetries;
         opts.maxInFlightWriteRows = this.maxInFlightWriteRows;
         opts.limitedPolicy = this.limitedPolicy;
-        opts.defaultStreamMaxWriteRowsPerSecond = this.defaultStreamMaxWriteRowsPerSecond;
+        opts.defaultStreamMaxWritePointsPerSecond = this.defaultStreamMaxWritePointsPerSecond;
         return opts;
     }
 
@@ -105,7 +105,7 @@ public class WriteOptions implements Copiable<WriteOptions> {
                 ", maxRetries=" + maxRetries + //
                 ", maxInFlightWriteRows=" + maxInFlightWriteRows + //
                 ", limitedPolicy=" + limitedPolicy + //
-                ", defaultStreamMaxWriteRowsPerSecond=" + defaultStreamMaxWriteRowsPerSecond + //
+                ", defaultStreamMaxWritePointsPerSecond=" + defaultStreamMaxWritePointsPerSecond + //
                 '}';
     }
 }

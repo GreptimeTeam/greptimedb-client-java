@@ -140,8 +140,8 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
     }
 
     @Override
-    public StreamWriter<WriteRows, WriteOk> streamWriter(int maxRowsPerSecond, Context ctx) {
-        return this.writeClient.streamWriter(maxRowsPerSecond, attachCtx(ctx));
+    public StreamWriter<WriteRows, WriteOk> streamWriter(int maxPointsPerSecond, Context ctx) {
+        return this.writeClient.streamWriter(maxPointsPerSecond, attachCtx(ctx));
     }
 
     @Override

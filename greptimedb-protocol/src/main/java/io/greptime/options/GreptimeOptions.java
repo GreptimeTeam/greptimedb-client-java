@@ -166,7 +166,7 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
         // Write flow limit: maximum number of data rows in-flight.
         private int maxInFlightWriteRows = 65536;
         private LimitedPolicy writeLimitedPolicy = LimitedPolicy.defaultWriteLimitedPolicy();
-        private int defaultStreamMaxWriteRowsPerSecond = 65536;
+        private int defaultStreamMaxWritePointsPerSecond = 10 * 65536;
         // In some case of failure, a retry of the read is attempted.
         private int readMaxRetries = 1;
         // Refresh frequency of route tables. The background refreshes all route tables periodically. By default,
@@ -241,11 +241,11 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
 
         /**
          * The default rate limit for stream writer.
-         * @param defaultStreamMaxWriteRowsPerSecond default max write rows per second
-         * @return this builde
+         * @param defaultStreamMaxWritePointsPerSecond default max write points per second
+         * @return this builder
          */
-        public Builder defaultStreamMaxWriteRowsPerSecond(int defaultStreamMaxWriteRowsPerSecond) {
-            this.defaultStreamMaxWriteRowsPerSecond = defaultStreamMaxWriteRowsPerSecond;
+        public Builder defaultStreamMaxWritePointsPerSecond(int defaultStreamMaxWritePointsPerSecond) {
+            this.defaultStreamMaxWritePointsPerSecond = defaultStreamMaxWritePointsPerSecond;
             return this;
         }
 
@@ -294,7 +294,7 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
             writeOpts.setMaxRetries(this.writeMaxRetries);
             writeOpts.setMaxInFlightWriteRows(this.maxInFlightWriteRows);
             writeOpts.setLimitedPolicy(this.writeLimitedPolicy);
-            writeOpts.setDefaultStreamMaxWriteRowsPerSecond(this.defaultStreamMaxWriteRowsPerSecond);
+            writeOpts.setDefaultStreamMaxWritePointsPerSecond(this.defaultStreamMaxWritePointsPerSecond);
             opts.setWriteOptions(writeOpts);
 
             QueryOptions queryOpts = new QueryOptions();

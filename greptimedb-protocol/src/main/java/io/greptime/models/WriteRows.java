@@ -38,6 +38,12 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
 
     int rowCount();
 
+    int columnCount();
+
+    default int pointCount() {
+        return rowCount() * columnCount();
+    }
+
     WriteRows insert(Object... values);
 
     void finish();
@@ -105,6 +111,11 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
         @Override
         public int rowCount() {
             return rowCount;
+        }
+
+        @Override
+        public int columnCount() {
+            return columnCount;
         }
 
         @Override
