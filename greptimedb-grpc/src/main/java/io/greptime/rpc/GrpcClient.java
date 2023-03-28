@@ -23,6 +23,7 @@ import io.greptime.common.Endpoint;
 import io.greptime.common.Keys;
 import io.greptime.common.util.Clock;
 import io.greptime.common.util.Cpus;
+import io.greptime.common.util.DirectExecutor;
 import io.greptime.common.util.Ensures;
 import io.greptime.common.util.ExecutorServiceHelper;
 import io.greptime.common.util.MetricsUtil;
@@ -115,7 +116,8 @@ public class GrpcClient implements RpcClient {
     private final MarshallerRegistry           marshallerRegistry;
 
     private RpcOptions                         opts;
-    private ExecutorService                    asyncPool;
+    private Executor                           asyncPool;
+    private boolean                            useSharedRpcPool;
 
     public GrpcClient(MarshallerRegistry marshallerRegistry) {
         this.marshallerRegistry = marshallerRegistry;
@@ -128,7 +130,13 @@ public class GrpcClient implements RpcClient {
         }
 
         this.opts = Ensures.ensureNonNull(opts, "null `GrpcClient.opts`").copy();
-        this.asyncPool = SHARED_ASYNC_POOL.getObject();
+
+        this.useSharedRpcPool = this.opts.isUseRpcSharedPool();
+        if (this.useSharedRpcPool) {
+            this.asyncPool = SHARED_ASYNC_POOL.getObject();
+        } else {
+            this.asyncPool = new DirectExecutor("rpc-direct-pool");
+        }
 
         initInterceptors();
 
@@ -141,7 +149,9 @@ public class GrpcClient implements RpcClient {
             return;
         }
 
-        ExecutorServiceHelper.shutdownAndAwaitTermination(this.asyncPool);
+        if (this.useSharedRpcPool) {
+            SHARED_ASYNC_POOL.returnObject((ExecutorService) this.asyncPool);
+        }
         this.asyncPool = null;
 
         closeAllChannels();
