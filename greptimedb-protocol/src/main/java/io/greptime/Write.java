@@ -57,17 +57,17 @@ public interface Write {
     /**
      * @see #streamWriter(int, Context)
      */
-    default StreamWriter<WriteRows, WriteOk> streamWriter(int maxRowsPerSecond) {
-        return streamWriter(maxRowsPerSecond, Context.newDefault());
+    default StreamWriter<WriteRows, WriteOk> streamWriter(int maxPointsPerSecond) {
+        return streamWriter(maxPointsPerSecond, Context.newDefault());
     }
 
     /**
      * Create a streaming for write.
      *
-     * @param maxRowsPerSecond The max number of rows that can be written per second,
-     *                         exceeding which may cause blockage.
+     * @param maxPointsPerSecond The max number of points that can be written per second,
+     *                           exceeding which may cause blockage.
      * @param ctx invoke context
      * @return a stream writer instance
      */
-    StreamWriter<WriteRows, WriteOk> streamWriter(int maxRowsPerSecond, Context ctx);
+    StreamWriter<WriteRows, WriteOk> streamWriter(int maxPointsPerSecond, Context ctx);
 }

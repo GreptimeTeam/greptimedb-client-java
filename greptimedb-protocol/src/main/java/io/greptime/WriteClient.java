@@ -102,8 +102,8 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     }
 
     @Override
-    public StreamWriter<WriteRows, WriteOk> streamWriter(int maxRowsPerSecond, Context ctx) {
-        int permitsPerSecond = maxRowsPerSecond > 0 ? maxRowsPerSecond : this.opts.getDefaultStreamMaxWriteRowsPerSecond();
+    public StreamWriter<WriteRows, WriteOk> streamWriter(int maxPointsPerSecond, Context ctx) {
+        int permitsPerSecond = maxPointsPerSecond > 0 ? maxPointsPerSecond : this.opts.getDefaultStreamMaxWritePointsPerSecond();
 
         CompletableFuture<WriteOk> respFuture = new CompletableFuture<>();
 
@@ -306,7 +306,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
             Ensures.ensureNonNull(rows, "null `rows`");
 
             if (this.rateLimiter != null) {
-                double timeSpent = this.rateLimiter.acquire(rows.rowCount());
+                double timeSpent = this.rateLimiter.acquire(rows.pointCount());
                 InnerMetricHelper.writeStreamLimiterTimeSpent().update((long) timeSpent);
             }
             this.observer.onNext(rows);
