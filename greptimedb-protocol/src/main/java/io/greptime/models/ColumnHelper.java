@@ -58,28 +58,28 @@ public final class ColumnHelper {
     private static void addValue(Columns.Column.Values.Builder builder, Columns.ColumnDataType dataType, Object value) {
         switch (dataType) {
             case INT8:
-                builder.addI8Values(((Number) value).intValue());
+                builder.addI8Values((int) value);
                 break;
             case INT16:
-                builder.addI16Values(((Number) value).intValue());
+                builder.addI16Values((int) value);
                 break;
             case INT32:
-                builder.addI32Values(((Number) value).intValue());
+                builder.addI32Values((int) value);
                 break;
             case INT64:
-                builder.addI64Values(((Number) value).longValue());
+                builder.addI64Values(getLongValue(value));
                 break;
             case UINT8:
-                builder.addU8Values(((Number) value).intValue());
+                builder.addU8Values((int) value);
                 break;
             case UINT16:
-                builder.addU16Values(((Number) value).intValue());
+                builder.addU16Values((int) value);
                 break;
             case UINT32:
-                builder.addU32Values(((Number) value).intValue());
+                builder.addU32Values((int) value);
                 break;
             case UINT64:
-                builder.addU64Values(((Number) value).intValue());
+                builder.addU64Values(getLongValue(value));
                 break;
             case FLOAT32:
                 builder.addF32Values(((Number) value).floatValue());
@@ -97,19 +97,19 @@ public final class ColumnHelper {
                 builder.addStringValues((String) value);
                 break;
             case DATE:
-                builder.addDateValues(((Number) value).intValue());
+                builder.addDateValues((int) value);
                 break;
             case DATETIME:
-                builder.addDatetimeValues(((Number) value).longValue());
+                builder.addDatetimeValues(getLongValue(value));
                 break;
             case TIMESTAMP_SECOND:
-                builder.addTsSecondValues(((Number) value).longValue());
+                builder.addTsSecondValues(getLongValue(value));
                 break;
             case TIMESTAMP_MILLISECOND:
-                builder.addTsMillisecondValues(((Number) value).longValue());
+                builder.addTsMillisecondValues(getLongValue(value));
                 break;
             case TIMESTAMP_NANOSECOND:
-                builder.addTsNanosecondValues(((Number) value).longValue());
+                builder.addTsNanosecondValues(getLongValue(value));
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));
@@ -157,6 +157,15 @@ public final class ColumnHelper {
             default:
                 throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));
         }
+    }
+
+    private static long getLongValue(Object value) {
+        if (value instanceof Integer) {
+            return (int) value;
+        } else if (value instanceof Long) {
+            return (long) value;
+        }
+        return ((Number) value).longValue();
     }
 
     private ColumnHelper() {}
