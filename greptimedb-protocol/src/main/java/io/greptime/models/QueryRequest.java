@@ -77,10 +77,8 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
             case Promql:
                 throw new UnsupportedOperationException("Promql unsupported yet!");
         }
-        return Database.GreptimeRequest.newBuilder()
-                    .setHeader(header_builder.build())
-                    .setQuery(builder.build())
-                    .build();
+        return Database.GreptimeRequest.newBuilder().setHeader(header_builder.build()).setQuery(builder.build())
+                .build();
     }
 
     public static class Builder {
