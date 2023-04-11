@@ -231,6 +231,9 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
         writeOpts.setRouterClient(routerClient);
         writeOpts.setAsyncPool(asyncPool);
         WriteClient writeClient = new WriteClient();
+        if (opts.getAuthInfo() != null) {
+            writeClient.setAuthInfo(opts.getAuthInfo());
+        }
         if (!writeClient.init(writeOpts)) {
             throw new IllegalStateException("Fail to start write client");
         }
@@ -242,6 +245,9 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
         queryOpts.setRouterClient(routerClient);
         queryOpts.setAsyncPool(asyncPool);
         QueryClient queryClient = new QueryClient();
+        if (opts.getAuthInfo() != null) {
+            queryClient.setAuthInfo(opts.getAuthInfo());
+        }
         if (!queryClient.init(queryOpts)) {
             throw new IllegalStateException("Fail to start query client");
         }

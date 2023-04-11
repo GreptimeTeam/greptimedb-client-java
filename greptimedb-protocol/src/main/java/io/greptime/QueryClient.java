@@ -29,6 +29,7 @@ import io.greptime.common.util.SerializingExecutor;
 import io.greptime.flight.AsyncExecCallOption;
 import io.greptime.flight.GreptimeFlightClient;
 import io.greptime.flight.GreptimeRequest;
+import io.greptime.models.AuthInfo;
 import io.greptime.models.Err;
 import io.greptime.models.QueryOk;
 import io.greptime.models.QueryRequest;
@@ -36,6 +37,7 @@ import io.greptime.models.Result;
 import io.greptime.models.SelectRows;
 import io.greptime.options.QueryOptions;
 import io.greptime.rpc.Context;
+import io.greptime.v1.Database;
 import org.apache.arrow.flight.FlightCallHeaders;
 import org.apache.arrow.flight.FlightStream;
 import org.apache.arrow.flight.HeaderCallOption;
@@ -59,6 +61,15 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
     private QueryOptions opts;
     private RouterClient routerClient;
     private Executor asyncPool;
+    private AuthInfo authInfo;
+
+    void setAuthInfo(AuthInfo authInfo) {
+        this.authInfo = authInfo;
+    }
+
+    AuthInfo getAuthInfo() {
+        return authInfo;
+    }
 
     @Override
     public boolean init(QueryOptions opts) {
@@ -91,7 +102,7 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
         }, this.asyncPool);
     }
 
-    private CompletableFuture<Result<QueryOk, Err>> query0(QueryRequest req,Context ctx, int retries) {
+    private CompletableFuture<Result<QueryOk, Err>> query0(QueryRequest req, Context ctx, int retries) {
         InnerMetricHelper.readByRetries(retries).mark();
 
         return this.routerClient.route()
@@ -121,6 +132,9 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
             int retries) {
         GreptimeFlightClient flightClient = this.routerClient.getFlightClient(endpoint);
 
+        if (this.authInfo != null) {
+            req.setAuthInfo(this.authInfo);
+        }
         GreptimeRequest request = new GreptimeRequest(req.into());
 
         FlightCallHeaders headers = new FlightCallHeaders();

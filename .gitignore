@@ -30,3 +30,9 @@ target
 
 *.bak
 .vscode/*
+
+# java language server
+.project
+.classpath
+.settings
+.factorypath
