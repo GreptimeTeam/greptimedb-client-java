@@ -19,6 +19,7 @@ package io.greptime.options;
 import io.greptime.RouterClient;
 import io.greptime.common.Copiable;
 import io.greptime.limit.LimitedPolicy;
+import io.greptime.models.AuthInfo;
 import java.util.concurrent.Executor;
 
 /**
@@ -30,6 +31,7 @@ public class WriteOptions implements Copiable<WriteOptions> {
     private RouterClient routerClient;
     private Executor asyncPool;
     private int maxRetries = 1;
+    private AuthInfo authInfo;
 
     // Write flow limit: maximum number of data rows in-flight.
     private int maxInFlightWriteRows = 65536;
@@ -85,6 +87,14 @@ public class WriteOptions implements Copiable<WriteOptions> {
         this.defaultStreamMaxWritePointsPerSecond = defaultStreamMaxWritePointsPerSecond;
     }
 
+    public AuthInfo getAuthInfo() {
+        return this.authInfo;
+    }
+
+    public void setAuthInfo(AuthInfo authInfo) {
+        this.authInfo = authInfo;
+    }
+
     @Override
     public WriteOptions copy() {
         WriteOptions opts = new WriteOptions();
@@ -94,6 +104,7 @@ public class WriteOptions implements Copiable<WriteOptions> {
         opts.maxInFlightWriteRows = this.maxInFlightWriteRows;
         opts.limitedPolicy = this.limitedPolicy;
         opts.defaultStreamMaxWritePointsPerSecond = this.defaultStreamMaxWritePointsPerSecond;
+        opts.authInfo = this.authInfo;
         return opts;
     }
 
@@ -106,6 +117,7 @@ public class WriteOptions implements Copiable<WriteOptions> {
                 ", maxInFlightWriteRows=" + maxInFlightWriteRows + //
                 ", limitedPolicy=" + limitedPolicy + //
                 ", defaultStreamMaxWritePointsPerSecond=" + defaultStreamMaxWritePointsPerSecond + //
+                ", authInfo=" + authInfo + //
                 '}';
     }
 }

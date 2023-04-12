@@ -29,7 +29,7 @@ import java.util.Optional;
 public class QueryRequest implements Into<Database.GreptimeRequest> {
     private SelectExprType exprType;
     private String ql;
-    private String databaseName;
+    private Optional<String> databaseName;
     private Optional<AuthInfo> authInfo;
 
     public SelectExprType getExprType() {
@@ -66,8 +66,8 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
             header_builder.setAuthorization(authHeader);
         }
 
-        if (databaseName != null) {
-            header_builder.setDbname(databaseName);
+        if (databaseName.isPresent()) {
+            header_builder.setDbname(databaseName.get());
         }
 
         switch (getExprType()) {
@@ -138,7 +138,7 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
             QueryRequest req = new QueryRequest();
             req.exprType = Ensures.ensureNonNull(this.exprType, "null `exprType`");
             req.ql = Ensures.ensureNonNull(this.ql, "null `ql`");
-            req.databaseName = this.databaseName;
+            req.databaseName = Optional.ofNullable(this.databaseName);
             req.authInfo = Optional.empty();
             return req;
         }

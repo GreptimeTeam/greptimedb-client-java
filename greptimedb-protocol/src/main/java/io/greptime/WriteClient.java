@@ -59,15 +59,6 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     private RouterClient routerClient;
     private Executor asyncPool;
     private WriteLimiter writeLimiter;
-    private AuthInfo authInfo;
-
-    void setAuthInfo(AuthInfo authInfo) {
-        this.authInfo = authInfo;
-    }
-
-    AuthInfo getAuthInfo() {
-        return authInfo;
-    }
 
     @Override
     public boolean init(WriteOptions opts) {
@@ -166,8 +157,8 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, WriteRows rows, Context ctx, int retries) {
         TableName tableName = rows.tableName();
 
-        if (this.getAuthInfo() != null) {
-            rows.setAuthInfo(this.getAuthInfo());
+        if (this.opts.getAuthInfo() != null) {
+            rows.setAuthInfo(this.opts.getAuthInfo());
         }
 
         Database.GreptimeRequest req = rows.into();
@@ -212,8 +203,8 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
             @Override
             public void onNext(WriteRows rows) {
-                if (WriteClient.this.getAuthInfo() != null) {
-                    rows.setAuthInfo(WriteClient.this.getAuthInfo());
+                if (WriteClient.this.opts.getAuthInfo() != null) {
+                    rows.setAuthInfo(WriteClient.this.opts.getAuthInfo());
                 }
                 rpcObserver.onNext(rows.into());
             }

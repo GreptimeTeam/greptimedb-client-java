@@ -18,6 +18,7 @@ package io.greptime.options;
 
 import io.greptime.RouterClient;
 import io.greptime.common.Copiable;
+import io.greptime.models.AuthInfo;
 import java.util.concurrent.Executor;
 
 /**
@@ -27,6 +28,7 @@ public class QueryOptions implements Copiable<QueryOptions> {
     private RouterClient routerClient;
     private Executor asyncPool;
     private int maxRetries = 1;
+    private AuthInfo authInfo;
 
     public RouterClient getRouterClient() {
         return routerClient;
@@ -52,12 +54,21 @@ public class QueryOptions implements Copiable<QueryOptions> {
         this.maxRetries = maxRetries;
     }
 
+    public AuthInfo getAuthInfo() {
+        return authInfo;
+    }
+
+    public void setAuthInfo(AuthInfo authInfo) {
+        this.authInfo = authInfo;
+    }
+
     @Override
     public QueryOptions copy() {
         QueryOptions opts = new QueryOptions();
         opts.routerClient = this.routerClient;
         opts.asyncPool = this.asyncPool;
         opts.maxRetries = this.maxRetries;
+        opts.authInfo = this.authInfo;
         return opts;
     }
 
@@ -67,6 +78,7 @@ public class QueryOptions implements Copiable<QueryOptions> {
                 "routerClient=" + routerClient + //
                 ", asyncPool=" + asyncPool + //
                 ", maxRetries=" + maxRetries + //
+                ", authInfo=" + authInfo + //
                 '}';
     }
 }
