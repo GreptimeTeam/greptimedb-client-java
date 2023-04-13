@@ -91,7 +91,7 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
         }, this.asyncPool);
     }
 
-    private CompletableFuture<Result<QueryOk, Err>> query0(QueryRequest req,Context ctx, int retries) {
+    private CompletableFuture<Result<QueryOk, Err>> query0(QueryRequest req, Context ctx, int retries) {
         InnerMetricHelper.readByRetries(retries).mark();
 
         return this.routerClient.route()
@@ -121,6 +121,9 @@ public class QueryClient implements Query, Lifecycle<QueryOptions>, Display {
             int retries) {
         GreptimeFlightClient flightClient = this.routerClient.getFlightClient(endpoint);
 
+        if (this.opts.getAuthInfo() != null) {
+            req.setAuthInfo(this.opts.getAuthInfo());
+        }
         GreptimeRequest request = new GreptimeRequest(req.into());
 
         FlightCallHeaders headers = new FlightCallHeaders();

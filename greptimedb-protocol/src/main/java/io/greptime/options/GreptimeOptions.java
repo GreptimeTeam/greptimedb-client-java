@@ -20,6 +20,7 @@ import io.greptime.common.Copiable;
 import io.greptime.common.Endpoint;
 import io.greptime.common.util.Ensures;
 import io.greptime.limit.LimitedPolicy;
+import io.greptime.models.AuthInfo;
 import io.greptime.rpc.RpcOptions;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
     private RouterOptions routerOptions;
     private WriteOptions writeOptions;
     private QueryOptions queryOptions;
+    private AuthInfo authInfo;
 
     public List<Endpoint> getEndpoints() {
         return endpoints;
@@ -97,12 +99,21 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
         this.queryOptions = queryOptions;
     }
 
+    public AuthInfo getAuthInfo() {
+        return authInfo;
+    }
+
+    public void setAuthInfo(AuthInfo authInfo) {
+        this.authInfo = authInfo;
+    }
+
     @Override
     public GreptimeOptions copy() {
         GreptimeOptions opts = new GreptimeOptions();
         opts.endpoints = new ArrayList<>(this.endpoints);
         opts.asyncWritePool = this.asyncWritePool;
         opts.asyncReadPool = this.asyncReadPool;
+        opts.authInfo = this.authInfo;
         if (this.rpcOptions != null) {
             opts.rpcOptions = this.rpcOptions.copy();
         }
@@ -128,6 +139,7 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
                 ", routerOptions=" + routerOptions + //
                 ", writeOptions=" + writeOptions + //
                 ", queryOptions=" + queryOptions + //
+                ", authInfo=" + authInfo + //
                 '}';
     }
 
@@ -172,6 +184,8 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
         // Refresh frequency of route tables. The background refreshes all route tables periodically. By default,
         // all route tables are refreshed every 30 seconds.
         private long routeTableRefreshPeriodSeconds = 30;
+        // Authentication information
+        private AuthInfo authInfo;
 
         public Builder(List<Endpoint> endpoints) {
             this.endpoints.addAll(endpoints);
@@ -273,6 +287,17 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
         }
 
         /**
+         * Set authentication information.
+         *
+         * @param the authentication information
+         * @return builder self
+         */
+        public Builder authInfo(AuthInfo authInfo) {
+            this.authInfo = authInfo;
+            return this;
+        }
+
+        /**
          * A good start, happy coding.
          *
          * @return nice things
@@ -283,6 +308,7 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
             opts.setAsyncWritePool(this.asyncWritePool);
             opts.setAsyncReadPool(this.asyncReadPool);
             opts.setRpcOptions(this.rpcOptions);
+            opts.setAuthInfo(this.authInfo);
 
             RouterOptions routerOpts = new RouterOptions();
             routerOpts.setEndpoints(this.endpoints);

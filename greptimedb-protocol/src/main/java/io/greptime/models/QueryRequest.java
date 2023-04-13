@@ -19,6 +19,7 @@ package io.greptime.models;
 import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Database;
+import java.util.Optional;
 
 /**
  * The query request condition.
@@ -28,6 +29,8 @@ import io.greptime.v1.Database;
 public class QueryRequest implements Into<Database.GreptimeRequest> {
     private SelectExprType exprType;
     private String ql;
+    private Optional<String> databaseName;
+    private Optional<AuthInfo> authInfo;
 
     public SelectExprType getExprType() {
         return exprType;
@@ -35,6 +38,10 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
 
     public String getQl() {
         return ql;
+    }
+
+    public void setAuthInfo(AuthInfo authInfo) {
+        this.authInfo = Optional.of(authInfo);
     }
 
     @Override
@@ -52,6 +59,17 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
     @Override
     public Database.GreptimeRequest into() {
         Database.QueryRequest.Builder builder = Database.QueryRequest.newBuilder();
+
+        Database.RequestHeader.Builder header_builder = Database.RequestHeader.newBuilder();
+        if (authInfo.isPresent()) {
+            Database.AuthHeader authHeader = authInfo.get().intoAuthHeader();
+            header_builder.setAuthorization(authHeader);
+        }
+
+        if (databaseName.isPresent()) {
+            header_builder.setDbname(databaseName.get());
+        }
+
         switch (getExprType()) {
             case Sql:
                 builder.setSql(getQl());
@@ -59,12 +77,14 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
             case Promql:
                 throw new UnsupportedOperationException("Promql unsupported yet!");
         }
-        return Database.GreptimeRequest.newBuilder().setQuery(builder.build()).build();
+        return Database.GreptimeRequest.newBuilder().setHeader(header_builder.build()).setQuery(builder.build())
+                .build();
     }
 
     public static class Builder {
         private SelectExprType exprType;
         private String ql;
+        private String databaseName;
 
         /**
          * Sets select expression type, such as sql, promql, etc.
@@ -89,6 +109,17 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
         }
 
         /**
+         * Set name of the database the query runs on.
+         *
+         * @param databaseName the name
+         * @return builder self
+         */
+        public Builder databaseName(String databaseName) {
+            this.databaseName = databaseName;
+            return this;
+        }
+
+        /**
          * Query language to, using the specified format string and arguments.
          *
          * @param fmtQl format ql string
@@ -107,7 +138,10 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
             QueryRequest req = new QueryRequest();
             req.exprType = Ensures.ensureNonNull(this.exprType, "null `exprType`");
             req.ql = Ensures.ensureNonNull(this.ql, "null `ql`");
+            req.databaseName = Optional.ofNullable(this.databaseName);
+            req.authInfo = Optional.empty();
             return req;
         }
     }
+
 }

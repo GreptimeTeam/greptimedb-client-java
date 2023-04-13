@@ -24,6 +24,7 @@ import io.greptime.v1.Database;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +34,8 @@ import java.util.stream.Collectors;
  */
 public interface WriteRows extends Into<Database.GreptimeRequest> {
     TableName tableName();
+
+    void setAuthInfo(AuthInfo authInfo);
 
     List<Columns.Column> columns();
 
@@ -78,6 +81,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
 
             DefaultWriteRows rows = new DefaultWriteRows();
             rows.tableName = tableName;
+            rows.authInfo = Optional.empty();
             rows.columnCount = columnCount;
             rows.builders = new ArrayList<>();
             for (int i = 0; i < columnCount; i++) {
@@ -99,6 +103,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
         private BitSet[] nullMasks;
         private List<Columns.Column> columns;
         private int rowCount;
+        private Optional<AuthInfo> authInfo;
 
         public TableName tableName() {
             return tableName;
@@ -116,6 +121,11 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
         @Override
         public int columnCount() {
             return columnCount;
+        }
+
+        @Override
+        public void setAuthInfo(AuthInfo authInfo) {
+            this.authInfo = Optional.of(authInfo);
         }
 
         @Override
@@ -173,9 +183,16 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
             Ensures.ensure(rowCount > 0, "`WriteRows` must contain at least one row of data");
             Ensures.ensureNonNull(columns, "Forget to call `WriteRows.finish()`?");
 
-            Database.RequestHeader header = Database.RequestHeader.newBuilder() //
-                    .setDbname(tableName.getDatabaseName()) //
-                    .build();
+
+            Database.RequestHeader.Builder header_builder = Database.RequestHeader.newBuilder() //
+                .setDbname(tableName.getDatabaseName());
+
+            if (authInfo.isPresent()) {
+                Database.AuthHeader authHeader = authInfo.get().intoAuthHeader();
+                header_builder.setAuthorization(authHeader);
+            }
+
+            Database.RequestHeader header = header_builder.build();
 
             Database.InsertRequest insertRequest = Database.InsertRequest.newBuilder() //
                     .setTableName(tableName.getTableName()) //
