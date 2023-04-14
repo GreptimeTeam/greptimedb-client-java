@@ -32,22 +32,47 @@ import java.util.stream.Collectors;
  * @author jiachun.fjc
  */
 public interface WriteRows extends Into<Database.GreptimeRequest> {
+
+    /**
+     * The table name to write.
+     */
     TableName tableName();
 
+    /**
+     * Sets auth info for this request.
+     */
     void setAuthInfo(AuthInfo authInfo);
 
+    /**
+     * The columns to write.
+     */
     List<Columns.Column> columns();
 
+    /**
+     * The rows count to write.
+     */
     int rowCount();
 
+    /**
+     * The columns count to write.
+     */
     int columnCount();
 
+    /**
+     * The points count to write.
+     */
     default int pointCount() {
         return rowCount() * columnCount();
     }
 
+    /**
+     * Insets one row.
+     */
     WriteRows insert(Object... values);
 
+    /**
+     * The data batch is complete, ready to be sent to the server.
+     */
     void finish();
 
     static WriteRows.Builder newBuilder(TableSchema tableSchema) {
@@ -102,6 +127,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
         private BitSet[] nullMasks;
         private List<Columns.Column> columns;
         private int rowCount;
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
         private Optional<AuthInfo> authInfo;
 
         public TableName tableName() {

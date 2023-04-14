@@ -35,9 +35,9 @@ public class ByteStringHelper {
     /**
      * Wrap a byte array into a ByteString.
      *
-     * @param bs     the byte array
+     * @param bs the byte array
      * @param offset read start offset in array
-     * @param len    read data length
+     * @param len read data length
      * @return the result byte string.
      */
     public static ByteString wrap(byte[] bs, int offset, int len) {

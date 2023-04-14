@@ -18,6 +18,8 @@ package io.greptime.common.signal;
 import java.util.Optional;
 
 /**
+ * File signal.
+ *
  * @author jiachun.fjc
  */
 public enum FileSignal {

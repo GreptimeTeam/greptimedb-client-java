@@ -27,12 +27,26 @@ import java.util.BitSet;
  */
 public final class ColumnHelper {
 
+    /**
+     * Adds a value to the column values builder.
+     *
+     * @param builder the column values builder
+     * @param value the value to add
+     */
     public static void addToColumnValuesBuilder(Columns.Column.Builder builder, Object value) {
         Columns.Column.Values.Builder valuesBuilder = builder.getValuesBuilder();
         Columns.ColumnDataType dataType = builder.getDatatype();
         addValue(valuesBuilder, dataType, value);
     }
 
+    /**
+     * Gets value from the column values by sepciified index.
+     *
+     * @param column the column values
+     * @param index the index of the value
+     * @param nullMask null mask of the column
+     * @return the value
+     */
     public static Object getValue(Columns.Column column, int index, BitSet nullMask) {
         Columns.Column.Values values = column.getValues();
         Columns.ColumnDataType dataType = column.getDatatype();
@@ -50,6 +64,12 @@ public final class ColumnHelper {
         return getValue(values, dataType, index - cardinality);
     }
 
+    /**
+     * Gets null mask bits from the column.
+     *
+     * @param column the column
+     * @return the null mask bits
+     */
     public static BitSet getNullMaskBits(Columns.Column column) {
         return BitSet.valueOf(ByteStringHelper.sealByteArray(column.getNullMask()));
     }

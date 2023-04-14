@@ -29,10 +29,16 @@ public class QueryOk implements Streamable<Row> {
     private String ql;
     private SelectRows rows;
 
+    /**
+     * Returns the QL.
+     */
     public String getQl() {
         return ql;
     }
 
+    /**
+     * Returns the data of rows.
+     */
     public SelectRows getRows() {
         return rows;
     }
@@ -50,6 +56,13 @@ public class QueryOk implements Streamable<Row> {
                 '}';
     }
 
+    /**
+     * Creates a new {@link QueryOk}.
+     *
+     * @param ql the QL
+     * @param rows the selected rows
+     * @return a new {@link QueryOk}
+     */
     public static QueryOk ok(String ql, SelectRows rows) {
         QueryOk ok = new QueryOk();
         ok.ql = ql;

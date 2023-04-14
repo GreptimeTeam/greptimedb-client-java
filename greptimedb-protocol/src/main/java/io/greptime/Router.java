@@ -27,7 +27,7 @@ public interface Router<Req, Resp> {
     /**
      * For a given request return the routing decision for the call.
      *
-     * @param request request
+     * @param request route request
      * @return a endpoint for the call
      */
     CompletableFuture<Resp> routeFor(Req request);

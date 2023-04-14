@@ -20,6 +20,7 @@ import io.greptime.common.util.Strings;
 import java.util.Objects;
 
 /**
+ * Table name, contains database name and table name.
  *
  * @author jiachun.fjc
  */

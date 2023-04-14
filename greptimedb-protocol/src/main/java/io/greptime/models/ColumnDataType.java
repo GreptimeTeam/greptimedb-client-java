@@ -20,6 +20,8 @@ import org.apache.arrow.vector.types.pojo.ArrowType;
 import static org.apache.arrow.vector.types.pojo.ArrowType.Timestamp;
 
 /**
+ * Column data type.
+ *
  * @author jiachun.fjc
  */
 public enum ColumnDataType {

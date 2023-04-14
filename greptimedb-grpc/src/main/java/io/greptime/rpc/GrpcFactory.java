@@ -29,12 +29,12 @@ public class GrpcFactory implements RpcFactory {
     @SuppressWarnings("unchecked")
     @Override
     public void register(MethodDescriptor method, //
-                         Class<?> reqCls, //
-                         Object defaultReqIns, //
-                         Object defaultRespIns) {
+            Class<?> reqCls, //
+            Object defaultReqIns, //
+            Object defaultRespIns) {
         getMarshallerRegistry() //
-            .registerMarshaller(method, (Class<? extends Message>) reqCls, (Message) defaultReqIns,
-                (Message) defaultRespIns);
+                .registerMarshaller(method, (Class<? extends Message>) reqCls, (Message) defaultReqIns,
+                        (Message) defaultRespIns);
     }
 
     @Override

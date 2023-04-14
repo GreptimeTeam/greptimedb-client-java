@@ -19,7 +19,7 @@ import io.greptime.common.util.Strings;
 import java.io.Serializable;
 
 /**
- * A IP address with port.
+ * An IP address with port.
  *
  * @author jiachun.fjc
  */

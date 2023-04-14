@@ -19,6 +19,11 @@ import com.google.protobuf.MessageLite;
 import io.greptime.common.Into;
 import org.apache.arrow.flight.Ticket;
 
+/**
+ * A Greptime request.
+ *
+ * @author LFC
+ */
 public class GreptimeRequest implements Into<Ticket> {
 
     private final MessageLite message;

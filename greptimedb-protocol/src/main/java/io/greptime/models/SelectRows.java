@@ -45,17 +45,31 @@ import java.util.stream.StreamSupport;
 public interface SelectRows extends Iterator<Row> {
 
     /**
-     * @return true if it's ready to be polled for data (calling `next` for `Row`s).
+     * Returns true if it's ready to be polled for data (calling `next` for `Row`s).
+     * <p>
+     * Note: Users should not care about this method in most cases, as the `next`
+     * method will be blocked until data is ready.
      */
     boolean isReady();
 
+    /**
+     * Close and release resources.
+     */
     void close();
 
+    /**
+     * Collects all rows into a list.
+     */
     default List<Row> collect() {
         Iterable<Row> iterable = () -> this;
         return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
     }
 
+    /**
+     * Collects all rows into a list of maps.
+     * <p>
+     * Note: All type information will be lost.
+     */
     default List<Map<String, Object>> collectToMaps() {
         Iterable<Row> iterable = () -> this;
         return StreamSupport.stream(iterable.spliterator(), false)

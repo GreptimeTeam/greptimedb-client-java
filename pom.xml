@@ -4,7 +4,7 @@
 
     <groupId>io.greptime</groupId>
     <artifactId>greptimedb-client</artifactId>
-    <version>0.1.4</version>
+    <version>0.1.5</version>
     <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -197,7 +197,6 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <excludes>
                         <exclude>**/v1/**</exclude>
-                        <exclude>**/greptime/rpc/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>

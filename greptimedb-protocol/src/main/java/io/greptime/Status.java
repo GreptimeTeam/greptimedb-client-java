@@ -92,18 +92,34 @@ public enum Status {
         this.shouldRetry = shouldRetry;
     }
 
+    /**
+     * Returns the status code.
+     */
     public int getStatusCode() {
         return statusCode;
     }
 
+    /**
+     * Returns {@code true} if the status code is {@link #Success}.
+     */
+    @SuppressWarnings("unused")
     public static boolean isSuccess(int statusCode) {
         return statusCode == Success.getStatusCode();
     }
 
+    /**
+     * Returns {@code true} if the status code represents a retry-needed error.
+     */
     public boolean isShouldRetry() {
         return shouldRetry;
     }
 
+    /**
+     * Returns the {@link Status} for the specified status code.
+     *
+     * @param statusCode the status code
+     * @return the {@link Status}
+     */
     public static Status parse(int statusCode) {
         return DICT.get(statusCode);
     }

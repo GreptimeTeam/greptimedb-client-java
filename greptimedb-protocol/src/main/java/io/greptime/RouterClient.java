@@ -101,18 +101,38 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
         }
     }
 
+    /**
+     * Get the current routing table.
+     */
     public CompletableFuture<Endpoint> route() {
         return this.inner.routeFor(null);
     }
 
+    /**
+     * Get the flight client for the given endpoint.
+     */
     public GreptimeFlightClient getFlightClient(Endpoint endpoint) {
         return flightClients.computeIfAbsent(endpoint, GreptimeFlightClient::createClient);
     }
 
+    /**
+     * @see #invoke(Endpoint, Object, Context, long)
+     */
     public <Req, Resp> CompletableFuture<Resp> invoke(Endpoint endpoint, Req request, Context ctx) {
         return invoke(endpoint, request, ctx, -1 /* use default rpc timeout */);
     }
 
+    /**
+     * Invoke the rpc request to the given endpoint.
+     *
+     * @param endpoint the endpoint to invoke
+     * @param request the request to send
+     * @param ctx the context
+     * @param timeoutMs timeout in milliseconds
+     * @return the response future
+     * @param <Req> request type
+     * @param <Resp> response type
+     */
     public <Req, Resp> CompletableFuture<Resp> invoke(Endpoint endpoint, Req request, Context ctx, long timeoutMs) {
         CompletableFuture<Resp> future = new CompletableFuture<>();
 
@@ -137,6 +157,17 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
         return future;
     }
 
+    /**
+     * Invoke a server streaming rpc request to the given endpoint.
+     *
+     * @param endpoint the endpoint to invoke
+     * @param request the request to send
+     * @param ctx the context
+     * @param observer the observer to receive the response
+     * @param <Req> the request type
+     * @param <Resp> the response type
+     */
+    @SuppressWarnings("unused")
     public <Req, Resp> void invokeServerStreaming(Endpoint endpoint, Req request, Context ctx, Observer<Resp> observer) {
         try {
             this.rpcClient.invokeServerStreaming(endpoint, request, ctx, observer);
@@ -145,6 +176,17 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
         }
     }
 
+    /**
+     * Invoke a client streaming rpc request to the given endpoint.
+     *
+     * @param endpoint the endpoint to invoke
+     * @param defaultReqIns the default request instance
+     * @param ctx the context
+     * @param respObserver the observer to receive the response
+     * @return the observer to send the request
+     * @param <Req> the request type
+     * @param <Resp> the response type
+     */
     public <Req, Resp> Observer<Req> invokeClientStreaming(Endpoint endpoint, Req defaultReqIns, Context ctx,
             Observer<Resp> respObserver) {
         try {
@@ -166,8 +208,9 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
             this.rpcClient.display(out);
         }
 
-        out.println("");
-        out.println("Flight clients: ").print(this.flightClients.keys());
+        out.println("") //
+                .println("Flight clients: ") //
+                .print(this.flightClients.keys());
     }
 
     @Override
@@ -175,7 +218,9 @@ public class RouterClient implements Lifecycle<RouterOptions>, Display {
         return "RouterClient{" + //
                 "refresher=" + refresher + //
                 ", opts=" + opts + //
-                ", flightClients=" + flightClients + '}';
+                ", rpcClient=" + rpcClient + //
+                ", flightClients=" + flightClients + //
+                '}';
     }
 
     /**

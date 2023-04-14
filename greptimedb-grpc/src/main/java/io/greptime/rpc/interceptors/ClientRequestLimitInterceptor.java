@@ -28,7 +28,6 @@ import io.grpc.ForwardingClientCallListener;
 import io.grpc.Metadata;
 import io.grpc.MethodDescriptor;
 import io.grpc.Status;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
@@ -43,12 +42,11 @@ import java.util.function.Function;
  */
 public class ClientRequestLimitInterceptor implements ClientInterceptor {
 
-    private static final Status             LIMIT_EXCEEDED_STATUS = Status.UNAVAILABLE
-                                                                      .withDescription("Client limit reached");
+    private static final Status LIMIT_EXCEEDED_STATUS = Status.UNAVAILABLE.withDescription("Client limit reached");
 
-    private static final AtomicBoolean      LIMIT_SWITCH          = new AtomicBoolean(true);
+    private static final AtomicBoolean LIMIT_SWITCH = new AtomicBoolean(true);
 
-    private final Limiter<RequestLimitCtx>  limiter;
+    private final Limiter<RequestLimitCtx> limiter;
     private final Function<String, Boolean> filter;
 
     public ClientRequestLimitInterceptor(Limiter<RequestLimitCtx> limiter) {

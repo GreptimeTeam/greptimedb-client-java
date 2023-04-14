@@ -20,7 +20,6 @@ import io.grpc.ClientCall;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import io.grpc.MethodDescriptor;
-
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -33,8 +32,8 @@ public class IdChannel extends ManagedChannel {
 
     private static final AtomicLong ID_ALLOC = new AtomicLong();
 
-    private final long              channelId;
-    private final ManagedChannel    channel;
+    private final long channelId;
+    private final ManagedChannel channel;
 
     private static long getNextId() {
         return ID_ALLOC.incrementAndGet();
@@ -75,8 +74,8 @@ public class IdChannel extends ManagedChannel {
     }
 
     @Override
-    public <RequestT, ResponseT> ClientCall<RequestT, ResponseT> newCall(MethodDescriptor<RequestT, ResponseT> methodDescriptor,
-                                                                         CallOptions callOptions) {
+    public <RequestT, ResponseT> ClientCall<RequestT, ResponseT> newCall(
+            MethodDescriptor<RequestT, ResponseT> methodDescriptor, CallOptions callOptions) {
         return this.channel.newCall(methodDescriptor, callOptions);
     }
 
@@ -108,8 +107,8 @@ public class IdChannel extends ManagedChannel {
     @Override
     public String toString() {
         return "IdChannel{" + //
-               "channelId=" + channelId + //
-               ", channel=" + channel + //
-               '}';
+                "channelId=" + channelId + //
+                ", channel=" + channel + //
+                '}';
     }
 }

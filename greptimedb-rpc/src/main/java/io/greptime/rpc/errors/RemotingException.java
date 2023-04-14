@@ -24,8 +24,7 @@ public class RemotingException extends Exception {
 
     private static final long serialVersionUID = -6326244159775972292L;
 
-    public RemotingException() {
-    }
+    public RemotingException() {}
 
     public RemotingException(String message) {
         super(message);
