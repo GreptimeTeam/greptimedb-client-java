@@ -19,6 +19,7 @@ import io.greptime.GreptimeDB;
 import io.greptime.StreamWriter;
 import io.greptime.models.ColumnDataType;
 import io.greptime.models.Err;
+import io.greptime.models.PromRangeQuery;
 import io.greptime.models.QueryOk;
 import io.greptime.models.QueryRequest;
 import io.greptime.models.Result;
@@ -57,16 +58,21 @@ public class QuickStart {
             throw new RuntimeException("Fail to start GreptimeDB client");
         }
 
+        long now = System.currentTimeMillis();
+        LOG.info("now = {}", now);
+
         // normal inset
-        runInsert(greptimeDB);
+        runInsert(greptimeDB, now);
 
         // streaming insert
-        runInsertWithStream(greptimeDB);
+        runInsertWithStream(greptimeDB, now);
 
-        runQuery(greptimeDB);
+        runQuery(greptimeDB, now);
+
+        runPromQueryRange(greptimeDB, now);
     }
 
-    private static void runInsert(GreptimeDB greptimeDB) throws Exception {
+    private static void runInsert(GreptimeDB greptimeDB, long now) throws Exception {
         TableSchema schema =
                 TableSchema
                         .newBuilder(TableName.with("public", "monitor"))
@@ -77,8 +83,8 @@ public class QuickStart {
                         .build();
 
         WriteRows rows = WriteRows.newBuilder(schema).build();
-        rows.insert("127.0.0.1", System.currentTimeMillis(), 0.1, null) //
-                .insert("127.0.0.2", System.currentTimeMillis(), 0.3, 0.5) //
+        rows.insert("127.0.0.1", now, 0.1, null) //
+                .insert("127.0.0.2", now, 0.3, 0.5) //
                 .finish();
 
         // For performance reasons, the SDK is designed to be purely asynchronous.
@@ -95,7 +101,7 @@ public class QuickStart {
         }
     }
 
-    private static void runInsertWithStream(GreptimeDB greptimeDB) throws Exception {
+    private static void runInsertWithStream(GreptimeDB greptimeDB, long now) throws Exception {
         TableName tableName = TableName.with("public", "monitor");
         TableSchema
                 .newBuilder(tableName)
@@ -108,7 +114,7 @@ public class QuickStart {
 
         for (int i = 0; i < 100; i++) {
             WriteRows rows = WriteRows.newBuilder(TableSchema.findSchema(tableName)).build();
-            rows.insert("127.0.0.1", System.currentTimeMillis(), i, null).finish();
+            rows.insert("127.0.0.1", now + i, i, null).finish();
 
             streamWriter.write(rows);
         }
@@ -120,10 +126,12 @@ public class QuickStart {
         LOG.info("Write result: {}", result);
     }
 
-    private static void runQuery(GreptimeDB greptimeDB) throws Exception {
+    @SuppressWarnings("unused")
+    private static void runQuery(GreptimeDB greptimeDB, long now) throws Exception {
         QueryRequest request = QueryRequest.newBuilder() //
                 .exprType(SelectExprType.Sql) //
                 .ql("SELECT * FROM monitor;") //
+                .databaseName("public") //
                 .build();
 
         // For performance reasons, the SDK is designed to be purely asynchronous.
@@ -142,6 +150,36 @@ public class QuickStart {
             for (Map<String, Object> map : maps) {
                 LOG.info("Query row: {}", map);
             }
+        } else {
+            LOG.error("Failed to query: {}", result.getErr());
+        }
+    }
+
+    private static void runPromQueryRange(GreptimeDB greptimeDB, long now) throws Exception {
+        // https://docs.greptime.com/user-guide/prometheus#greptimedb-s-http-api
+        PromRangeQuery query = PromRangeQuery.newBuildr() //
+                .query("sum(monitor)") //
+                .start(String.valueOf(now / 1000)) //
+                .end(String.valueOf(now / 1000 + 200)) //
+                .step("1s") //
+                .build();
+        QueryRequest request = QueryRequest.newBuilder() //
+                .exprType(SelectExprType.Promql) //
+                .promQueryRange(query) //
+                .databaseName("public") //
+                .build();
+
+        // For performance reasons, the SDK is designed to be purely asynchronous.
+        // The return value is a future object. If you want to immediately obtain
+        // the result, you can call `future.get()`.
+        CompletableFuture<Result<QueryOk, Err>> future = greptimeDB.query(request);
+
+        Result<QueryOk, Err> result = future.get();
+
+        if (result.isOk()) {
+            QueryOk queryOk = result.getOk();
+            SelectRows rows = queryOk.getRows();
+            LOG.info("PromQL result: {}", rows.collectToMaps());
         } else {
             LOG.error("Failed to query: {}", result.getErr());
         }

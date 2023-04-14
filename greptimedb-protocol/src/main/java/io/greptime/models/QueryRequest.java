@@ -28,7 +28,10 @@ import java.util.Optional;
 public class QueryRequest implements Into<Database.GreptimeRequest> {
     private SelectExprType exprType;
     private String ql;
+    private PromRangeQuery promRangeQuery;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<String> databaseName;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<AuthInfo> authInfo;
 
     public SelectExprType getExprType() {
@@ -37,6 +40,10 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
 
     public String getQl() {
         return ql;
+    }
+
+    public PromRangeQuery getPromRangeQuery() {
+        return promRangeQuery;
     }
 
     public void setAuthInfo(AuthInfo authInfo) {
@@ -48,6 +55,8 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
         return "QueryRequest{" + //
                 "exprType=" + exprType + //
                 ", ql='" + ql + '\'' + //
+                ", promRangeQuery=" + promRangeQuery + //
+                ", databaseName=" + databaseName + //
                 '}';
     }
 
@@ -59,30 +68,28 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
     public Database.GreptimeRequest into() {
         Database.QueryRequest.Builder builder = Database.QueryRequest.newBuilder();
 
-        Database.RequestHeader.Builder header_builder = Database.RequestHeader.newBuilder();
-        if (authInfo.isPresent()) {
-            Database.AuthHeader authHeader = authInfo.get().intoAuthHeader();
-            header_builder.setAuthorization(authHeader);
-        }
-
-        if (databaseName.isPresent()) {
-            header_builder.setDbname(databaseName.get());
-        }
+        Database.RequestHeader.Builder headerBuilder = Database.RequestHeader.newBuilder();
+        this.authInfo.ifPresent(auth -> headerBuilder.setAuthorization(auth.into()));
+        this.databaseName.ifPresent(headerBuilder::setDbname);
 
         switch (getExprType()) {
             case Sql:
                 builder.setSql(getQl());
                 break;
             case Promql:
-                throw new UnsupportedOperationException("Promql unsupported yet!");
+                builder.setPromRangeQuery(getPromRangeQuery().into());
+                break;
         }
-        return Database.GreptimeRequest.newBuilder().setHeader(header_builder.build()).setQuery(builder.build())
+        return Database.GreptimeRequest.newBuilder() //
+                .setHeader(headerBuilder.build()) //
+                .setQuery(builder.build()) //
                 .build();
     }
 
     public static class Builder {
         private SelectExprType exprType;
         private String ql;
+        private PromRangeQuery promRangeQuery;
         private String databaseName;
 
         /**
@@ -108,10 +115,21 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
         }
 
         /**
+         * The input parameters are similar to the `range_query` in Prometheus' HTTP API:
+         *
+         * @param promRangeQuery promql `range_query`
+         * @return this builder
+         */
+        public Builder promQueryRange(PromRangeQuery promRangeQuery) {
+            this.promRangeQuery = promRangeQuery;
+            return this;
+        }
+
+        /**
          * Set name of the database the query runs on.
          *
          * @param databaseName the name
-         * @return builder self
+         * @return this builder
          */
         public Builder databaseName(String databaseName) {
             this.databaseName = databaseName;
@@ -136,11 +154,18 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
         public QueryRequest build() {
             QueryRequest req = new QueryRequest();
             req.exprType = Ensures.ensureNonNull(this.exprType, "null `exprType`");
-            req.ql = Ensures.ensureNonNull(this.ql, "null `ql`");
+            switch (req.exprType) {
+                case Sql:
+                    req.ql = Ensures.ensureNonNull(this.ql, "null `ql`");
+                    break;
+                case Promql:
+                    req.promRangeQuery = Ensures.ensureNonNull(this.promRangeQuery, "null `promQueryRange`");
+                    break;
+            }
+
             req.databaseName = Optional.ofNullable(this.databaseName);
             req.authInfo = Optional.empty();
             return req;
         }
     }
-
 }

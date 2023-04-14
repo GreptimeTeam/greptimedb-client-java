@@ -182,16 +182,10 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
             Ensures.ensure(rowCount > 0, "`WriteRows` must contain at least one row of data");
             Ensures.ensureNonNull(columns, "Forget to call `WriteRows.finish()`?");
 
-
-            Database.RequestHeader.Builder header_builder = Database.RequestHeader.newBuilder() //
+            Database.RequestHeader.Builder headerBuilder = Database.RequestHeader.newBuilder() //
                 .setDbname(tableName.getDatabaseName());
 
-            if (authInfo.isPresent()) {
-                Database.AuthHeader authHeader = authInfo.get().intoAuthHeader();
-                header_builder.setAuthorization(authHeader);
-            }
-
-            Database.RequestHeader header = header_builder.build();
+            this.authInfo.ifPresent(auth -> headerBuilder.setAuthorization(auth.into()));
 
             Database.InsertRequest insertRequest = Database.InsertRequest.newBuilder() //
                     .setTableName(tableName.getTableName()) //
@@ -200,7 +194,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
                     .build();
 
             return Database.GreptimeRequest.newBuilder() //
-                    .setHeader(header) //
+                    .setHeader(headerBuilder.build()) //
                     .setInsert(insertRequest) //
                     .build();
         }

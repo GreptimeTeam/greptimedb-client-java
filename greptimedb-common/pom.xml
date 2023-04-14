@@ -4,7 +4,7 @@
     <parent>
         <artifactId>greptimedb-client</artifactId>
         <groupId>io.greptime</groupId>
-        <version>0.1.3</version>
+        <version>0.1.4</version>
     </parent>
 
     <artifactId>greptimedb-common</artifactId>
