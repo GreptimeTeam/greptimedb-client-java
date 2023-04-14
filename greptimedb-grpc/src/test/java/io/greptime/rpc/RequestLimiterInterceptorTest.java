@@ -32,7 +32,6 @@ import io.grpc.stub.ClientCalls;
 import io.grpc.stub.ServerCalls;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -49,12 +48,12 @@ public class RequestLimiterInterceptorTest {
     private static final MethodDescriptor<String, String> METHOD_DESCRIPTOR;
 
     static {
-        METHOD_DESCRIPTOR = MethodDescriptor.<String, String> newBuilder() //
-            .setType(MethodDescriptor.MethodType.UNARY) //
-            .setFullMethodName("service/method") //
-            .setRequestMarshaller(StringMarshaller.INSTANCE) //
-            .setResponseMarshaller(StringMarshaller.INSTANCE) //
-            .build();
+        METHOD_DESCRIPTOR = MethodDescriptor.<String, String>newBuilder() //
+                .setType(MethodDescriptor.MethodType.UNARY) //
+                .setFullMethodName("service/method") //
+                .setRequestMarshaller(StringMarshaller.INSTANCE) //
+                .setResponseMarshaller(StringMarshaller.INSTANCE) //
+                .build();
     }
 
     @Ignore("Not a unit test, just for simulate the operation of the limiter")

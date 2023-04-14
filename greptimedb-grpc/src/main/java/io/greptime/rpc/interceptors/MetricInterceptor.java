@@ -34,18 +34,18 @@ import io.grpc.MethodDescriptor;
  */
 public class MetricInterceptor implements ClientInterceptor {
 
-    private static final String  REQ_TYPE         = "req";
-    private static final String  RESP_TYPE        = "resp";
-    private static final String  QPS              = "qps";
-    private static final String  BYTES            = "bytes";
-    private static final String  SERIALIZED_BYTES = "serialized_bytes";
+    private static final String REQ_TYPE = "req";
+    private static final String RESP_TYPE = "resp";
+    private static final String QPS = "qps";
+    private static final String BYTES = "bytes";
+    private static final String SERIALIZED_BYTES = "serialized_bytes";
 
-    private static final Counter REQ_BYTES        = MetricsUtil.counter(REQ_TYPE, BYTES);
-    private static final Counter RESP_BYTES       = MetricsUtil.counter(RESP_TYPE, BYTES);
+    private static final Counter REQ_BYTES = MetricsUtil.counter(REQ_TYPE, BYTES);
+    private static final Counter RESP_BYTES = MetricsUtil.counter(RESP_TYPE, BYTES);
 
     @Override
     public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> method,
-                                                               CallOptions callOpts, Channel next) {
+            CallOptions callOpts, Channel next) {
         String methodName = method.getFullMethodName();
         MetricsUtil.meter(REQ_TYPE, QPS, methodName).mark();
 

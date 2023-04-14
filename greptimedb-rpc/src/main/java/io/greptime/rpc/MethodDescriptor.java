@@ -23,9 +23,9 @@ import java.util.Objects;
  * @author jiachun.fjc
  */
 public class MethodDescriptor {
-    private final String     name;
+    private final String name;
     private final MethodType type;
-    private final double     limitPercent;
+    private final double limitPercent;
 
     public static MethodDescriptor of(String name, MethodType type) {
         return new MethodDescriptor(name, type, -1d);
@@ -73,10 +73,10 @@ public class MethodDescriptor {
     @Override
     public String toString() {
         return "MethodDescriptor{" + //
-               "name='" + name + '\'' + //
-               ", type=" + type + //
-               ", limitPercent=" + limitPercent + //
-               '}';
+                "name='" + name + '\'' + //
+                ", type=" + type + //
+                ", limitPercent=" + limitPercent + //
+                '}';
     }
 
     public enum MethodType {

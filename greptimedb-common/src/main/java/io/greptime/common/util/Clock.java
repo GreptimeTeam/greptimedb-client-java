@@ -16,6 +16,7 @@
 package io.greptime.common.util;
 
 /**
+ * A clock implementation which default returns the current millis.
  *
  * @author jiachun.fjc
  */

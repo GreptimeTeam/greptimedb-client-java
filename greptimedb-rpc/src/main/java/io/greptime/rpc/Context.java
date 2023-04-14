@@ -16,7 +16,6 @@
 package io.greptime.rpc;
 
 import io.greptime.common.Copiable;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -26,23 +25,40 @@ import java.util.Set;
  *
  * @author jiachun.fjc
  */
-@SuppressWarnings({ "unchecked", "unused" })
+@SuppressWarnings("unchecked")
 public class Context implements Copiable<Context> {
 
     public static final String KEY_QUERY_ID = "QueryId";
     public static final String KEY_QUERY_START = "QueryStart";
     public static final String KEY_ENDPOINT = "Endpoint";
 
-    private final Map<String, Object> ctx             = new HashMap<>();
+    private final Map<String, Object> ctx = new HashMap<>();
 
+    /**
+     * Creates a new {@link Context} with empty values.
+     */
     public static Context newDefault() {
         return new Context();
     }
 
+    /**
+     * Creates a new {@link Context} with the specified key-value pair.
+     *
+     * @param key the key
+     * @param value the value
+     * @return the new {@link Context}
+     */
     public static Context of(String key, Object value) {
         return new Context().with(key, value);
     }
 
+    /**
+     * Adds the specified key-value pair to this {@link Context}.
+     *
+     * @param key the key
+     * @param value the value
+     * @return this {@link Context}
+     */
     public Context with(String key, Object value) {
         synchronized (this) {
             this.ctx.put(key, value);
@@ -50,30 +66,60 @@ public class Context implements Copiable<Context> {
         return this;
     }
 
+    /**
+     * Gets the value of the specified key.
+     *
+     * @param key the key
+     * @return the value
+     * @param <T> the type of the value
+     */
     public <T> T get(String key) {
         synchronized (this) {
             return (T) this.ctx.get(key);
         }
     }
 
+    /**
+     * Removes the specified key and its value form this {@link Context}.
+     *
+     * @param key the key
+     * @return the removed value
+     * @param <T> the type of the value
+     */
     public <T> T remove(String key) {
         synchronized (this) {
             return (T) this.ctx.remove(key);
         }
     }
 
+    /**
+     * Gets the value of the specified key, or the default value if the key is not present.
+     *
+     * @param key the key
+     * @param defaultValue the default value
+     * @return the value
+     * @param <T> the type of the value
+     */
+    @SuppressWarnings("unused")
     public <T> T getOrDefault(String key, T defaultValue) {
         synchronized (this) {
             return (T) this.ctx.getOrDefault(key, defaultValue);
         }
     }
 
+    /**
+     * Clears all key-value pairs from this {@link Context}.
+     */
+    @SuppressWarnings("unused")
     public void clear() {
         synchronized (this) {
             this.ctx.clear();
         }
     }
 
+    /**
+     * Returns all the KV entries in this {@link Context}.
+     */
     public Set<Map.Entry<String, Object>> entrySet() {
         synchronized (this) {
             return this.ctx.entrySet();

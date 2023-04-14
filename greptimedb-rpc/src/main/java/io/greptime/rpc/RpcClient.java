@@ -21,7 +21,7 @@ import io.greptime.common.Lifecycle;
 import io.greptime.rpc.errors.RemotingException;
 
 /**
- * A common RPC client.
+ * A common RPC client interface.
  *
  * @author jiachun.fjc
  */
@@ -38,14 +38,15 @@ public interface RpcClient extends Lifecycle<RpcOptions>, Display {
 
     /**
      * Check connection for given address and async to create a new one if there is no connection.
-     * @param endpoint       target address
+     *
+     * @param endpoint target address
      * @param createIfAbsent create a new one if there is no connection
      * @return true if there is a connection and the connection is active and writable.
      */
     boolean checkConnection(Endpoint endpoint, boolean createIfAbsent);
 
     /**
-     * Close all connections of a address.
+     * Close all connections of an address.
      *
      * @param endpoint target address
      */
@@ -89,67 +90,67 @@ public interface RpcClient extends Lifecycle<RpcOptions>, Display {
     /**
      * Executes a synchronous call.
      *
-     * @param endpoint  target address
-     * @param request   request object
+     * @param endpoint target address
+     * @param request request object
      * @param timeoutMs timeout millisecond
-     * @param <Req>     request message type
-     * @param <Resp>    response message type
+     * @param <Req> request message type
+     * @param <Resp> response message type
      * @return response
      */
-    default <Req, Resp> Resp invokeSync(Endpoint endpoint, //
-                                        Req request, //
+    default <Req, Resp> Resp invokeSync(Endpoint endpoint,
+                                        Req request,
                                         long timeoutMs) throws RemotingException {
         return invokeSync(endpoint, request, null, timeoutMs);
     }
 
     /**
-     * Executes a synchronous call using a invoke context.
+     * Executes a synchronous call using an invoke context.
      *
-     * @param endpoint  target address
-     * @param request   request object
-     * @param ctx       invoke context
+     * @param endpoint target address
+     * @param request request object
+     * @param ctx invoke context
      * @param timeoutMs timeout millisecond
-     * @param <Req>     request message type
-     * @param <Resp>    response message type
+     * @param <Req> request message type
+     * @param <Resp> response message type
      * @return response
      */
-    <Req, Resp> Resp invokeSync(Endpoint endpoint, //
-                                Req request, //
-                                Context ctx, //
+    <Req, Resp> Resp invokeSync(Endpoint endpoint,
+                                Req request,
+                                Context ctx,
                                 long timeoutMs) throws RemotingException;
 
     /**
-     * Executes a asynchronous call with a response {@link Observer}.
+     * Executes an asynchronous call with a response {@link Observer}.
      *
-     * @param endpoint  target address
-     * @param request   request object
-     * @param observer  response observer
+     * @param endpoint target address
+     * @param request request object
+     * @param observer response observer
      * @param timeoutMs timeout millisecond
-     * @param <Req>     request message type
-     * @param <Resp>    response message type
+     * @param <Req> request message type
+     * @param <Resp> response message type
      */
-    default <Req, Resp> void invokeAsync(Endpoint endpoint, //
-                                         Req request, //
-                                         Observer<Resp> observer, //
+    default <Req, Resp> void invokeAsync(Endpoint endpoint,
+                                         Req request,
+                                         Observer<Resp> observer,
                                          long timeoutMs) throws RemotingException {
         invokeAsync(endpoint, request, null, observer, timeoutMs);
     }
 
     /**
-     * Executes a asynchronous call with a response {@link Observer}.
+     * Executes an asynchronous call with a response {@link Observer}.
      *
-     * @param endpoint  target address
-     * @param request   request object
-     * @param ctx       invoke context
-     * @param observer  response observer
+     * @param endpoint target address
+     * @param request request object
+     * @param ctx invoke context
+     * @param observer response observer
      * @param timeoutMs timeout millisecond
-     * @param <Req>     request message type
-     * @param <Resp>    response message type
+     * @param <Req> request message type
+     * @param <Resp> response message type
      */
-    <Req, Resp> void invokeAsync(Endpoint endpoint, //
-                                 Req request, //
-                                 Context ctx, //
-                                 Observer<Resp> observer, //
+    <Req, Resp> void invokeAsync(Endpoint endpoint,
+                                 Req request,
+                                 Context ctx,
+                                 Observer<Resp> observer,
                                  long timeoutMs) throws RemotingException;
 
     /**
@@ -158,27 +159,27 @@ public interface RpcClient extends Lifecycle<RpcOptions>, Display {
      * One request message followed by zero or more response messages.
      *
      * @param endpoint target address
-     * @param request  request object
-     * @param ctx      invoke context
+     * @param request request object
+     * @param ctx invoke context
      * @param observer response stream observer
-     * @param <Req>    request message type
-     * @param <Resp>   response message type
+     * @param <Req> request message type
+     * @param <Resp> response message type
      */
-    <Req, Resp> void invokeServerStreaming(Endpoint endpoint, //
-                                           Req request, //
-                                           Context ctx, //
+    <Req, Resp> void invokeServerStreaming(Endpoint endpoint,
+                                           Req request,
+                                           Context ctx,
                                            Observer<Resp> observer) throws RemotingException;
 
     /**
      * Executes a client-streaming call with a request {@link Observer}
      * and a response {@link Observer}.
      *
-     * @param endpoint      target address
+     * @param endpoint target address
      * @param defaultReqIns the default request instance
-     * @param ctx           invoke context
-     * @param respObserver  response stream observer
-     * @param <Req>         request message type
-     * @param <Resp>        response message type
+     * @param ctx invoke context
+     * @param respObserver response stream observer
+     * @param <Req> request message type
+     * @param <Resp> response message type
      * @return request {@link Observer}.
      */
     <Req, Resp> Observer<Req> invokeClientStreaming(Endpoint endpoint,

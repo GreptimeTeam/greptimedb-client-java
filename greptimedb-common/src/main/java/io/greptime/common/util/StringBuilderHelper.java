@@ -25,7 +25,7 @@ package io.greptime.common.util;
 @SuppressWarnings("unused")
 public class StringBuilderHelper {
 
-    private static final int                              MAX_BUF_SIZE;
+    private static final int MAX_BUF_SIZE;
     private static final ThreadLocal<StringBuilderHolder> HOLDER_THREAD_LOCAL;
 
     static {

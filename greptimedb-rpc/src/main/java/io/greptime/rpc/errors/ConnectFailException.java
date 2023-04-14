@@ -16,6 +16,8 @@
 package io.greptime.rpc.errors;
 
 /**
+ * Connect failed error.
+ *
  * @author jiachun.fjc
  */
 @SuppressWarnings("unused")
@@ -23,8 +25,7 @@ public class ConnectFailException extends RemotingException {
 
     private static final long serialVersionUID = 3129127065579018606L;
 
-    public ConnectFailException() {
-    }
+    public ConnectFailException() {}
 
     public ConnectFailException(String message) {
         super(message);

@@ -18,6 +18,7 @@ package io.greptime.common;
 import java.util.stream.Stream;
 
 /**
+ * Streamable interface.
  *
  * @author jiachun.fjc
  */

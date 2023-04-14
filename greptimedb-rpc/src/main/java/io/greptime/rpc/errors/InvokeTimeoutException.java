@@ -16,6 +16,8 @@
 package io.greptime.rpc.errors;
 
 /**
+ * Invoke timeout error.
+ *
  * @author jiachun.fjc
  */
 @SuppressWarnings("unused")
@@ -23,8 +25,7 @@ public class InvokeTimeoutException extends RemotingException {
 
     private static final long serialVersionUID = -4710810309766380565L;
 
-    public InvokeTimeoutException() {
-    }
+    public InvokeTimeoutException() {}
 
     public InvokeTimeoutException(String message) {
         super(message);

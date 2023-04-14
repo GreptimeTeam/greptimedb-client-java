@@ -39,14 +39,13 @@ public class ContextToHeadersInterceptor implements ClientInterceptor {
 
     @Override
     public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> method, //
-                                                               CallOptions callOpts, //
-                                                               Channel next) {
+            CallOptions callOpts, //
+            Channel next) {
         return new HeaderAttachingClientCall<>(next.newCall(method, callOpts));
     }
 
-    private static final class HeaderAttachingClientCall<ReqT, RespT>
-                                                                      extends
-                                                                      ForwardingClientCall.SimpleForwardingClientCall<ReqT, RespT> {
+    private static final class HeaderAttachingClientCall<ReqT, RespT> extends
+            ForwardingClientCall.SimpleForwardingClientCall<ReqT, RespT> {
 
         // Non private to avoid synthetic class
         HeaderAttachingClientCall(ClientCall<ReqT, RespT> delegate) {

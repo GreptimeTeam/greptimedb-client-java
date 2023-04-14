@@ -21,6 +21,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
+ * Resource holder with ref count.
  *
  * @author jiachun.fjc
  */

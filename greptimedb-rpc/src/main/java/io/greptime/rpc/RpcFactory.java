@@ -26,18 +26,18 @@ public interface RpcFactory {
     /**
      * Register default request instance.
      *
-     * @param method         method name and type
-     * @param reqCls         request class
+     * @param method method name and type
+     * @param reqCls request class
      * @param defaultReqIns  default request instance
      * @param defaultRespIns default response instance
      */
-    void register(MethodDescriptor method, //
-                  Class<?> reqCls, //
-                  Object defaultReqIns, //
+    void register(MethodDescriptor method,
+                  Class<?> reqCls,
+                  Object defaultReqIns,
                   Object defaultRespIns);
 
     /**
-     * Creates RPC client.
+     * Creates a RPC client.
      *
      * @return a new RPC client instance
      */
@@ -46,7 +46,7 @@ public interface RpcFactory {
     }
 
     /**
-     * Creates RPC client.
+     * Creates a RPC client.
      *
      * @param helper config helper for RPC client impl
      * @return a new RPC client instance

@@ -17,7 +17,6 @@ package io.greptime.rpc;
 
 import io.greptime.common.util.StringBuilderHelper;
 import io.grpc.MethodDescriptor.Marshaller;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;

@@ -18,7 +18,6 @@ package io.greptime.rpc.limit;
 import com.netflix.concurrency.limits.Limiter;
 import com.netflix.concurrency.limits.limiter.AbstractPartitionedLimiter;
 import com.netflix.concurrency.limits.limiter.BlockingLimiter;
-
 import java.time.Duration;
 
 /**
@@ -33,7 +32,7 @@ public class RequestLimiterBuilder extends AbstractPartitionedLimiter.Builder<Re
     }
 
     private boolean blockOnLimit = true;
-    private long    blockTimeoutMillis;
+    private long blockTimeoutMillis;
 
     public RequestLimiterBuilder partitionByMethod() {
         return super.partitionResolver(RequestLimitCtx::partitionKey);
@@ -55,7 +54,7 @@ public class RequestLimiterBuilder extends AbstractPartitionedLimiter.Builder<Re
 
     public Limiter<RequestLimitCtx> build() {
         return this.blockOnLimit ? BlockingLimiter.wrap(super.build(), Duration.ofMillis(this.blockTimeoutMillis))
-            : super.build();
+                : super.build();
     }
 
     @Override

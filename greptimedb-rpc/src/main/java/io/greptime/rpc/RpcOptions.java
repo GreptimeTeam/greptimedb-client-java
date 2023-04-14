@@ -16,7 +16,6 @@
 package io.greptime.rpc;
 
 import io.greptime.common.Copiable;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,81 +23,82 @@ import java.util.concurrent.TimeUnit;
  *
  * @author jiachun.fjc
  */
+@SuppressWarnings("unused")
 public class RpcOptions implements Copiable<RpcOptions> {
 
-    private boolean  useRpcSharedPool = false;
+    private boolean useRpcSharedPool = false;
 
     /**
      * RPC request default timeout in milliseconds
      * Default: 10000(10s)
      */
-    private int       defaultRpcTimeout       = 10000;
+    private int defaultRpcTimeout = 10000;
 
     /**
      * Sets the maximum message size allowed to be received on a channel.
      */
-    private int       maxInboundMessageSize   = 256 * 1024 * 1024;
+    private int maxInboundMessageSize = 256 * 1024 * 1024;
 
-    private int       flowControlWindow       = 256 * 1024 * 1024;
+    private int flowControlWindow = 256 * 1024 * 1024;
 
     /**
      * Set the duration without ongoing RPCs before going to idle mode.
      * In idle mode the channel shuts down all connections.
      */
-    private long      idleTimeoutSeconds      = TimeUnit.MINUTES.toSeconds(5);
+    private long idleTimeoutSeconds = TimeUnit.MINUTES.toSeconds(5);
 
     // --- keep-alive options: default will disable keep-alive
 
     /**
      * Sets the time without read activity before sending a keep-alive ping.
      */
-    private long      keepAliveTimeSeconds    = Long.MAX_VALUE;
+    private long keepAliveTimeSeconds = Long.MAX_VALUE;
 
     /**
      * Sets the time waiting for read activity after sending a keep-alive ping.
      * If the time expires without any read activity on the connection, the
      * connection is considered dead.
      */
-    private long      keepAliveTimeoutSeconds = 3;
+    private long keepAliveTimeoutSeconds = 3;
 
     /**
      * Sets whether keep-alive will be performed when there are no outstanding
      * RPC on a connection.
      */
-    private boolean   keepAliveWithoutCalls   = false;
+    private boolean keepAliveWithoutCalls = false;
 
     // --- keep-alive options: default will disable keep-alive
 
-    private LimitKind limitKind               = LimitKind.None;
+    private LimitKind limitKind = LimitKind.None;
 
     /**
      * Initial limit used by the limiter
      */
-    private int       initialLimit            = 64;
+    private int initialLimit = 64;
 
     /**
      * Maximum allowable concurrency.  Any estimated concurrency will be capped
      * at this value
      */
-    private int       maxLimit                = 1024;
+    private int maxLimit = 1024;
 
-    private int       longRttWindow           = 100;
+    private int longRttWindow = 100;
 
     /**
      * Smoothing factor to limit how aggressively the estimated limit can shrink
      * when queuing has been detected.
      */
-    private double    smoothing               = 0.2;
+    private double smoothing = 0.2;
 
     /**
      * When set to true new calls to the channel will block when the limit has
      * been reached instead of failing fast with an UNAVAILABLE status.
      */
-    private boolean   blockOnLimit            = false;
+    private boolean blockOnLimit = false;
 
-    private boolean   logOnLimitChange        = true;
+    private boolean logOnLimitChange = true;
 
-    private boolean   enableMetricInterceptor = false;
+    private boolean enableMetricInterceptor = false;
 
     public boolean isUseRpcSharedPool() {
         return useRpcSharedPool;
@@ -253,23 +253,23 @@ public class RpcOptions implements Copiable<RpcOptions> {
     @Override
     public String toString() {
         return "RpcOptions{" + //
-               "useRpcSharedPool=" + useRpcSharedPool + //
-               ", defaultRpcTimeout=" + defaultRpcTimeout + //
-               ", maxInboundMessageSize=" + maxInboundMessageSize + //
-               ", flowControlWindow=" + flowControlWindow + //
-               ", idleTimeoutSeconds=" + idleTimeoutSeconds + //
-               ", keepAliveTimeSeconds=" + keepAliveTimeSeconds + //
-               ", keepAliveTimeoutSeconds=" + keepAliveTimeoutSeconds + //
-               ", keepAliveWithoutCalls=" + keepAliveWithoutCalls + //
-               ", limitKind=" + limitKind + //
-               ", initialLimit=" + initialLimit + //
-               ", maxLimit=" + maxLimit + //
-               ", longRttWindow=" + longRttWindow + //
-               ", smoothing=" + smoothing + //
-               ", blockOnLimit=" + blockOnLimit + //
-               ", logOnLimitChange=" + logOnLimitChange + //
-               ", enableMetricInterceptor=" + enableMetricInterceptor + //
-               '}';
+                "useRpcSharedPool=" + useRpcSharedPool + //
+                ", defaultRpcTimeout=" + defaultRpcTimeout + //
+                ", maxInboundMessageSize=" + maxInboundMessageSize + //
+                ", flowControlWindow=" + flowControlWindow + //
+                ", idleTimeoutSeconds=" + idleTimeoutSeconds + //
+                ", keepAliveTimeSeconds=" + keepAliveTimeSeconds + //
+                ", keepAliveTimeoutSeconds=" + keepAliveTimeoutSeconds + //
+                ", keepAliveWithoutCalls=" + keepAliveWithoutCalls + //
+                ", limitKind=" + limitKind + //
+                ", initialLimit=" + initialLimit + //
+                ", maxLimit=" + maxLimit + //
+                ", longRttWindow=" + longRttWindow + //
+                ", smoothing=" + smoothing + //
+                ", blockOnLimit=" + blockOnLimit + //
+                ", logOnLimitChange=" + logOnLimitChange + //
+                ", enableMetricInterceptor=" + enableMetricInterceptor + //
+                '}';
     }
 
     public static RpcOptions newDefault() {
@@ -295,5 +295,5 @@ public class RpcOptions implements Copiable<RpcOptions> {
         Gradient,
 
         None
-    } 
+    }
 }

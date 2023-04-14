@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * File output helper.
  *
  * @author jiachun.fjc
  */

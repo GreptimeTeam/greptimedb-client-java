@@ -18,6 +18,11 @@ package io.greptime.common.util;
 import java.util.concurrent.Executor;
 import com.codahale.metrics.Timer;
 
+/**
+ * A direct executor.
+ *
+ * @author jiachun.fjc
+ */
 public class DirectExecutor implements Executor {
     private final String name;
     private final Timer executeTimer;

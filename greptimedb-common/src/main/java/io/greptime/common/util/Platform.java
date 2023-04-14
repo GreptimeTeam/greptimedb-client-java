@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Locale;
 
 /**
+ * Platform utilities.
  *
  * @author jiachun.fjc
  */
