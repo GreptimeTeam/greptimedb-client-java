@@ -17,3 +17,9 @@ A Java Client for GreptimeDB, which is compatible with GreptimeDB protocol and l
   This is helpful when troubleshooting complex issues
 
 ## [User Guide](https://docs.greptime.com/reference/sdk/java)
+
+## Javadoc
+- [greptimedb-protocol](https://javadoc.io/doc/io.greptime/greptimedb-protocol/latest/index.html)
+- [greptimedb-rpc](https://javadoc.io/doc/io.greptime/greptimedb-rpc/latest/index.html)
+- [greptimedb-grpc](https://javadoc.io/doc/io.greptime/greptimedb-grpc/latest/index.html)
+- [greptimedb-common](https://javadoc.io/doc/io.greptime/greptimedb-common/latest/index.html)
