@@ -288,8 +288,8 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
         /**
          * Set authentication information.
          *
-         * @param the authentication information
-         * @return builder self
+         * @param authInfo the authentication information
+         * @return this builder
          */
         public Builder authInfo(AuthInfo authInfo) {
             this.authInfo = authInfo;

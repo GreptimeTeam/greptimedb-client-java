@@ -15,6 +15,7 @@
  */
 package io.greptime.models;
 
+import io.greptime.common.Into;
 import io.greptime.v1.Database;
 
 /**
@@ -22,7 +23,7 @@ import io.greptime.v1.Database;
  *
  * @auther sunng87
  */
-public class AuthInfo {
+public class AuthInfo implements Into<Database.AuthHeader> {
 
     private String username;
     private String password;
@@ -52,11 +53,12 @@ public class AuthInfo {
         this.password = password;
     }
 
-    public Database.AuthHeader intoAuthHeader() {
-        return Database.AuthHeader
-                .newBuilder()
-                .setBasic(
-                        Database.Basic.newBuilder().setUsername(this.getUsername()).setPassword(this.getPassword())
-                                .build()).build();
+    @Override
+    public Database.AuthHeader into() {
+        Database.Basic basic = Database.Basic.newBuilder() //
+                .setUsername(getUsername()) //
+                .setPassword(getPassword()) //
+                .build();
+        return Database.AuthHeader.newBuilder().setBasic(basic).build();
     }
 }
