@@ -54,8 +54,9 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
     public String toString() {
         return "QueryRequest{" + //
                 "exprType=" + exprType + //
-                "databaseName=" + databaseName + //
                 ", ql='" + ql + '\'' + //
+                ", promRangeQuery=" + promRangeQuery + //
+                ", databaseName=" + databaseName + //
                 '}';
     }
 

@@ -83,6 +83,16 @@ public class PromRangeQuery implements Into<Database.PromRangeQuery> {
                 .build();
     }
 
+    @Override
+    public String toString() {
+        return "PromRangeQuery{" + //
+                "query='" + query + '\'' + //
+                ", start='" + start + '\'' + //
+                ", end='" + end + '\'' + //
+                ", step='" + step + '\'' + //
+                '}';
+    }
+
     public static Builder newBuildr() {
         return new Builder();
     }
