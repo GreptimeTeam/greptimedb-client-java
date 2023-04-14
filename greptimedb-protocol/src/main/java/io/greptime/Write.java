@@ -41,7 +41,7 @@ public interface Write {
      * Write a single table multi rows data to database.
      *
      * @param rows rows with one table
-     * @param ctx  invoke context
+     * @param ctx invoke context
      * @return write result
      */
     CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx);

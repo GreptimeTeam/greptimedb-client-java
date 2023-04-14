@@ -50,7 +50,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * GreptimeDB client.
+ * The GreptimeDB client.
  *
  * @author jiachun.fjc
  */
@@ -74,6 +74,9 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
     private Executor asyncWritePool;
     private Executor asyncReadPool;
 
+    /**
+     * Returns all instances of {@link GreptimeDB}.
+     */
     public static List<GreptimeDB> instances() {
         return new ArrayList<>(INSTANCES.values());
     }

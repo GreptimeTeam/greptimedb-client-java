@@ -102,7 +102,7 @@ public final class Util {
     /**
      * Create a shared scheduler pool with the given name.
      *
-     * @param name    scheduled pool's name
+     * @param name scheduled pool's name
      * @param workers the num of workers
      * @return new scheduler poll instance
      */
@@ -144,7 +144,7 @@ public final class Util {
      * Returns a new CompletableFuture that is already exceptionally with the given
      * error.
      *
-     * @param t   the given exception
+     * @param t the given exception
      * @param <U> the type of the value
      * @return the exceptionally {@link CompletableFuture}
      */
@@ -188,7 +188,7 @@ public final class Util {
     /**
      * Returns the version of this client.
      *
-     * @return version
+     * @return the version of this client
      */
     public static String clientVersion() {
         try {

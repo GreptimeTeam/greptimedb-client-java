@@ -21,7 +21,7 @@ import io.greptime.v1.Database;
 /**
  * Greptime authentication information
  *
- * @auther sunng87
+ * @author sunng87
  */
 public class AuthInfo implements Into<Database.AuthHeader> {
 
@@ -30,7 +30,6 @@ public class AuthInfo implements Into<Database.AuthHeader> {
 
     /**
      * Create AuthInfo from username/password.
-     *
      */
     public AuthInfo(String username, String password) {
         this.username = username;

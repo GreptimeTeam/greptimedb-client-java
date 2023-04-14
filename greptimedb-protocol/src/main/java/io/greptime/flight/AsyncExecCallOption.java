@@ -19,6 +19,11 @@ import io.grpc.stub.AbstractStub;
 import org.apache.arrow.flight.CallOptions;
 import java.util.concurrent.Executor;
 
+/**
+ * A {@link CallOptions.GrpcCallOption} for async-executor.
+ *
+ * @author LFC
+ */
 public class AsyncExecCallOption implements CallOptions.GrpcCallOption {
 
     private final Executor executor;

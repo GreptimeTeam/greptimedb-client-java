@@ -140,10 +140,10 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
          * Query language to, using the specified format string and arguments.
          *
          * @param fmtQl format ql string
-         * @param args  arguments referenced by the format specifiers in the format
-         *              QL string.  If there are more arguments than format specifiers,
-         *              the extra arguments are ignored.  The number of arguments is
-         *              variable and may be zero.
+         * @param args arguments referenced by the format specifiers in the format
+         *             QL string.  If there are more arguments than format specifiers,
+         *             the extra arguments are ignored.  The number of arguments is
+         *             variable and may be zero.
          * @return this builder
          */
         public Builder ql(String fmtQl, Object... args) {

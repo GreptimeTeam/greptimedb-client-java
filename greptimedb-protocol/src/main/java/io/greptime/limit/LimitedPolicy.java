@@ -38,6 +38,9 @@ public interface LimitedPolicy {
         return new AbortOnBlockingTimeoutPolicy(3, TimeUnit.SECONDS);
     }
 
+    /**
+     * A limited policy that discards the data if the {@code Limiter} is full.
+     */
     class DiscardPolicy implements LimitedPolicy {
 
         @Override
@@ -46,6 +49,9 @@ public interface LimitedPolicy {
         }
     }
 
+    /**
+     * A limited policy that aborts if the {@code Limiter} is full.
+     */
     class AbortPolicy implements LimitedPolicy {
 
         @Override
@@ -63,6 +69,9 @@ public interface LimitedPolicy {
         }
     }
 
+    /**
+     * A limited policy that blocks if the {@code Limiter} is full.
+     */
     class BlockingPolicy implements LimitedPolicy {
 
         @Override
@@ -72,6 +81,7 @@ public interface LimitedPolicy {
         }
     }
 
+    /** A limited policy that blocks the specified time if the {@code Limiter} is full. */
     class BlockingTimeoutPolicy implements LimitedPolicy {
 
         private final long timeout;
@@ -96,6 +106,10 @@ public interface LimitedPolicy {
         }
     }
 
+    /**
+     * A limited policy that aborts if the {@code Limiter} is full, and aborts if the blocking
+     * time exceeds the given timeout.
+     */
     class AbortOnBlockingTimeoutPolicy extends BlockingTimeoutPolicy {
 
         public AbortOnBlockingTimeoutPolicy(long timeout, TimeUnit unit) {

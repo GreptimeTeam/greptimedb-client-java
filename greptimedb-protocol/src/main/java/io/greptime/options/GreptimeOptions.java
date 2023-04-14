@@ -199,7 +199,7 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
          * Note: We do not close it to free resources, as we view it as shared.
          *
          * @param asyncWritePool async thread pool for write
-         * @param asyncReadPool  async thread pool for read
+         * @param asyncReadPool async thread pool for read
          * @return this builder
          */
         public Builder asyncPool(Executor asyncWritePool, Executor asyncReadPool) {

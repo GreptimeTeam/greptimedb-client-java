@@ -16,13 +16,24 @@
 package io.greptime.models;
 
 /**
+ * The value of a column.
+ *
  * @author jiachun.fjc
  */
 public interface Value {
+    /**
+     * Returns the name of the column.
+     */
     String name();
 
+    /**
+     * Returns the data type of the column.
+     */
     ColumnDataType dataType();
 
+    /**
+     * Returns the value of the column.
+     */
     Object value();
 
     final class DefaultValue implements Value {

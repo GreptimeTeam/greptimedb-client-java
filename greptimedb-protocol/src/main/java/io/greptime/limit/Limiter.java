@@ -18,6 +18,7 @@ package io.greptime.limit;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * A rate limiter.
  *
  * @author jiachun.fjc
  */

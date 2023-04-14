@@ -44,6 +44,13 @@ public abstract class AbstractLimiter<In, Out> {
         this.acquireAvailablePermits = MetricsUtil.histogram(metricPrefix, "available_permits");
     }
 
+    /**
+     * Acquire permits and do the action.
+     *
+     * @param in input
+     * @param action the action to do
+     * @return the result of the action
+     */
     public CompletableFuture<Out> acquireAndDo(In in, Supplier<CompletableFuture<Out>> action) {
         if (this.limiter == null || this.policy == null) {
             return action.get();
@@ -70,14 +77,40 @@ public abstract class AbstractLimiter<In, Out> {
         }
     }
 
+    /**
+     * Calculate the number of permits to acquire.
+     *
+     * @param in input
+     * @return the number of permits to acquire
+     */
     public abstract int calculatePermits(In in);
 
+    /**
+     * The rejected action.
+     *
+     * @param in input
+     * @param state the rejected state
+     * @return the rejected result
+     */
     public abstract Out rejected(In in, RejectedState state);
 
+    /**
+     * The rejected action.
+     *
+     * @param in input
+     * @param acquirePermits the number of permits to acquire
+     * @param maxPermits the maximum number of permits
+     * @return the rejected result
+     */
     private Out rejected(In in, int acquirePermits, int maxPermits) {
         return rejected(in, new RejectedState(acquirePermits, maxPermits, this.limiter.availablePermits()));
     }
 
+    /**
+     * Release the permits.
+     *
+     * @param permits the number of permits to release
+     */
     private void release(int permits) {
         this.limiter.release(permits);
     }

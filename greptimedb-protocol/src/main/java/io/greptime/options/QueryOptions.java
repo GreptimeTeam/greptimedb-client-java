@@ -21,6 +21,8 @@ import io.greptime.models.AuthInfo;
 import java.util.concurrent.Executor;
 
 /**
+ * Query options.
+ *
  * @author jiachun.fjc
  */
 public class QueryOptions implements Copiable<QueryOptions> {

@@ -30,11 +30,27 @@ public final class Result<Ok, Err> {
     private final Ok ok;
     private final Err err;
 
+    /**
+     * Creates a new `Result` from the given value.
+     *
+     * @param ok the value
+     * @return `Result<Ok, Err>`
+     * @param <Ok> the value type
+     * @param <Err> the error type
+     */
     public static <Ok, Err> Result<Ok, Err> ok(Ok ok) {
         Ensures.ensureNonNull(ok, "null `ok`");
         return new Result<>(ok, null);
     }
 
+    /**
+     * Creates a new `Result` from the given error.
+     *
+     * @param err the error
+     * @return `Result<Ok, Err>`
+     * @param <Ok> the value type
+     * @param <Err> the error type
+     */
     public static <Ok, Err> Result<Ok, Err> err(Err err) {
         Ensures.ensureNonNull(err, "null `err`");
         return new Result<>(null, err);
@@ -45,14 +61,23 @@ public final class Result<Ok, Err> {
         this.err = err;
     }
 
+    /**
+     * Returns `true` if the result is [`Ok`].
+     */
     public boolean isOk() {
         return this.ok != null && this.err == null;
     }
 
+    /**
+     * Returns the [`Ok`] value.
+     */
     public Ok getOk() {
         return Ensures.ensureNonNull(this.ok, "null `ok`");
     }
 
+    /**
+     * Returns the [`Err`].
+     */
     public Err getErr() {
         return Ensures.ensureNonNull(this.err, "null `err`");
     }
@@ -64,7 +89,7 @@ public final class Result<Ok, Err> {
      * This function can be used to compose the results of two functions.
      *
      * @param mapper a function to a contained [`Ok`] value
-     * @param <U>    the [`Ok`] value type to map to
+     * @param <U> the [`Ok`] value type to map to
      * @return `Result<U, Err>`
      */
     public <U> Result<U, Err> map(Function<Ok, U> mapper) {
@@ -80,8 +105,8 @@ public final class Result<Ok, Err> {
      * {@link #mapOrElse(Function, Function)}, which is lazily evaluated.
      *
      * @param defaultVal default value (if [`Err`])
-     * @param mapper     a function to a contained [`Ok`] value
-     * @param <U>        the value type to map to
+     * @param mapper a function to a contained [`Ok`] value
+     * @param <U> the value type to map to
      * @return the provided default (if [`Err`]), or applies a function to
      * the contained value (if [`Ok`])
      */
@@ -98,8 +123,8 @@ public final class Result<Ok, Err> {
      * handling an error.
      *
      * @param fallbackMapper a fallback function to a contained [`Err`] value
-     * @param mapper         a function to a contained [`Ok`] value
-     * @param <U>            the value type to map to
+     * @param mapper a function to a contained [`Ok`] value
+     * @param <U> the value type to map to
      * @return `U` by applying a fallback function to a contained [`Err`] value,
      * or a default function to a contained [`Ok`] value.
      */
@@ -112,7 +137,7 @@ public final class Result<Ok, Err> {
      * contained [`Err`] value, leaving an [`Ok`] value untouched.
      *
      * @param mapper a function to a contained [`Err`] value
-     * @param <F>    the error type to map to
+     * @param <F> the error type to map to
      * @return `Result<Ok, F>`
      */
     public <F> Result<Ok, F> mapErr(Function<Err, F> mapper) {
@@ -134,7 +159,7 @@ public final class Result<Ok, Err> {
      * Calls `mapper` if the result is [`Err`], otherwise returns the [`Ok`] value.
      *
      * @param mapper a function to a contained [`Err`] value
-     * @param <F>    the error type to map to
+     * @param <F> the error type to map to
      * @return `Result<Ok, Err>`
      */
     public <F> Result<Ok, F> orElse(Function<Err, Result<Ok, F>> mapper) {

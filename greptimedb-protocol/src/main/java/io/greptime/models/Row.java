@@ -18,9 +18,15 @@ package io.greptime.models;
 import java.util.List;
 
 /**
+ * Represents a row of data in query result.
+ *
  * @author jiachun.fjc
  */
 public interface Row {
+
+    /**
+     * Returns the values of this row.
+     */
     List<Value> values();
 
     final class DefaultRow implements Row {
@@ -34,6 +40,13 @@ public interface Row {
         @Override
         public List<Value> values() {
             return values;
+        }
+
+        @Override
+        public String toString() {
+            return "DefaultRow{" + //
+                    "values=" + values + //
+                    '}';
         }
     }
 }

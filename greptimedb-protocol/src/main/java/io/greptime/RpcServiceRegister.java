@@ -20,6 +20,7 @@ import io.greptime.rpc.RpcFactoryProvider;
 import io.greptime.v1.Database;
 
 /**
+ * The RPC service register.
  *
  * @author jiachun.fjc
  */

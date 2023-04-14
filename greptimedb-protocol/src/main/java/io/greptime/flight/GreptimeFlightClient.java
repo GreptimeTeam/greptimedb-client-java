@@ -28,6 +28,11 @@ import org.apache.arrow.util.AutoCloseables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Flight client for GreptimeDB.
+ *
+ * @author LFC
+ */
 public class GreptimeFlightClient implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(GreptimeFlightClient.class);

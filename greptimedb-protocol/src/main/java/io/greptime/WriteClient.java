@@ -30,7 +30,6 @@ import io.greptime.errors.LimitedException;
 import io.greptime.errors.StreamException;
 import io.greptime.limit.LimitedPolicy;
 import io.greptime.limit.WriteLimiter;
-import io.greptime.models.AuthInfo;
 import io.greptime.models.Err;
 import io.greptime.models.Result;
 import io.greptime.models.TableName;

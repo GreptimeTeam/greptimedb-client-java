@@ -18,11 +18,16 @@ package io.greptime.models;
 import io.greptime.v1.Columns;
 
 /**
+ * The semantic type.
+ *
  * @author jiachun.fjc
  */
 public enum SemanticType {
     Tag, Field, Timestamp;
 
+    /**
+     * Converts to the corresponding proto value.
+     */
     public Columns.Column.SemanticType toProtoValue() {
         switch (this) {
             case Tag:
@@ -36,6 +41,9 @@ public enum SemanticType {
         }
     }
 
+    /**
+     * Converts from the corresponding proto value.
+     */
     public static SemanticType fromProtoValue(Columns.Column.SemanticType v) {
         switch (v) {
             case TAG:

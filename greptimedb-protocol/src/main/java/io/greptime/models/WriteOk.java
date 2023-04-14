@@ -26,18 +26,30 @@ public class WriteOk {
     private int failure;
     private TableName tableName;
 
+    /**
+     * Returns the number of successful writes.
+     */
     public int getSuccess() {
         return success;
     }
 
+    /**
+     * Returns the number of failed writes.
+     */
     public int getFailure() {
         return failure;
     }
 
+    /**
+     * Returns the table name.
+     */
     public TableName getTableName() {
         return tableName;
     }
 
+    /**
+     * Map the {@link WriteOk} to {@link Result}.
+     */
     public Result<WriteOk, Err> mapToResult() {
         return Result.ok(this);
     }
@@ -51,10 +63,16 @@ public class WriteOk {
                 '}';
     }
 
+    /**
+     * Returns an empty {@link WriteOk}.
+     */
     public static WriteOk emptyOk() {
         return ok(0, 0, null);
     }
 
+    /**
+     * Creates a new {@link WriteOk} from the given value.
+     */
     public static WriteOk ok(int success, int failure, TableName tableName) {
         WriteOk ok = new WriteOk();
         ok.success = success;

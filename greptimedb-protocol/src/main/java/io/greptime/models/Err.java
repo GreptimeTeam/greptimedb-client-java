@@ -35,26 +35,44 @@ public class Err {
     // the QL failed to query
     private String failedQl;
 
+    /**
+     * Returns the error code.
+     */
     public int getCode() {
         return code;
     }
 
+    /**
+     * Returns the error.
+     */
     public Throwable getError() {
         return error;
     }
 
+    /**
+     * Returns the server address where the error occurred.
+     */
     public Endpoint getErrTo() {
         return errTo;
     }
 
+    /**
+     * Returns the data of wrote failed, can be used to retry.
+     */
     public WriteRows getRowsFailed() {
         return rowsFailed;
     }
 
+    /**
+     * Returns the QL failed to query.
+     */
     public String getFailedQl() {
         return failedQl;
     }
 
+    /**
+     * Returns a {@link Result} containing this error.
+     */
     public <T> Result<T, Err> mapToResult() {
         return Result.err(this);
     }
@@ -75,6 +93,15 @@ public class Err {
                 '}';
     }
 
+    /**
+     * Creates a new {@link Err} for write error.
+     *
+     * @param code the error code
+     * @param error the error
+     * @param errTo the server address where the error occurred
+     * @param rowsFailed the data of wrote failed, can be used to retry
+     * @return a new {@link Err} for write error
+     */
     public static Err writeErr(int code, Throwable error, Endpoint errTo, WriteRows rowsFailed) {
         Err err = new Err();
         err.code = code;
@@ -84,6 +111,15 @@ public class Err {
         return err;
     }
 
+    /**
+     * Creates a new {@link Err} for query error.
+     *
+     * @param code the error code
+     * @param error the error
+     * @param errTo the server address where the error occurred
+     * @param failedQl the QL failed to query
+     * @return a new {@link Err} for query error
+     */
     public static Err queryErr(int code, Throwable error, Endpoint errTo, String failedQl) {
         Err err = new Err();
         err.code = code;
