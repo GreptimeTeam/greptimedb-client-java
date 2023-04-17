@@ -107,7 +107,7 @@ public interface LimitedPolicy {
     }
 
     /**
-     * A limited policy that aborts if the {@code Limiter} is full, and aborts if the blocking
+     * A limited policy that first blocks if the {@code Limiter} is full, and aborts if the blocking
      * time exceeds the given timeout.
      */
     class AbortOnBlockingTimeoutPolicy extends BlockingTimeoutPolicy {
@@ -122,7 +122,7 @@ public interface LimitedPolicy {
                 return true;
             }
 
-            final String err =
+            String err =
                     String.format("Limited by `AbortOnBlockingTimeoutPolicy[timeout=%d, unit=%s]`, acquirePermits=%d, "
                             + "maxPermits=%d, availablePermits=%d.", //
                             timeout(), //
