@@ -30,7 +30,7 @@ public interface LimitedPolicy {
      *
      * @param limiter the given limiter
      * @param permits the number of permits to acquire
-     * @return true if can continue processing the data, otherwise false
+     * @return true if it can continue processing the data, otherwise false
      */
     boolean acquire(Limiter limiter, int permits);
 

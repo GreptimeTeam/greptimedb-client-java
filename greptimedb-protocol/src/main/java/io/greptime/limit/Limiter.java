@@ -36,7 +36,7 @@ public interface Limiter {
      * Acquires the given number of permits from this {@code Limiter}
      * if it can be obtained without exceeding the specified {@code timeout},
      * or returns {@code false} immediately (without waiting) if the permits
-     * would not have been granted before the timeout expired.
+     * had not been granted before the timeout expired.
      *
      * @param permits the number of permits to acquire
      * @param timeout the maximum time to wait for the permits
