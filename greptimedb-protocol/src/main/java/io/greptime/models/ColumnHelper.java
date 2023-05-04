@@ -40,7 +40,7 @@ public final class ColumnHelper {
     }
 
     /**
-     * Gets value from the column values by sepciified index.
+     * Gets value from the column values by specified index.
      *
      * @param column the column values
      * @param index the index of the value
