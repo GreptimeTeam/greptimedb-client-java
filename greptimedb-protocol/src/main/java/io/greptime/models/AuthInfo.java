@@ -16,14 +16,13 @@
 package io.greptime.models;
 
 import io.greptime.common.Into;
-import io.greptime.v1.Database;
 
 /**
  * Greptime authentication information
  *
  * @author sunng87
  */
-public class AuthInfo implements Into<Database.AuthHeader> {
+public class AuthInfo implements Into<Common.AuthHeader> {
 
     private String username;
     private String password;
@@ -53,11 +52,13 @@ public class AuthInfo implements Into<Database.AuthHeader> {
     }
 
     @Override
-    public Database.AuthHeader into() {
-        Database.Basic basic = Database.Basic.newBuilder() //
+    public Common.AuthHeader into() {
+        Common.Basic basic = Common.Basic.newBuilder() //
                 .setUsername(getUsername()) //
                 .setPassword(getPassword()) //
                 .build();
-        return Database.AuthHeader.newBuilder().setBasic(basic).build();
+        return Common.AuthHeader.newBuilder() //
+                .setBasic(basic) //
+                .build();
     }
 }

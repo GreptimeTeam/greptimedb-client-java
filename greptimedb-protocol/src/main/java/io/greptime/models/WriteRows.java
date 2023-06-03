@@ -19,6 +19,7 @@ import com.google.protobuf.ByteStringHelper;
 import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Columns;
+import io.greptime.v1.Common;
 import io.greptime.v1.Database;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -208,7 +209,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
             Ensures.ensure(rowCount > 0, "`WriteRows` must contain at least one row of data");
             Ensures.ensureNonNull(columns, "Forget to call `WriteRows.finish()`?");
 
-            Database.RequestHeader.Builder headerBuilder = Database.RequestHeader.newBuilder() //
+            Common.RequestHeader.Builder headerBuilder = Common.RequestHeader.newBuilder() //
                 .setDbname(tableName.getDatabaseName());
 
             this.authInfo.ifPresent(auth -> headerBuilder.setAuthorization(auth.into()));

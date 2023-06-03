@@ -25,6 +25,7 @@ import io.greptime.models.TableSchema;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
 import io.greptime.options.WriteOptions;
+import io.greptime.v1.Common;
 import io.greptime.v1.Database;
 import org.junit.After;
 import org.junit.Assert;
@@ -112,7 +113,7 @@ public class WriteClientTest {
 
         Endpoint addr = Endpoint.parse("127.0.0.1:8081");
         Database.GreptimeResponse response = Database.GreptimeResponse.newBuilder() //
-                .setAffectedRows(Database.AffectedRows.newBuilder().setValue(3)) //
+                .setAffectedRows(Common.AffectedRows.newBuilder().setValue(3)) //
                 .build();
 
         Mockito.when(this.routerClient.route()) //
