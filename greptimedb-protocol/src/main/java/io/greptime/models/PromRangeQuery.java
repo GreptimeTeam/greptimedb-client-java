@@ -18,7 +18,7 @@ package io.greptime.models;
 import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
 import io.greptime.common.util.Strings;
-import io.greptime.v1.Database;
+import io.greptime.v1.Prometheus;
 
 /**
  * Similar to the range_query in Prometheus' HTTP API:
@@ -30,7 +30,7 @@ import io.greptime.v1.Database;
  *
  * @author jiachun.fjc
  */
-public class PromRangeQuery implements Into<Database.PromRangeQuery> {
+public class PromRangeQuery implements Into<Prometheus.PromRangeQuery> {
 
     /** Prometheus expression query string. */
     private String query;
@@ -74,8 +74,8 @@ public class PromRangeQuery implements Into<Database.PromRangeQuery> {
     }
 
     @Override
-    public Database.PromRangeQuery into() {
-        return Database.PromRangeQuery.newBuilder() //
+    public Prometheus.PromRangeQuery into() {
+        return Prometheus.PromRangeQuery.newBuilder() //
                 .setQuery(getQuery()) //
                 .setStart(getStart()) //
                 .setEnd(getEnd()) //

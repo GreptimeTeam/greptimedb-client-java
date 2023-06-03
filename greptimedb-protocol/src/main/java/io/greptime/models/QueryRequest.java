@@ -17,6 +17,7 @@ package io.greptime.models;
 
 import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
+import io.greptime.v1.Common;
 import io.greptime.v1.Database;
 import java.util.Optional;
 
@@ -68,7 +69,7 @@ public class QueryRequest implements Into<Database.GreptimeRequest> {
     public Database.GreptimeRequest into() {
         Database.QueryRequest.Builder builder = Database.QueryRequest.newBuilder();
 
-        Database.RequestHeader.Builder headerBuilder = Database.RequestHeader.newBuilder();
+        Common.RequestHeader.Builder headerBuilder = Common.RequestHeader.newBuilder();
         this.authInfo.ifPresent(auth -> headerBuilder.setAuthorization(auth.into()));
         this.databaseName.ifPresent(headerBuilder::setDbname);
 
