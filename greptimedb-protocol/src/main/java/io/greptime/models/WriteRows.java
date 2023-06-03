@@ -219,10 +219,13 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
                     .addAllColumns(columns) //
                     .setRowCount(rowCount) //
                     .build();
+            Database.InsertRequests insertRequests = Database.InsertRequests.newBuilder() //
+                    .addInserts(insertRequest) //
+                    .build();
 
             return Database.GreptimeRequest.newBuilder() //
                     .setHeader(headerBuilder.build()) //
-                    .setInsert(insertRequest) //
+                    .setInserts(insertRequests) //
                     .build();
         }
     }

@@ -16,6 +16,7 @@
 package io.greptime.models;
 
 import io.greptime.common.Into;
+import io.greptime.v1.Common;
 
 /**
  * Greptime authentication information
