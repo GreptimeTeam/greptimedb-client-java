@@ -21,6 +21,8 @@ import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
 import io.greptime.rpc.Context;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -34,7 +36,7 @@ public interface Write {
      * @see #write(WriteRows, Context)
      */
     default CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows) {
-        return write(rows, Context.newDefault());
+        return writeBatch(Collections.singleton(rows));
     }
 
     /**
@@ -44,7 +46,25 @@ public interface Write {
      * @param ctx invoke context
      * @return write result
      */
-    CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx);
+    default CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx) {
+        return writeBatch(Collections.singleton(rows), ctx);
+    }
+
+    /**
+     * @see #writeBatch(Collection, Context)
+     */
+    default CompletableFuture<Result<WriteOk, Err>> writeBatch(Collection<WriteRows> rows) {
+        return writeBatch(rows, Context.newDefault());
+    }
+
+    /**
+     * Write multi tables multi rows data to database.
+     *
+     * @param rows rows with multi tables
+     * @param ctx invoke context
+     * @return write result
+     */
+    CompletableFuture<Result<WriteOk, Err>> writeBatch(Collection<WriteRows> rows, Context ctx);
 
     /**
      * @see #streamWriter(int, Context)

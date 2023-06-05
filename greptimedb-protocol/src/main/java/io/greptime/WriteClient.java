@@ -35,14 +35,17 @@ import io.greptime.models.Result;
 import io.greptime.models.TableName;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
+import io.greptime.models.WriteRowsHelper;
 import io.greptime.options.WriteOptions;
 import io.greptime.rpc.Context;
 import io.greptime.rpc.Observer;
 import io.greptime.v1.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 /**
  * Default Write API impl.
@@ -74,8 +77,9 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
     }
 
     @Override
-    public CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx) {
+    public CompletableFuture<Result<WriteOk, Err>> writeBatch(Collection<WriteRows> rows, Context ctx) {
         Ensures.ensureNonNull(rows, "null `rows`");
+        Ensures.ensure(!rows.isEmpty(), "empty `rows`");
 
         long startCall = Clock.defaultClock().getTick();
 
@@ -126,7 +130,7 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
                 }).join();
     }
 
-    private CompletableFuture<Result<WriteOk, Err>> write0(WriteRows rows, Context ctx, int retries) {
+    private CompletableFuture<Result<WriteOk, Err>> write0(Collection<WriteRows> rows, Context ctx, int retries) {
         InnerMetricHelper.writeByRetries(retries).mark();
 
         return this.routerClient.route()
@@ -152,21 +156,16 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
             }, this.asyncPool);
     }
 
-    private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, WriteRows rows, Context ctx, int retries) {
-        TableName tableName = rows.tableName();
-
-        if (this.opts.getAuthInfo() != null) {
-            rows.setAuthInfo(this.opts.getAuthInfo());
-        }
-
-        Database.GreptimeRequest req = rows.into();
+    private CompletableFuture<Result<WriteOk, Err>> writeTo(Endpoint endpoint, Collection<WriteRows> rows, Context ctx, int retries) {
+        Collection<TableName> tableNames = rows.stream().map(WriteRows::tableName).collect(Collectors.toList());
+        Database.GreptimeRequest req = WriteRowsHelper.toGreptimeRequest(tableNames, rows, this.opts.getAuthInfo());
         ctx.with("retries", retries);
 
         CompletableFuture<Database.GreptimeResponse> future = this.routerClient.invoke(endpoint, req, ctx);
 
         return future.thenApplyAsync(resp -> {
             int affectedRows = resp.getAffectedRows().getValue();
-            return WriteOk.ok(affectedRows, 0, tableName).mapToResult();
+            return WriteOk.ok(affectedRows, 0, tableNames).mapToResult();
         }, this.asyncPool);
     }
 
@@ -201,10 +200,9 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
 
             @Override
             public void onNext(WriteRows rows) {
-                if (WriteClient.this.opts.getAuthInfo() != null) {
-                    rows.setAuthInfo(WriteClient.this.opts.getAuthInfo());
-                }
-                rpcObserver.onNext(rows.into());
+                Database.GreptimeRequest req =
+                        WriteRowsHelper.toGreptimeRequest(rows, WriteClient.this.opts.getAuthInfo());
+                rpcObserver.onNext(req);
             }
 
             @Override
@@ -278,12 +276,12 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
         }
 
         @Override
-        public int calculatePermits(WriteRows in) {
-            return in.rowCount();
+        public int calculatePermits(Collection<WriteRows> in) {
+            return in.stream().map(WriteRows::rowCount).reduce(0, Integer::sum);
         }
 
         @Override
-        public Result<WriteOk, Err> rejected(WriteRows in, RejectedState state) {
+        public Result<WriteOk, Err> rejected(Collection<WriteRows> in, RejectedState state) {
             String errMsg =
                     String.format("Write limited by client, acquirePermits=%d, maxPermits=%d, availablePermits=%d.", //
                             state.acquirePermits(), //

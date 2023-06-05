@@ -19,13 +19,14 @@ import io.greptime.models.Err;
 import io.greptime.models.Result;
 import io.greptime.models.WriteOk;
 import io.greptime.models.WriteRows;
+import java.util.Collection;
 
 /**
  * Like rust: pub type WriteLimiter = AbstractLimiter<WriteRowsWriteRows, Result<WriteOk, Err>>
  *
  * @author jiachun.fjc
  */
-public abstract class WriteLimiter extends AbstractLimiter<WriteRows, Result<WriteOk, Err>> {
+public abstract class WriteLimiter extends AbstractLimiter<Collection<WriteRows>, Result<WriteOk, Err>> {
 
     public WriteLimiter(int maxInFlight, LimitedPolicy policy, String metricPrefix) {
         super(maxInFlight, policy, metricPrefix);

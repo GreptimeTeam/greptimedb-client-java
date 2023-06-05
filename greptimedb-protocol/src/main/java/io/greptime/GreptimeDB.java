@@ -40,6 +40,7 @@ import io.greptime.rpc.RpcOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -136,9 +137,9 @@ public class GreptimeDB implements Write, Query, Lifecycle<GreptimeOptions>, Dis
     }
 
     @Override
-    public CompletableFuture<Result<WriteOk, Err>> write(WriteRows rows, Context ctx) {
+    public CompletableFuture<Result<WriteOk, Err>> writeBatch(Collection<WriteRows> rows, Context ctx) {
         ensureInitialized();
-        return this.writeClient.write(rows, attachCtx(ctx));
+        return this.writeClient.writeBatch(rows, attachCtx(ctx));
     }
 
     @Override
