@@ -15,6 +15,8 @@
  */
 package io.greptime.models;
 
+import java.util.Collection;
+
 /**
  * Contains the success value of write.
  *
@@ -24,7 +26,7 @@ public class WriteOk {
 
     private int success;
     private int failure;
-    private TableName tableName;
+    private Collection<TableName> tableNames;
 
     /**
      * Returns the number of successful writes.
@@ -41,10 +43,10 @@ public class WriteOk {
     }
 
     /**
-     * Returns the table name.
+     * Returns the table names.
      */
-    public TableName getTableName() {
-        return tableName;
+    public Collection<TableName> getTableNames() {
+        return tableNames;
     }
 
     /**
@@ -59,7 +61,7 @@ public class WriteOk {
         return "WriteOk{" + //
                 "success=" + success + //
                 ", failure=" + failure + //
-                ", tableName=" + tableName + //
+                ", tableNames=" + tableNames + //
                 '}';
     }
 
@@ -73,11 +75,11 @@ public class WriteOk {
     /**
      * Creates a new {@link WriteOk} from the given value.
      */
-    public static WriteOk ok(int success, int failure, TableName tableName) {
+    public static WriteOk ok(int success, int failure, Collection<TableName> tableNames) {
         WriteOk ok = new WriteOk();
         ok.success = success;
         ok.failure = failure;
-        ok.tableName = tableName;
+        ok.tableNames = tableNames;
         return ok;
     }
 }

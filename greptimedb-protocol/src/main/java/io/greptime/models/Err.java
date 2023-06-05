@@ -17,6 +17,7 @@ package io.greptime.models;
 
 import io.greptime.common.Endpoint;
 import io.greptime.common.util.Strings;
+import java.util.Collection;
 
 /**
  * Contains the write/query error value.
@@ -31,7 +32,7 @@ public class Err {
     // the server address where the error occurred
     private Endpoint errTo;
     // the data of wrote failed, can be used to retry
-    private WriteRows rowsFailed;
+    private Collection<WriteRows> rowsFailed;
     // the QL failed to query
     private String failedQl;
 
@@ -59,7 +60,7 @@ public class Err {
     /**
      * Returns the data of wrote failed, can be used to retry.
      */
-    public WriteRows getRowsFailed() {
+    public Collection<WriteRows> getRowsFailed() {
         return rowsFailed;
     }
 
@@ -77,18 +78,12 @@ public class Err {
         return Result.err(this);
     }
 
-    private String tableNameFailed() {
-        return this.rowsFailed == null ? "" //
-                : Strings.toString(this.rowsFailed.tableName());
-    }
-
     @Override
     public String toString() {
         return "Err{" + //
                 "code=" + code + //
                 ", error='" + error + '\'' + //
                 ", errTo=" + errTo + //
-                ", tableNameFailed=" + tableNameFailed() + //
                 ", failedQl=" + failedQl + //
                 '}';
     }
@@ -102,7 +97,7 @@ public class Err {
      * @param rowsFailed the data of wrote failed, can be used to retry
      * @return a new {@link Err} for write error
      */
-    public static Err writeErr(int code, Throwable error, Endpoint errTo, WriteRows rowsFailed) {
+    public static Err writeErr(int code, Throwable error, Endpoint errTo, Collection<WriteRows> rowsFailed) {
         Err err = new Err();
         err.code = code;
         err.error = error;

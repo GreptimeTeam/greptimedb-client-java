@@ -20,13 +20,15 @@ import io.greptime.models.SemanticType;
 import io.greptime.models.TableName;
 import io.greptime.models.TableSchema;
 import io.greptime.models.WriteRows;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author jiachun.fjc
  */
 public class TestUtil {
 
-    public static WriteRows testWriteRows(String tableName, int rowCount) {
+    public static Collection<WriteRows> testWriteRows(String tableName, int rowCount) {
         TableSchema tableSchema =
                 TableSchema.newBuilder(TableName.with("public", tableName))
                         .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field)
@@ -39,6 +41,6 @@ public class TestUtil {
             rows.insert("127.0.0.1", System.currentTimeMillis(), i);
         }
         rows.finish();
-        return rows;
+        return Collections.singleton(rows);
     }
 }

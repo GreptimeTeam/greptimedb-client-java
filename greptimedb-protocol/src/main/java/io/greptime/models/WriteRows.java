@@ -19,12 +19,10 @@ import com.google.protobuf.ByteStringHelper;
 import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Columns;
-import io.greptime.v1.Common;
 import io.greptime.v1.Database;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -32,17 +30,12 @@ import java.util.stream.Collectors;
  *
  * @author jiachun.fjc
  */
-public interface WriteRows extends Into<Database.GreptimeRequest> {
+public interface WriteRows extends Into<Database.InsertRequest> {
 
     /**
      * The table name to write.
      */
     TableName tableName();
-
-    /**
-     * Sets auth info for this request.
-     */
-    void setAuthInfo(AuthInfo authInfo);
 
     /**
      * The columns to write.
@@ -106,7 +99,6 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
 
             DefaultWriteRows rows = new DefaultWriteRows();
             rows.tableName = tableName;
-            rows.authInfo = Optional.empty();
             rows.columnCount = columnCount;
             rows.builders = new ArrayList<>();
             for (int i = 0; i < columnCount; i++) {
@@ -128,8 +120,6 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
         private BitSet[] nullMasks;
         private List<Columns.Column> columns;
         private int rowCount;
-        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-        private Optional<AuthInfo> authInfo;
 
         public TableName tableName() {
             return tableName;
@@ -147,11 +137,6 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
         @Override
         public int columnCount() {
             return columnCount;
-        }
-
-        @Override
-        public void setAuthInfo(AuthInfo authInfo) {
-            this.authInfo = Optional.of(authInfo);
         }
 
         @Override
@@ -201,7 +186,7 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
         }
 
         @Override
-        public Database.GreptimeRequest into() {
+        public Database.InsertRequest into() {
             TableName tableName = tableName();
             int rowCount = rowCount();
             List<Columns.Column> columns = columns();
@@ -209,23 +194,10 @@ public interface WriteRows extends Into<Database.GreptimeRequest> {
             Ensures.ensure(rowCount > 0, "`WriteRows` must contain at least one row of data");
             Ensures.ensureNonNull(columns, "Forget to call `WriteRows.finish()`?");
 
-            Common.RequestHeader.Builder headerBuilder = Common.RequestHeader.newBuilder() //
-                .setDbname(tableName.getDatabaseName());
-
-            this.authInfo.ifPresent(auth -> headerBuilder.setAuthorization(auth.into()));
-
-            Database.InsertRequest insertRequest = Database.InsertRequest.newBuilder() //
+            return Database.InsertRequest.newBuilder() //
                     .setTableName(tableName.getTableName()) //
                     .addAllColumns(columns) //
                     .setRowCount(rowCount) //
-                    .build();
-            Database.InsertRequests insertRequests = Database.InsertRequests.newBuilder() //
-                    .addInserts(insertRequest) //
-                    .build();
-
-            return Database.GreptimeRequest.newBuilder() //
-                    .setHeader(headerBuilder.build()) //
-                    .setInserts(insertRequests) //
                     .build();
         }
     }
