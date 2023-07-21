@@ -27,6 +27,7 @@ import io.greptime.common.util.Ensures;
 import io.greptime.common.util.MetricsUtil;
 import io.greptime.common.util.SerializingExecutor;
 import io.greptime.errors.LimitedException;
+import io.greptime.errors.ServerException;
 import io.greptime.errors.StreamException;
 import io.greptime.limit.LimitedPolicy;
 import io.greptime.limit.WriteLimiter;
@@ -39,6 +40,7 @@ import io.greptime.models.WriteRowsHelper;
 import io.greptime.options.WriteOptions;
 import io.greptime.rpc.Context;
 import io.greptime.rpc.Observer;
+import io.greptime.v1.Common;
 import io.greptime.v1.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,8 +166,15 @@ public class WriteClient implements Write, Lifecycle<WriteOptions>, Display {
         CompletableFuture<Database.GreptimeResponse> future = this.routerClient.invoke(endpoint, req, ctx);
 
         return future.thenApplyAsync(resp -> {
-            int affectedRows = resp.getAffectedRows().getValue();
-            return WriteOk.ok(affectedRows, 0, tableNames).mapToResult();
+            Common.ResponseHeader header = resp.getHeader();
+            Common.Status status = header.getStatus();
+            int statusCode = status.getStatusCode();
+            if (Status.isSuccess(statusCode)) {
+                int affectedRows = resp.getAffectedRows().getValue();
+                return WriteOk.ok(affectedRows, 0, tableNames).mapToResult();
+            } else {
+                return Err.writeErr(statusCode, new ServerException(status.getErrMsg()), endpoint, rows).mapToResult();
+            }
         }, this.asyncPool);
     }
 

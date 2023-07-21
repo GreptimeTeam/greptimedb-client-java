@@ -35,9 +35,11 @@ public enum Status {
     // Unexpected error, maybe there is a BUG.
     Unexpected(1002),
     // Internal server error.
-    Internal(1003),
+    Internal(1003, true),
     // Invalid arguments.
     InvalidArguments(1004),
+    // / The task is cancelled.
+    Cancelled(1005),
     // ====== End of common status code ================
 
     // ====== Begin of SQL related status code =========
@@ -58,18 +60,37 @@ public enum Status {
     //
     TableNotFound(4001),
     //
-    TableColumnNotFound(4002),
+    TableColumnNotFound(4002), //
+    TableColumnExists(4003), //
+    DatabaseNotFound(4004),
     // ====== End of catalog related status code =======
 
     // ====== Begin of storage related status code =====
     // Storage is temporarily unable to handle the request
-    StorageUnavailable(5000),
+    StorageUnavailable(5000, true),
     // ====== End of storage related status code =======
 
     // ====== Begin of server related status code =====
     // Runtime resources exhausted, like creating threads failed.
-    RuntimeResourcesExhausted(6000),
+    RuntimeResourcesExhausted(6000, true),
+    // / Rate limit exceeded
+    RateLimited(6001),
     // ====== End of server related status code =======
+
+    // ====== Begin of auth related status code =====
+    // / User not exist
+    UserNotFound(7000),
+    // / Unsupported password type
+    UnsupportedPasswordType(7001),
+    // / Username and password does not match
+    UserPasswordMismatch(7002),
+    // / Not found http authorization header
+    AuthHeaderNotFound(7003),
+    // / Invalid http authorization header
+    InvalidAuthHeader(7004),
+    // / Illegal request to connect catalog-schema
+    AccessDenied(7005),
+    // ====== End of auth related status code =====
     ;
 
     private static final Map<Integer, Status> DICT = new HashMap<>();
