@@ -87,7 +87,7 @@ public final class ColumnHelper {
                 builder.addI32Values((int) value);
                 break;
             case INT64:
-                builder.addI64Values(getLongValue(value));
+                builder.addI64Values(Util.getLongValue(value));
                 break;
             case UINT8:
                 builder.addU8Values((int) value);
@@ -99,7 +99,7 @@ public final class ColumnHelper {
                 builder.addU32Values((int) value);
                 break;
             case UINT64:
-                builder.addU64Values(getLongValue(value));
+                builder.addU64Values(Util.getLongValue(value));
                 break;
             case FLOAT32:
                 builder.addF32Values(((Number) value).floatValue());
@@ -120,16 +120,16 @@ public final class ColumnHelper {
                 builder.addDateValues((int) value);
                 break;
             case DATETIME:
-                builder.addDatetimeValues(getLongValue(value));
+                builder.addDatetimeValues(Util.getLongValue(value));
                 break;
             case TIMESTAMP_SECOND:
-                builder.addTsSecondValues(getLongValue(value));
+                builder.addTsSecondValues(Util.getLongValue(value));
                 break;
             case TIMESTAMP_MILLISECOND:
-                builder.addTsMillisecondValues(getLongValue(value));
+                builder.addTsMillisecondValues(Util.getLongValue(value));
                 break;
             case TIMESTAMP_NANOSECOND:
-                builder.addTsNanosecondValues(getLongValue(value));
+                builder.addTsNanosecondValues(Util.getLongValue(value));
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));
@@ -177,15 +177,6 @@ public final class ColumnHelper {
             default:
                 throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));
         }
-    }
-
-    private static long getLongValue(Object value) {
-        if (value instanceof Integer) {
-            return (int) value;
-        } else if (value instanceof Long) {
-            return (long) value;
-        }
-        return ((Number) value).longValue();
     }
 
     private ColumnHelper() {}

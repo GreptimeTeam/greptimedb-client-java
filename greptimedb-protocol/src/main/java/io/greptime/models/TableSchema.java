@@ -17,6 +17,7 @@ package io.greptime.models;
 
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Common;
+import io.greptime.v1.RowData;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

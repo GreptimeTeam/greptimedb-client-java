@@ -52,13 +52,23 @@ public class WriteRowsHelper {
         }
 
         Database.InsertRequests.Builder insertRequestsBuilder = Database.InsertRequests.newBuilder();
+        Database.RowInsertRequests.Builder rowInsertRequestsBuilder = Database.RowInsertRequests.newBuilder();
         for (WriteRows r : rows) {
-            insertRequestsBuilder.addInserts(r.into());
+            switch (r.writeProtocol()) {
+                case Columnar:
+                    insertRequestsBuilder.addInserts(r.intoColumnarInsertRequest());
+                    break;
+                case Row:
+                    rowInsertRequestsBuilder.addInserts(r.intoRowInsertRequest());
+                    break;
+            }
+
         }
 
         return Database.GreptimeRequest.newBuilder() //
                 .setHeader(headerBuilder.build()) //
                 .setInserts(insertRequestsBuilder.build()) //
+                .setRowInserts(rowInsertRequestsBuilder.build()) //
                 .build();
     }
 
