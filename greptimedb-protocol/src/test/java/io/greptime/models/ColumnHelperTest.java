@@ -17,6 +17,7 @@ package io.greptime.models;
 
 import com.google.protobuf.ByteStringHelper;
 import io.greptime.v1.Columns;
+import io.greptime.v1.Common;
 import org.junit.Assert;
 import org.junit.Test;
 import java.util.BitSet;
@@ -33,13 +34,13 @@ public class ColumnHelperTest {
         nullMask.set(1, true);
         nullMask.set(3, true);
         Columns.Column column = Columns.Column.newBuilder().setColumnName("test_column") //
-                .setSemanticType(Columns.Column.SemanticType.FIELD) //
+                .setSemanticType(Common.SemanticType.FIELD) //
                 .setValues(Columns.Column.Values.newBuilder() //
                         .addI32Values(1) //
                         .addI32Values(3) //
                         .addI32Values(5) //
                         .build()) //
-                .setDatatype(Columns.ColumnDataType.INT32) //
+                .setDatatype(Common.ColumnDataType.INT32) //
                 .setNullMask(ByteStringHelper.wrap(nullMask.toByteArray())) //
                 .build();
 
@@ -58,13 +59,13 @@ public class ColumnHelperTest {
     @Test
     public void testGetValueNonNull() {
         Columns.Column column = Columns.Column.newBuilder().setColumnName("test_column") //
-                .setSemanticType(Columns.Column.SemanticType.FIELD) //
+                .setSemanticType(Common.SemanticType.FIELD) //
                 .setValues(Columns.Column.Values.newBuilder() //
                         .addI32Values(1) //
                         .addI32Values(2) //
                         .addI32Values(3) //
                         .build()) //
-                .setDatatype(Columns.ColumnDataType.INT32) //
+                .setDatatype(Common.ColumnDataType.INT32) //
                 .build();
 
         Object v = ColumnHelper.getValue(column, 0, ColumnHelper.getNullMaskBits(column));

@@ -16,7 +16,7 @@
 package io.greptime.models;
 
 import io.greptime.common.util.Ensures;
-import io.greptime.v1.Columns;
+import io.greptime.v1.Common;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +34,8 @@ public class TableSchema {
 
     private TableName tableName;
     private List<String> columnNames;
-    private List<Columns.Column.SemanticType> semanticTypes;
-    private List<Columns.ColumnDataType> dataTypes;
+    private List<Common.SemanticType> semanticTypes;
+    private List<Common.ColumnDataType> dataTypes;
 
     private TableSchema() {}
 
@@ -47,11 +47,11 @@ public class TableSchema {
         return columnNames;
     }
 
-    public List<Columns.Column.SemanticType> getSemanticTypes() {
+    public List<Common.SemanticType> getSemanticTypes() {
         return semanticTypes;
     }
 
-    public List<Columns.ColumnDataType> getDataTypes() {
+    public List<Common.ColumnDataType> getDataTypes() {
         return dataTypes;
     }
 
@@ -74,8 +74,8 @@ public class TableSchema {
     public static class Builder {
         private final TableName tableName;
         private List<String> columnNames;
-        private List<Columns.Column.SemanticType> semanticTypes;
-        private List<Columns.ColumnDataType> dataTypes;
+        private List<Common.SemanticType> semanticTypes;
+        private List<Common.ColumnDataType> dataTypes;
 
         public Builder(TableName tableName) {
             this.tableName = tableName;

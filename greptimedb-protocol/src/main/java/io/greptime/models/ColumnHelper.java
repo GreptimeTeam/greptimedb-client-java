@@ -18,6 +18,7 @@ package io.greptime.models;
 import com.google.protobuf.ByteStringHelper;
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Columns;
+import io.greptime.v1.Common;
 import java.util.BitSet;
 
 /**
@@ -35,7 +36,7 @@ public final class ColumnHelper {
      */
     public static void addToColumnValuesBuilder(Columns.Column.Builder builder, Object value) {
         Columns.Column.Values.Builder valuesBuilder = builder.getValuesBuilder();
-        Columns.ColumnDataType dataType = builder.getDatatype();
+        Common.ColumnDataType dataType = builder.getDatatype();
         addValue(valuesBuilder, dataType, value);
     }
 
@@ -49,7 +50,7 @@ public final class ColumnHelper {
      */
     public static Object getValue(Columns.Column column, int index, BitSet nullMask) {
         Columns.Column.Values values = column.getValues();
-        Columns.ColumnDataType dataType = column.getDatatype();
+        Common.ColumnDataType dataType = column.getDatatype();
         if (nullMask.isEmpty()) {
             return getValue(values, dataType, index);
         }
@@ -74,7 +75,7 @@ public final class ColumnHelper {
         return BitSet.valueOf(ByteStringHelper.sealByteArray(column.getNullMask()));
     }
 
-    private static void addValue(Columns.Column.Values.Builder builder, Columns.ColumnDataType dataType, Object value) {
+    private static void addValue(Columns.Column.Values.Builder builder, Common.ColumnDataType dataType, Object value) {
         switch (dataType) {
             case INT8:
                 builder.addI8Values((int) value);
@@ -135,7 +136,7 @@ public final class ColumnHelper {
         }
     }
 
-    private static Object getValue(Columns.Column.Values values, Columns.ColumnDataType dataType, int index) {
+    private static Object getValue(Columns.Column.Values values, Common.ColumnDataType dataType, int index) {
         switch (dataType) {
             case INT8:
                 return values.getI8Values(index);

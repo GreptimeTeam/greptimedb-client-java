@@ -19,6 +19,7 @@ import com.google.protobuf.ByteStringHelper;
 import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Columns;
+import io.greptime.v1.Common;
 import io.greptime.v1.Database;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -83,8 +84,8 @@ public interface WriteRows extends Into<Database.InsertRequest> {
         public WriteRows build() {
             TableName tableName = this.tableSchema.getTableName();
             List<String> columnNames = this.tableSchema.getColumnNames();
-            List<Columns.Column.SemanticType> semanticTypes = this.tableSchema.getSemanticTypes();
-            List<Columns.ColumnDataType> dataTypes = this.tableSchema.getDataTypes();
+            List<Common.SemanticType> semanticTypes = this.tableSchema.getSemanticTypes();
+            List<Common.ColumnDataType> dataTypes = this.tableSchema.getDataTypes();
 
             Ensures.ensureNonNull(tableName, "Null table name");
             Ensures.ensureNonNull(columnNames, "Null column names");
