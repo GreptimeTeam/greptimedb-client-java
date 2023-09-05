@@ -34,16 +34,33 @@ public class WriteRowsTest {
                 .dataTypes(ColumnDataType.String, ColumnDataType.String, ColumnDataType.Int32) //
                 .build();
 
-        WriteRows rows = WriteRows.newBuilder(schema).build();
-        rows.insert("1", "11", 111) //
-                .insert("2", "22", 222) //
-                .insert("3", "33", 333) //
-                .finish();
+        {
+            WriteRows.ColumnarBasedWriteRows rows =
+                    (WriteRows.ColumnarBasedWriteRows) WriteRows.newColumnarBasedBuilder(schema).build();
+            rows.insert("1", "11", 111) //
+                    .insert("2", "22", 222) //
+                    .insert("3", "33", 333) //
+                    .finish();
 
-        Assert.assertEquals(3, rows.rowCount());
-        Assert.assertEquals(111, rows.columns().get(2).getValues().getI32Values(0));
-        Assert.assertEquals(222, rows.columns().get(2).getValues().getI32Values(1));
-        Assert.assertEquals(333, rows.columns().get(2).getValues().getI32Values(2));
+            Assert.assertEquals(3, rows.rowCount());
+            Assert.assertEquals(111, rows.columns().get(2).getValues().getI32Values(0));
+            Assert.assertEquals(222, rows.columns().get(2).getValues().getI32Values(1));
+            Assert.assertEquals(333, rows.columns().get(2).getValues().getI32Values(2));
+        }
+
+        {
+            WriteRows.RowBasedWriteRows rows =
+                    (WriteRows.RowBasedWriteRows) WriteRows.newRowBasedBuilder(schema).build();
+            rows.insert("1", "11", 111) //
+                    .insert("2", "22", 222) //
+                    .insert("3", "33", 333) //
+                    .finish();
+
+            Assert.assertEquals(3, rows.rowCount());
+            Assert.assertEquals(111, rows.rows().get(0).getValues(2).getI32Value());
+            Assert.assertEquals(222, rows.rows().get(1).getValues(2).getI32Value());
+            Assert.assertEquals(333, rows.rows().get(2).getValues(2).getI32Value());
+        }
     }
 
     @Test
@@ -54,19 +71,37 @@ public class WriteRowsTest {
                 .dataTypes(ColumnDataType.String, ColumnDataType.String, ColumnDataType.Int32) //
                 .build();
 
-        WriteRows rows = WriteRows.newBuilder(schema).build();
-        rows.insert("1", "11", 111) //
-                .insert("2", null, 222) //
-                .insert("3", "33", null) //
-                .finish();
+        {
+            WriteRows.ColumnarBasedWriteRows rows =
+                    (WriteRows.ColumnarBasedWriteRows) WriteRows.newColumnarBasedBuilder(schema).build();
+            rows.insert("1", "11", 111) //
+                    .insert("2", null, 222) //
+                    .insert("3", "33", null) //
+                    .finish();
 
-        Assert.assertEquals(3, rows.rowCount());
-        Assert.assertEquals(111, rows.columns().get(2).getValues().getI32Values(0));
-        Assert.assertEquals(222, rows.columns().get(2).getValues().getI32Values(1));
-        Assert.assertEquals("33", rows.columns().get(1).getValues().getStringValues(1));
-        Assert.assertTrue(rows.columns().get(0).getNullMask().isEmpty());
-        Assert.assertTrue(bitSet(rows.columns().get(1).getNullMask()).get(1));
-        Assert.assertTrue(bitSet(rows.columns().get(2).getNullMask()).get(2));
+            Assert.assertEquals(3, rows.rowCount());
+            Assert.assertEquals(111, rows.columns().get(2).getValues().getI32Values(0));
+            Assert.assertEquals(222, rows.columns().get(2).getValues().getI32Values(1));
+            Assert.assertEquals("33", rows.columns().get(1).getValues().getStringValues(1));
+            Assert.assertTrue(rows.columns().get(0).getNullMask().isEmpty());
+            Assert.assertTrue(bitSet(rows.columns().get(1).getNullMask()).get(1));
+            Assert.assertTrue(bitSet(rows.columns().get(2).getNullMask()).get(2));
+        }
+
+        {
+            WriteRows.RowBasedWriteRows rows =
+                    (WriteRows.RowBasedWriteRows) WriteRows.newRowBasedBuilder(schema).build();
+            rows.insert("1", "11", 111) //
+                    .insert("2", null, 222) //
+                    .insert("3", "33", null) //
+                    .finish();
+
+            Assert.assertEquals(3, rows.rowCount());
+            Assert.assertEquals(111, rows.rows().get(0).getValues(2).getI32Value());
+            Assert.assertEquals(222, rows.rows().get(1).getValues(2).getI32Value());
+            Assert.assertFalse(rows.rows().get(2).getValues(2).hasI32Value());
+            Assert.assertFalse(rows.rows().get(1).getValues(1).hasStringValue());
+        }
     }
 
     private BitSet bitSet(ByteString byteString) {

@@ -19,7 +19,10 @@ import com.google.protobuf.ByteStringHelper;
 import io.greptime.common.Into;
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Columns;
+import io.greptime.v1.Common;
 import io.greptime.v1.Database;
+import io.greptime.v1.RowData;
+
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
@@ -30,17 +33,14 @@ import java.util.stream.Collectors;
  *
  * @author jiachun.fjc
  */
-public interface WriteRows extends Into<Database.InsertRequest> {
+public interface WriteRows {
+
+    WriteProtocol writeProtocol();
 
     /**
      * The table name to write.
      */
     TableName tableName();
-
-    /**
-     * The columns to write.
-     */
-    List<Columns.Column> columns();
 
     /**
      * The rows count to write.
@@ -69,22 +69,74 @@ public interface WriteRows extends Into<Database.InsertRequest> {
      */
     void finish();
 
+
+
+    /**
+     * Convert to {@link Database.InsertRequest}.
+     * ```java
+     * WriteRows rows = WriteRows.newBuilder(schema).build();
+     * // ...
+     * Database.InsertRequest insertRequest = null;
+     * Database.RowInsertRequest rowInsertRequest = null;
+     * switch (rows.writeProtocol()) {
+     *    case Columnar:
+     *      insertRequest = rows.intoColumnarInsertRequest();
+     *      break;
+     *    case Row:
+     *      rowInsertRequest = rows.intoRowInsertRequest();
+     *      break;
+     * }
+     * // ...
+     * ```
+     * @return {@link Database.InsertRequest}
+     */
+    Database.InsertRequest intoColumnarInsertRequest();
+
+    /**
+     * Convert to {@link Database.RowInsertRequest}.
+     *
+     * @see #intoColumnarInsertRequest()
+     *
+     * @return {@link Database.RowInsertRequest}
+     */
+    Database.RowInsertRequest intoRowInsertRequest();
+
+    default void checkNumValues(int len) {
+        int columnCount = columnCount();
+        Ensures.ensure(columnCount == len, "Expected values num: %d, actual: %d", columnCount, len);
+    }
+
     static WriteRows.Builder newBuilder(TableSchema tableSchema) {
-        return new Builder(tableSchema);
+        return newRowBasedBuilder(tableSchema);
+    }
+
+    static WriteRows.Builder newColumnarBasedBuilder(TableSchema tableSchema) {
+        return new Builder(WriteProtocol.Columnar, tableSchema);
+    }
+
+    static WriteRows.Builder newRowBasedBuilder(TableSchema tableSchema) {
+        return new Builder(WriteProtocol.Row, tableSchema);
+    }
+
+    enum WriteProtocol {
+        Columnar,
+        Row,
     }
 
     class Builder {
+        private final WriteProtocol writeProtocol;
         private final TableSchema tableSchema;
 
-        public Builder(TableSchema tableSchema) {
+        public Builder(WriteProtocol writeProtocol, TableSchema tableSchema) {
+            this.writeProtocol = writeProtocol;
             this.tableSchema = tableSchema;
         }
 
         public WriteRows build() {
             TableName tableName = this.tableSchema.getTableName();
             List<String> columnNames = this.tableSchema.getColumnNames();
-            List<Columns.Column.SemanticType> semanticTypes = this.tableSchema.getSemanticTypes();
-            List<Columns.ColumnDataType> dataTypes = this.tableSchema.getDataTypes();
+            List<Common.SemanticType> semanticTypes = this.tableSchema.getSemanticTypes();
+            List<Common.ColumnDataType> dataTypes = this.tableSchema.getDataTypes();
 
             Ensures.ensureNonNull(tableName, "Null table name");
             Ensures.ensureNonNull(columnNames, "Null column names");
@@ -97,7 +149,22 @@ public interface WriteRows extends Into<Database.InsertRequest> {
             Ensures.ensure(columnCount == semanticTypes.size(), "Column names size not equal to semantic types size");
             Ensures.ensure(columnCount == dataTypes.size(), "Column names size not equal to data types size");
 
-            DefaultWriteRows rows = new DefaultWriteRows();
+            switch (this.writeProtocol) {
+                case Columnar:
+                    return buildColumnar(tableName, columnCount, columnNames, semanticTypes, dataTypes);
+                case Row:
+                    return buildRow(tableName, columnCount, columnNames, semanticTypes, dataTypes);
+                default:
+                    throw new IllegalStateException("Unknown write protocol: " + this.writeProtocol);
+            }
+        }
+
+        private static WriteRows buildColumnar(TableName tableName, //
+                                               int columnCount, //
+                                               List<String> columnNames, //
+                                               List<Common.SemanticType> semanticTypes, //
+                                               List<Common.ColumnDataType> dataTypes) {
+            ColumnarBasedWriteRows rows = new ColumnarBasedWriteRows();
             rows.tableName = tableName;
             rows.columnCount = columnCount;
             rows.builders = new ArrayList<>();
@@ -111,9 +178,28 @@ public interface WriteRows extends Into<Database.InsertRequest> {
             rows.nullMasks = new BitSet[columnCount];
             return rows;
         }
+
+        private static WriteRows buildRow(TableName tableName, //
+                                          int columnCount, //
+                                          List<String> columnNames, //
+                                          List<Common.SemanticType> semanticTypes, //
+                                          List<Common.ColumnDataType> dataTypes) {
+            RowBasedWriteRows rows = new RowBasedWriteRows();
+            rows.tableName = tableName;
+            rows.columnSchemas = new ArrayList<>(columnCount);
+
+            for (int i = 0; i < columnCount; i++) {
+                RowData.ColumnSchema.Builder builder = RowData.ColumnSchema.newBuilder();
+                builder.setColumnName(columnNames.get(i)) //
+                        .setSemanticType(semanticTypes.get(i)) //
+                        .setDatatype(dataTypes.get(i));
+                rows.columnSchemas.add(builder.build());
+            }
+            return rows;
+        }
     }
 
-    class DefaultWriteRows implements WriteRows {
+    class ColumnarBasedWriteRows implements WriteRows, Into<Database.InsertRequest> {
         private TableName tableName;
         private int columnCount;
         private List<Columns.Column.Builder> builders;
@@ -121,12 +207,14 @@ public interface WriteRows extends Into<Database.InsertRequest> {
         private List<Columns.Column> columns;
         private int rowCount;
 
-        public TableName tableName() {
-            return tableName;
+        @Override
+        public WriteProtocol writeProtocol() {
+            return WriteProtocol.Columnar;
         }
 
-        public List<Columns.Column> columns() {
-            return columns;
+        @Override
+        public TableName tableName() {
+            return tableName;
         }
 
         @Override
@@ -141,7 +229,7 @@ public interface WriteRows extends Into<Database.InsertRequest> {
 
         @Override
         public WriteRows insert(Object... values) {
-            checkValuesNum(values.length);
+            checkNumValues(values.length);
 
             for (int i = 0; i < this.columnCount; i++) {
                 Columns.Column.Builder builder = this.builders.get(i);
@@ -181,24 +269,110 @@ public interface WriteRows extends Into<Database.InsertRequest> {
                 .collect(Collectors.toList());
         }
 
-        private void checkValuesNum(int len) {
-            Ensures.ensure(this.columnCount == len, "Expected values num: %d, actual: %d", this.columnCount, len);
+        @Override
+        public Database.InsertRequest intoColumnarInsertRequest() {
+            return into();
+        }
+
+        @Override
+        public Database.RowInsertRequest intoRowInsertRequest() {
+            throw new UnsupportedOperationException("Not supported");
         }
 
         @Override
         public Database.InsertRequest into() {
             TableName tableName = tableName();
             int rowCount = rowCount();
-            List<Columns.Column> columns = columns();
 
             Ensures.ensure(rowCount > 0, "`WriteRows` must contain at least one row of data");
-            Ensures.ensureNonNull(columns, "Forget to call `WriteRows.finish()`?");
+            Ensures.ensureNonNull(this.columns, "Forget to call `WriteRows.finish()`?");
 
             return Database.InsertRequest.newBuilder() //
                     .setTableName(tableName.getTableName()) //
-                    .addAllColumns(columns) //
+                    .addAllColumns(this.columns) //
                     .setRowCount(rowCount) //
                     .build();
+        }
+
+        List<Columns.Column> columns() {
+            return columns;
+        }
+    }
+
+    class RowBasedWriteRows implements WriteRows, Into<Database.RowInsertRequest> {
+
+        private TableName tableName;
+
+        private List<RowData.ColumnSchema> columnSchemas;
+        private final List<RowData.Row> rows = new ArrayList<>();
+
+        @Override
+        public WriteProtocol writeProtocol() {
+            return WriteProtocol.Row;
+        }
+
+        @Override
+        public TableName tableName() {
+            return tableName;
+        }
+
+        @Override
+        public int rowCount() {
+            return rows.size();
+        }
+
+        @Override
+        public int columnCount() {
+            return columnSchemas.size();
+        }
+
+        @Override
+        public WriteRows insert(Object... values) {
+            checkNumValues(values.length);
+
+            RowData.Row.Builder rowBuilder = RowData.Row.newBuilder();
+            for (int i = 0; i < values.length; i++) {
+                RowData.ColumnSchema columnSchema = this.columnSchemas.get(i);
+                Object value = values[i];
+                RowHelper.addValue(rowBuilder, columnSchema.getDatatype(), value);
+            }
+            this.rows.add(rowBuilder.build());
+
+            return this;
+        }
+
+        @Override
+        public void finish() {}
+
+        @Override
+        public Database.InsertRequest intoColumnarInsertRequest() {
+            throw new UnsupportedOperationException("Not supported");
+        }
+
+        @Override
+        public Database.RowInsertRequest intoRowInsertRequest() {
+            return into();
+        }
+
+        @Override
+        public Database.RowInsertRequest into() {
+            TableName tableName = tableName();
+            RowData.Rows rows = RowData.Rows.newBuilder() //
+                    .addAllSchema(this.columnSchemas) //
+                    .addAllRows(this.rows) //
+                    .build();
+            return Database.RowInsertRequest.newBuilder() //
+                    .setTableName(tableName.getTableName()) //
+                    .setRows(rows) //
+                    .build();
+        }
+
+        List<RowData.ColumnSchema> columnSchemas() {
+            return columnSchemas;
+        }
+
+        List<RowData.Row> rows() {
+            return rows;
         }
     }
 }

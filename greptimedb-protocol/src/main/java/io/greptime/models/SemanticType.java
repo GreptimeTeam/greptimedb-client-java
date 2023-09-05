@@ -16,6 +16,7 @@
 package io.greptime.models;
 
 import io.greptime.v1.Columns;
+import io.greptime.v1.Common;
 
 /**
  * The semantic type.
@@ -28,14 +29,14 @@ public enum SemanticType {
     /**
      * Converts to the corresponding proto value.
      */
-    public Columns.Column.SemanticType toProtoValue() {
+    public Common.SemanticType toProtoValue() {
         switch (this) {
             case Tag:
-                return Columns.Column.SemanticType.TAG;
+                return Common.SemanticType.TAG;
             case Field:
-                return Columns.Column.SemanticType.FIELD;
+                return Common.SemanticType.FIELD;
             case Timestamp:
-                return Columns.Column.SemanticType.TIMESTAMP;
+                return Common.SemanticType.TIMESTAMP;
             default:
                 return null;
         }
@@ -44,7 +45,7 @@ public enum SemanticType {
     /**
      * Converts from the corresponding proto value.
      */
-    public static SemanticType fromProtoValue(Columns.Column.SemanticType v) {
+    public static SemanticType fromProtoValue(Common.SemanticType v) {
         switch (v) {
             case TAG:
                 return Tag;

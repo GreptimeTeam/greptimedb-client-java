@@ -15,7 +15,7 @@
  */
 package io.greptime.models;
 
-import io.greptime.v1.Columns;
+import io.greptime.v1.Common;
 import org.apache.arrow.vector.types.pojo.ArrowType;
 import static org.apache.arrow.vector.types.pojo.ArrowType.Timestamp;
 
@@ -45,46 +45,46 @@ public enum ColumnDataType {
     TimestampMicrosecond, //
     TimestampNanosecond;
 
-    public Columns.ColumnDataType toProtoValue() {
+    public Common.ColumnDataType toProtoValue() {
         switch (this) {
             case Bool:
-                return Columns.ColumnDataType.BOOLEAN;
+                return Common.ColumnDataType.BOOLEAN;
             case Int8:
-                return Columns.ColumnDataType.INT8;
+                return Common.ColumnDataType.INT8;
             case Int16:
-                return Columns.ColumnDataType.INT16;
+                return Common.ColumnDataType.INT16;
             case Int32:
-                return Columns.ColumnDataType.INT32;
+                return Common.ColumnDataType.INT32;
             case Int64:
-                return Columns.ColumnDataType.INT64;
+                return Common.ColumnDataType.INT64;
             case UInt8:
-                return Columns.ColumnDataType.UINT8;
+                return Common.ColumnDataType.UINT8;
             case UInt16:
-                return Columns.ColumnDataType.UINT16;
+                return Common.ColumnDataType.UINT16;
             case UInt32:
-                return Columns.ColumnDataType.UINT32;
+                return Common.ColumnDataType.UINT32;
             case UInt64:
-                return Columns.ColumnDataType.UINT64;
+                return Common.ColumnDataType.UINT64;
             case Float32:
-                return Columns.ColumnDataType.FLOAT32;
+                return Common.ColumnDataType.FLOAT32;
             case Float64:
-                return Columns.ColumnDataType.FLOAT64;
+                return Common.ColumnDataType.FLOAT64;
             case Binary:
-                return Columns.ColumnDataType.BINARY;
+                return Common.ColumnDataType.BINARY;
             case String:
-                return Columns.ColumnDataType.STRING;
+                return Common.ColumnDataType.STRING;
             case Date:
-                return Columns.ColumnDataType.DATE;
+                return Common.ColumnDataType.DATE;
             case DateTime:
-                return Columns.ColumnDataType.DATETIME;
+                return Common.ColumnDataType.DATETIME;
             case TimestampSecond:
-                return Columns.ColumnDataType.TIMESTAMP_SECOND;
+                return Common.ColumnDataType.TIMESTAMP_SECOND;
             case TimestampMillisecond:
-                return Columns.ColumnDataType.TIMESTAMP_MILLISECOND;
+                return Common.ColumnDataType.TIMESTAMP_MILLISECOND;
             case TimestampMicrosecond:
-                return Columns.ColumnDataType.TIMESTAMP_MICROSECOND;
+                return Common.ColumnDataType.TIMESTAMP_MICROSECOND;
             case TimestampNanosecond:
-                return Columns.ColumnDataType.TIMESTAMP_NANOSECOND;
+                return Common.ColumnDataType.TIMESTAMP_NANOSECOND;
             default:
                 return null;
         }
