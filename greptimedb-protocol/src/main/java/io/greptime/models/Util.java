@@ -17,7 +17,6 @@ package io.greptime.models;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 
 /**
