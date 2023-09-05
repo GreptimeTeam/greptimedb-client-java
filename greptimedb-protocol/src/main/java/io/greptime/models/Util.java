@@ -15,10 +15,17 @@
  */
 package io.greptime.models;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 /**
  * @author jiachun.fjc
  */
 public class Util {
+
+    static int ONE_DAY_IN_SECONDS = 86400;
 
     public static long getLongValue(Object value) {
         if (value instanceof Integer) {
@@ -27,5 +34,25 @@ public class Util {
             return (long) value;
         }
         return ((Number) value).longValue();
+    }
+
+    public static int getDataValue(Object value) {
+        if (value instanceof Date) {
+            Instant instant = ((Date) value).toInstant();
+            long epochDay = instant.getEpochSecond() / ONE_DAY_IN_SECONDS;
+            return (int) epochDay;
+        } else if (value instanceof LocalDate) {
+            return (int) ((LocalDate) value).toEpochDay();
+        }
+        return (int) getLongValue(value);
+    }
+
+    public static int getDataTimeValue(Object value) {
+        if (value instanceof Date) {
+            Instant instant = ((Date) value).toInstant();
+            long epochDay = instant.getEpochSecond();
+            return (int) epochDay;
+        }
+        return (int) getLongValue(value);
     }
 }
