@@ -100,6 +100,7 @@ public class WriteRowsTest {
             Assert.assertEquals(111, rows.rows().get(0).getValues(2).getI32Value());
             Assert.assertEquals(222, rows.rows().get(1).getValues(2).getI32Value());
             Assert.assertFalse(rows.rows().get(2).getValues(2).hasI32Value());
+            Assert.assertFalse(rows.rows().get(1).getValues(1).hasStringValue());
         }
     }
 
