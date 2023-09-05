@@ -15,6 +15,7 @@
  */
 package io.greptime.models;
 
+import io.greptime.common.util.Ensures;
 import io.greptime.v1.Common;
 import io.greptime.v1.Database;
 import java.util.Collection;
@@ -62,14 +63,22 @@ public class WriteRowsHelper {
                     rowInsertRequestsBuilder.addInserts(r.intoRowInsertRequest());
                     break;
             }
-
         }
 
-        return Database.GreptimeRequest.newBuilder() //
-                .setHeader(headerBuilder.build()) //
-                .setInserts(insertRequestsBuilder.build()) //
-                .setRowInserts(rowInsertRequestsBuilder.build()) //
-                .build();
+        if (insertRequestsBuilder.getInsertsCount() > 0) {
+            Ensures.ensure(rowInsertRequestsBuilder.getInsertsCount() == 0, "Columnar and Row inserts cannot be mixed");
+            return Database.GreptimeRequest.newBuilder() //
+                    .setHeader(headerBuilder.build()) //
+                    .setInserts(insertRequestsBuilder.build()) //
+                    .build();
+        } else if (rowInsertRequestsBuilder.getInsertsCount() > 0) {
+            Ensures.ensure(insertRequestsBuilder.getInsertsCount() == 0, "Columnar and Row inserts cannot be mixed");
+            return Database.GreptimeRequest.newBuilder() //
+                    .setHeader(headerBuilder.build()) //
+                    .setRowInserts(rowInsertRequestsBuilder.build()) //
+                    .build();
+        }
+        throw new IllegalArgumentException("No inserts");
     }
 
     private WriteRowsHelper() {}
