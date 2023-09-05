@@ -54,7 +54,7 @@
     </distributionManagement>
 
     <properties>
-        <guava.version>31.1-jre</guava.version>
+        <guava.version>32.0.1-jre</guava.version>
         <jmh.version>1.20</jmh.version>
         <junit.dep.version>4.8.2</junit.dep.version>
         <junit.version>4.13.1</junit.version>

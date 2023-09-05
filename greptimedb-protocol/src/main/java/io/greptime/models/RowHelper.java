@@ -28,98 +28,70 @@ public final class RowHelper {
 
     public static void addValue(RowData.Row.Builder builder, Common.ColumnDataType dataType, Object value) {
         RowData.Value.Builder valueBuilder = RowData.Value.newBuilder();
+        if (value == null) {
+            builder.addValues(valueBuilder.build());
+            return;
+        }
+
         switch (dataType) {
             case INT8:
-                if (value != null) {
-                    valueBuilder.setI8Value((int) value);
-                }
+                valueBuilder.setI8Value((int) value);
                 break;
             case INT16:
-                if (value != null) {
-                    valueBuilder.setI16Value((int) value);
-                }
+                valueBuilder.setI16Value((int) value);
                 break;
             case INT32:
-                if (value != null) {
-                    valueBuilder.setI32Value((int) value);
-                }
+                valueBuilder.setI32Value((int) value);
                 break;
             case INT64:
-                if (value != null) {
-                    valueBuilder.setI64Value(Util.getLongValue(value));
-                }
+                valueBuilder.setI64Value(Util.getLongValue(value));
                 break;
             case UINT8:
-                if (value != null) {
-                    valueBuilder.setU8Value((int) value);
-                }
+                valueBuilder.setU8Value((int) value);
                 break;
             case UINT16:
-                if (value != null) {
-                    valueBuilder.setU16Value((int) value);
-                }
+                valueBuilder.setU16Value((int) value);
                 break;
             case UINT32:
-                if (value != null) {
-                    valueBuilder.setU32Value((int) value);
-                }
+                valueBuilder.setU32Value((int) value);
                 break;
             case UINT64:
-                if (value != null) {
-                    valueBuilder.setU64Value(Util.getLongValue(value));
-                }
+                valueBuilder.setU64Value(Util.getLongValue(value));
                 break;
             case FLOAT32:
-                if (value != null) {
-                    valueBuilder.setF32Value(((Number) value).floatValue());
-                }
+                valueBuilder.setF32Value(((Number) value).floatValue());
                 break;
             case FLOAT64:
-                if (value != null) {
-                    valueBuilder.setF64Value(((Number) value).doubleValue());
-                }
+                valueBuilder.setF64Value(((Number) value).doubleValue());
                 break;
             case BOOLEAN:
-                if (value != null) {
-                    valueBuilder.setBoolValue((boolean) value);
-                }
+                valueBuilder.setBoolValue((boolean) value);
                 break;
             case BINARY:
-                if (value != null) {
-                    valueBuilder.setBinaryValue(ByteStringHelper.wrap((byte[]) value));
-                }
+                valueBuilder.setBinaryValue(ByteStringHelper.wrap((byte[]) value));
                 break;
             case STRING:
-                if (value != null) {
-                    valueBuilder.setStringValue((String) value);
-                }
+                valueBuilder.setStringValue((String) value);
                 break;
             case DATE:
-                if (value != null) {
-                    valueBuilder.setDateValue((int) value);
-                }
+                valueBuilder.setDateValue((int) value);
                 break;
             case DATETIME:
-                if (value != null) {
-                    valueBuilder.setDatetimeValue(Util.getLongValue(value));
-                }
+                valueBuilder.setDatetimeValue(Util.getLongValue(value));
                 break;
             case TIMESTAMP_SECOND:
-                if (value != null) {
-                    valueBuilder.setTsSecondValue(Util.getLongValue(value));
-                }
+                valueBuilder.setTsSecondValue(Util.getLongValue(value));
                 break;
             case TIMESTAMP_MILLISECOND:
                 valueBuilder.setTsMillisecondValue(Util.getLongValue(value));
                 break;
             case TIMESTAMP_NANOSECOND:
-                if (value != null) {
-                    valueBuilder.setTsNanosecondValue(Util.getLongValue(value));
-                }
+                valueBuilder.setTsNanosecondValue(Util.getLongValue(value));
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));
         }
+
         builder.addValues(valueBuilder.build());
     }
 
