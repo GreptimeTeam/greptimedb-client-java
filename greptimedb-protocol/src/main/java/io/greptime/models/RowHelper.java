@@ -74,10 +74,10 @@ public final class RowHelper {
                 valueBuilder.setStringValue((String) value);
                 break;
             case DATE:
-                valueBuilder.setDateValue(Util.getDataValue(value));
+                valueBuilder.setDateValue(Util.getDateValue(value));
                 break;
             case DATETIME:
-                valueBuilder.setDatetimeValue(Util.getDataTimeValue(value));
+                valueBuilder.setDatetimeValue(Util.getDateTimeValue(value));
                 break;
             case TIMESTAMP_SECOND:
                 valueBuilder.setTsSecondValue(Util.getLongValue(value));

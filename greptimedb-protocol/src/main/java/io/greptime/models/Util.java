@@ -43,7 +43,7 @@ public class Util {
         throw new IllegalArgumentException("Unsupported value type: " + value.getClass());
     }
 
-    static int getDataValue(Object value) {
+    static int getDateValue(Object value) {
         if (value instanceof Date) {
             Instant instant = ((Date) value).toInstant();
             long epochDay = instant.getEpochSecond() / ONE_DAY_IN_SECONDS;
@@ -57,7 +57,7 @@ public class Util {
         return (int) getLongValue(value);
     }
 
-    static int getDataTimeValue(Object value) {
+    static int getDateTimeValue(Object value) {
         if (value instanceof Date) {
             Instant instant = ((Date) value).toInstant();
             long epochDay = instant.getEpochSecond();
