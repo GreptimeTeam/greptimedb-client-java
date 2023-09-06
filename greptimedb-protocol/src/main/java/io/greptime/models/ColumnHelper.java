@@ -117,10 +117,10 @@ public final class ColumnHelper {
                 builder.addStringValues((String) value);
                 break;
             case DATE:
-                builder.addDateValues(Util.getDataValue(value));
+                builder.addDateValues(Util.getDateValue(value));
                 break;
             case DATETIME:
-                builder.addDatetimeValues(Util.getDataTimeValue(value));
+                builder.addDatetimeValues(Util.getDateTimeValue(value));
                 break;
             case TIMESTAMP_SECOND:
                 builder.addTsSecondValues(Util.getLongValue(value));
