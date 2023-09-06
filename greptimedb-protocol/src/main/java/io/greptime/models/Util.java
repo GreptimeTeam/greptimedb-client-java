@@ -15,17 +15,55 @@
  */
 package io.greptime.models;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
+
 /**
  * @author jiachun.fjc
  */
 public class Util {
 
-    public static long getLongValue(Object value) {
+    static int ONE_DAY_IN_SECONDS = 86400;
+
+    static long getLongValue(Object value) {
         if (value instanceof Integer) {
             return (int) value;
-        } else if (value instanceof Long) {
+        }
+
+        if (value instanceof Long) {
             return (long) value;
         }
-        return ((Number) value).longValue();
+
+        if (value instanceof Number) {
+            return ((Number) value).longValue();
+        }
+
+        // Not null
+        throw new IllegalArgumentException("Unsupported value type: " + value.getClass());
+    }
+
+    static int getDataValue(Object value) {
+        if (value instanceof Date) {
+            Instant instant = ((Date) value).toInstant();
+            long epochDay = instant.getEpochSecond() / ONE_DAY_IN_SECONDS;
+            return (int) epochDay;
+        }
+
+        if (value instanceof LocalDate) {
+            return (int) ((LocalDate) value).toEpochDay();
+        }
+
+        return (int) getLongValue(value);
+    }
+
+    static int getDataTimeValue(Object value) {
+        if (value instanceof Date) {
+            Instant instant = ((Date) value).toInstant();
+            long epochDay = instant.getEpochSecond();
+            return (int) epochDay;
+        }
+
+        return (int) getLongValue(value);
     }
 }
