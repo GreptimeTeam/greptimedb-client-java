@@ -123,13 +123,13 @@ public final class ColumnHelper {
                 builder.addDatetimeValues(Util.getDateTimeValue(value));
                 break;
             case TIMESTAMP_SECOND:
-                builder.addTsSecondValues(Util.getLongValue(value));
+                builder.addTimestampSecondValues(Util.getLongValue(value));
                 break;
             case TIMESTAMP_MILLISECOND:
-                builder.addTsMillisecondValues(Util.getLongValue(value));
+                builder.addTimestampMillisecondValues(Util.getLongValue(value));
                 break;
             case TIMESTAMP_NANOSECOND:
-                builder.addTsNanosecondValues(Util.getLongValue(value));
+                builder.addTimestampNanosecondValues(Util.getLongValue(value));
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));
@@ -169,11 +169,11 @@ public final class ColumnHelper {
             case DATETIME:
                 return values.getDatetimeValues(index);
             case TIMESTAMP_SECOND:
-                return values.getTsSecondValues(index);
+                return values.getTimestampSecondValues(index);
             case TIMESTAMP_MILLISECOND:
-                return values.getTsMillisecondValues(index);
+                return values.getTimestampMillisecondValues(index);
             case TIMESTAMP_NANOSECOND:
-                return values.getTsNanosecondValues(index);
+                return values.getTimestampNanosecondValues(index);
             default:
                 throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));
         }

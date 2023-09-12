@@ -80,13 +80,13 @@ public final class RowHelper {
                 valueBuilder.setDatetimeValue(Util.getDateTimeValue(value));
                 break;
             case TIMESTAMP_SECOND:
-                valueBuilder.setTsSecondValue(Util.getLongValue(value));
+                valueBuilder.setTimestampSecondValue(Util.getLongValue(value));
                 break;
             case TIMESTAMP_MILLISECOND:
-                valueBuilder.setTsMillisecondValue(Util.getLongValue(value));
+                valueBuilder.setTimestampMillisecondValue(Util.getLongValue(value));
                 break;
             case TIMESTAMP_NANOSECOND:
-                valueBuilder.setTsNanosecondValue(Util.getLongValue(value));
+                valueBuilder.setTimestampNanosecondValue(Util.getLongValue(value));
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));
