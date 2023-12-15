@@ -17,7 +17,6 @@ package io.greptime.models;
 
 import io.greptime.common.util.Ensures;
 import io.greptime.v1.Common;
-import io.greptime.v1.RowData;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +36,7 @@ public class TableSchema {
     private List<String> columnNames;
     private List<Common.SemanticType> semanticTypes;
     private List<Common.ColumnDataType> dataTypes;
+    private List<Common.ColumnDataTypeExtension> dataTypeExtensions;
 
     private TableSchema() {}
 
@@ -54,6 +54,10 @@ public class TableSchema {
 
     public List<Common.ColumnDataType> getDataTypes() {
         return dataTypes;
+    }
+
+    public List<Common.ColumnDataTypeExtension> getDataTypeExtensions() {
+        return dataTypeExtensions;
     }
 
     public static TableSchema findSchema(TableName tableName) {
@@ -77,6 +81,7 @@ public class TableSchema {
         private List<String> columnNames;
         private List<Common.SemanticType> semanticTypes;
         private List<Common.ColumnDataType> dataTypes;
+        private List<Common.ColumnDataTypeExtension> dataTypeExtensions;
 
         public Builder(TableName tableName) {
             this.tableName = tableName;
@@ -95,8 +100,26 @@ public class TableSchema {
         }
 
         public Builder dataTypes(ColumnDataType... dataTypes) {
+            ColumnDataTypeWithExtension[] columnDataTypeWithExtensions = Arrays.stream(dataTypes)
+                    .map(ColumnDataTypeWithExtension::of)
+                    .toArray(ColumnDataTypeWithExtension[]::new);
+            return dataTypes(columnDataTypeWithExtensions);
+        }
+
+        public Builder dataTypes(ColumnDataTypeWithExtension... dataTypes) {
             this.dataTypes = Arrays.stream(dataTypes) //
-                    .map(ColumnDataType::toProtoValue) //
+                    .map((dataType) -> dataType.getColumnDataType().toProtoValue()) //
+                    .collect(Collectors.toList());
+            this.dataTypeExtensions = Arrays.stream(dataTypes) //
+                    .map((dataType) -> {
+                        ColumnDataType.DecimalTypeExtension decimalTypeExtension = dataType.getDecimalTypeExtension();
+                        if (decimalTypeExtension == null) {
+                            return Common.ColumnDataTypeExtension.getDefaultInstance();
+                        }
+                        return Common.ColumnDataTypeExtension.newBuilder() //
+                                .setDecimalType(decimalTypeExtension.into())
+                                .build();
+                    })
                     .collect(Collectors.toList());
             return this;
         }
@@ -110,14 +133,18 @@ public class TableSchema {
             int columnCount = this.columnNames.size();
 
             Ensures.ensure(columnCount > 0, "Empty column names");
-            Ensures.ensure(columnCount == semanticTypes.size(), "Column names size not equal to semantic types size");
-            Ensures.ensure(columnCount == dataTypes.size(), "Column names size not equal to data types size");
+            Ensures.ensure(columnCount == this.semanticTypes.size(),
+                    "Column names size not equal to semantic types size");
+            Ensures.ensure(columnCount == this.dataTypes.size(), "Column names size not equal to data types size");
+            Ensures.ensure(columnCount == this.dataTypeExtensions.size(),
+                    "Column names size not equal to data type extensions size");
 
             TableSchema tableSchema = new TableSchema();
             tableSchema.tableName = this.tableName;
             tableSchema.columnNames = this.columnNames;
             tableSchema.semanticTypes = this.semanticTypes;
             tableSchema.dataTypes = this.dataTypes;
+            tableSchema.dataTypeExtensions = this.dataTypeExtensions;
             return tableSchema;
         }
 

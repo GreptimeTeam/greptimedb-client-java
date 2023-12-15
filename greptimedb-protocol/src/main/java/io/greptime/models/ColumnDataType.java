@@ -15,9 +15,9 @@
  */
 package io.greptime.models;
 
+import io.greptime.common.Into;
 import io.greptime.v1.Common;
 import org.apache.arrow.vector.types.pojo.ArrowType;
-import static org.apache.arrow.vector.types.pojo.ArrowType.Timestamp;
 
 /**
  * Column data type.
@@ -43,7 +43,20 @@ public enum ColumnDataType {
     TimestampSecond, //
     TimestampMillisecond, //
     TimestampMicrosecond, //
-    TimestampNanosecond;
+    TimestampNanosecond, //
+    TimeSecond, //
+    TimeMilliSecond, //
+    TimeMicroSecond, //
+    TimeNanoSecond, //
+    IntervalYearMonth, //
+    IntervalDayTime, //
+    IntervalMonthDayNano, //
+    DurationSecond, //
+    DurationMillisecond, //
+    DurationMicrosecond, //
+    DurationNanosecond, //
+    Decimal128, //
+    ;
 
     public Common.ColumnDataType toProtoValue() {
         switch (this) {
@@ -85,6 +98,30 @@ public enum ColumnDataType {
                 return Common.ColumnDataType.TIMESTAMP_MICROSECOND;
             case TimestampNanosecond:
                 return Common.ColumnDataType.TIMESTAMP_NANOSECOND;
+            case TimeSecond:
+                return Common.ColumnDataType.TIME_SECOND;
+            case TimeMilliSecond:
+                return Common.ColumnDataType.TIME_MILLISECOND;
+            case TimeMicroSecond:
+                return Common.ColumnDataType.TIME_MICROSECOND;
+            case TimeNanoSecond:
+                return Common.ColumnDataType.TIME_NANOSECOND;
+            case IntervalYearMonth:
+                return Common.ColumnDataType.INTERVAL_YEAR_MONTH;
+            case IntervalDayTime:
+                return Common.ColumnDataType.INTERVAL_DAY_TIME;
+            case IntervalMonthDayNano:
+                return Common.ColumnDataType.INTERVAL_MONTH_DAY_NANO;
+            case DurationSecond:
+                return Common.ColumnDataType.DURATION_SECOND;
+            case DurationMillisecond:
+                return Common.ColumnDataType.DURATION_MILLISECOND;
+            case DurationMicrosecond:
+                return Common.ColumnDataType.DURATION_MICROSECOND;
+            case DurationNanosecond:
+                return Common.ColumnDataType.DURATION_NANOSECOND;
+            case Decimal128:
+                return Common.ColumnDataType.DECIMAL128;
             default:
                 return null;
         }
@@ -115,7 +152,7 @@ public enum ColumnDataType {
                         return null;
                 }
             case Timestamp:
-                Timestamp timestampType = (Timestamp) t;
+                ArrowType.Timestamp timestampType = (ArrowType.Timestamp) t;
                 switch (timestampType.getUnit()) {
                     case SECOND:
                         return TimestampSecond;
@@ -128,8 +165,63 @@ public enum ColumnDataType {
                     default:
                         return null;
                 }
+            case Interval:
+                ArrowType.Interval intervalType = (ArrowType.Interval) t;
+                switch (intervalType.getUnit()) {
+                    case YEAR_MONTH:
+                        return IntervalYearMonth;
+                    case DAY_TIME:
+                        return IntervalDayTime;
+                    case MONTH_DAY_NANO:
+                        return IntervalMonthDayNano;
+                    default:
+                        return null;
+                }
+            case Duration:
+                ArrowType.Duration durationType = (ArrowType.Duration) t;
+                switch (durationType.getUnit()) {
+                    case SECOND:
+                        return DurationSecond;
+                    case MILLISECOND:
+                        return DurationMillisecond;
+                    case MICROSECOND:
+                        return DurationMicrosecond;
+                    case NANOSECOND:
+                        return DurationNanosecond;
+                    default:
+                        return null;
+                }
+            case Decimal:
+                return Decimal128;
             default:
                 return null;
+        }
+    }
+
+    public static class DecimalTypeExtension implements Into<Common.DecimalTypeExtension> {
+        // The maximum precision for [Decimal128] values
+        public static final int DECIMAL128_MAX_PRECISION = 38;
+
+        // The maximum scale for [Decimal128] values
+        public static final int DECIMAL128_MAX_SCALE = 38;
+
+        public static final DecimalTypeExtension DEFAULT = new DecimalTypeExtension(DECIMAL128_MAX_PRECISION,
+                DECIMAL128_MAX_SCALE);
+
+        private final int precision;
+        private final int scale;
+
+        public DecimalTypeExtension(int precision, int scale) {
+            this.precision = precision;
+            this.scale = scale;
+        }
+
+        @Override
+        public Common.DecimalTypeExtension into() {
+            return Common.DecimalTypeExtension.newBuilder() //
+                    .setPrecision(this.precision) //
+                    .setScale(this.scale) //
+                    .build();
         }
     }
 }
