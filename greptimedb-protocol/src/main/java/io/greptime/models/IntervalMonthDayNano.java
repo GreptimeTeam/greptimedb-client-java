@@ -47,7 +47,10 @@ public class IntervalMonthDayNano implements Into<Common.IntervalMonthDayNano> {
 
     @Override
     public Common.IntervalMonthDayNano into() {
-        return Common.IntervalMonthDayNano.newBuilder().setMonths(this.months).setDays(this.days)
-                .setNanoseconds(this.nanoseconds).build();
+        return Common.IntervalMonthDayNano.newBuilder() //
+                .setMonths(this.months) //
+                .setDays(this.days) //
+                .setNanoseconds(this.nanoseconds) //
+                .build();
     }
 }

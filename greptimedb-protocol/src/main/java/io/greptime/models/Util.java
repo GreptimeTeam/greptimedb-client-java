@@ -49,6 +49,11 @@ public class Util {
     }
 
     static int getDateValue(Object value) {
+        if (value instanceof Instant) {
+            long epochDay = ((Instant) value).getEpochSecond() / ONE_DAY_IN_SECONDS;
+            return (int) epochDay;
+        }
+
         if (value instanceof Date) {
             Instant instant = ((Date) value).toInstant();
             long epochDay = instant.getEpochSecond() / ONE_DAY_IN_SECONDS;
@@ -63,10 +68,15 @@ public class Util {
     }
 
     static int getDateTimeValue(Object value) {
+        if (value instanceof Instant) {
+            long epochSecond = ((Instant) value).getEpochSecond();
+            return (int) epochSecond;
+        }
+
         if (value instanceof Date) {
             Instant instant = ((Date) value).toInstant();
-            long epochDay = instant.getEpochSecond();
-            return (int) epochDay;
+            long epochSecond = instant.getEpochSecond();
+            return (int) epochSecond;
         }
 
         return (int) getLongValue(value);
