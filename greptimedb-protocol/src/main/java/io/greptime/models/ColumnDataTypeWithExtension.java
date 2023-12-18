@@ -23,6 +23,9 @@ public class ColumnDataTypeWithExtension {
     private final ColumnDataType.DecimalTypeExtension decimalTypeExtension;
 
     public static ColumnDataTypeWithExtension of(ColumnDataType columnDataType) {
+        if (columnDataType == ColumnDataType.Decimal128) {
+            return new ColumnDataTypeWithExtension(columnDataType, ColumnDataType.DecimalTypeExtension.DEFAULT);
+        }
         return new ColumnDataTypeWithExtension(columnDataType, null);
     }
 

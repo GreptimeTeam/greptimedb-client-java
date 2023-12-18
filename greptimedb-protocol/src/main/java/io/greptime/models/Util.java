@@ -91,8 +91,9 @@ public class Util {
     static Common.Decimal128 getDecimal128Value(Common.ColumnDataTypeExtension dataTypeExtension, Object value) {
         Ensures.ensure(value instanceof BigDecimal, "Expected type: `BigDecimal`, actual: %s", value.getClass());
         Ensures.ensureNonNull(dataTypeExtension, "Null `dataTypeExtension`");
-        Ensures.ensure(dataTypeExtension.hasDecimalType(), "Expected decimal type in `dataTypeExtension`");
-        Common.DecimalTypeExtension decimalTypeExtension = dataTypeExtension.getDecimalType();
+        Common.DecimalTypeExtension decimalTypeExtension =
+                dataTypeExtension.hasDecimalType() ? dataTypeExtension.getDecimalType()
+                        : ColumnDataType.DecimalTypeExtension.DEFAULT.into();
         BigDecimal decimal = (BigDecimal) value;
         BigDecimal converted = decimal.setScale(decimalTypeExtension.getScale(), RoundingMode.HALF_UP);
 
