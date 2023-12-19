@@ -137,6 +137,7 @@ public interface WriteRows {
             List<String> columnNames = this.tableSchema.getColumnNames();
             List<Common.SemanticType> semanticTypes = this.tableSchema.getSemanticTypes();
             List<Common.ColumnDataType> dataTypes = this.tableSchema.getDataTypes();
+            List<Common.ColumnDataTypeExtension> dataTypeExtensions = this.tableSchema.getDataTypeExtensions();
 
             Ensures.ensureNonNull(tableName, "Null table name");
             Ensures.ensureNonNull(columnNames, "Null column names");
@@ -148,12 +149,13 @@ public interface WriteRows {
             Ensures.ensure(columnCount > 0, "Empty column names");
             Ensures.ensure(columnCount == semanticTypes.size(), "Column names size not equal to semantic types size");
             Ensures.ensure(columnCount == dataTypes.size(), "Column names size not equal to data types size");
+            Ensures.ensure(columnCount == dataTypeExtensions.size(), "Column names size not equal to data type extensions size");
 
             switch (this.writeProtocol) {
                 case Columnar:
-                    return buildColumnar(tableName, columnCount, columnNames, semanticTypes, dataTypes);
+                    return buildColumnar(tableName, columnCount, columnNames, semanticTypes, dataTypes, dataTypeExtensions);
                 case Row:
-                    return buildRow(tableName, columnCount, columnNames, semanticTypes, dataTypes);
+                    return buildRow(tableName, columnCount, columnNames, semanticTypes, dataTypes, dataTypeExtensions);
                 default:
                     throw new IllegalStateException("Unknown write protocol: " + this.writeProtocol);
             }
@@ -163,7 +165,8 @@ public interface WriteRows {
                                                int columnCount, //
                                                List<String> columnNames, //
                                                List<Common.SemanticType> semanticTypes, //
-                                               List<Common.ColumnDataType> dataTypes) {
+                                               List<Common.ColumnDataType> dataTypes, //
+                                               List<Common.ColumnDataTypeExtension> dataTypeExtensions) {
             ColumnarBasedWriteRows rows = new ColumnarBasedWriteRows();
             rows.tableName = tableName;
             rows.columnCount = columnCount;
@@ -172,7 +175,8 @@ public interface WriteRows {
                 Columns.Column.Builder builder = Columns.Column.newBuilder();
                 builder.setColumnName(columnNames.get(i)) //
                         .setSemanticType(semanticTypes.get(i)) //
-                        .setDatatype(dataTypes.get(i));
+                        .setDatatype(dataTypes.get(i)) //
+                        .setDatatypeExtension(dataTypeExtensions.get(i));
                 rows.builders.add(builder);
             }
             rows.nullMasks = new BitSet[columnCount];
@@ -183,7 +187,8 @@ public interface WriteRows {
                                           int columnCount, //
                                           List<String> columnNames, //
                                           List<Common.SemanticType> semanticTypes, //
-                                          List<Common.ColumnDataType> dataTypes) {
+                                          List<Common.ColumnDataType> dataTypes, //
+                                          List<Common.ColumnDataTypeExtension> dataTypeExtensions) {
             RowBasedWriteRows rows = new RowBasedWriteRows();
             rows.tableName = tableName;
             rows.columnSchemas = new ArrayList<>(columnCount);
@@ -192,7 +197,8 @@ public interface WriteRows {
                 RowData.ColumnSchema.Builder builder = RowData.ColumnSchema.newBuilder();
                 builder.setColumnName(columnNames.get(i)) //
                         .setSemanticType(semanticTypes.get(i)) //
-                        .setDatatype(dataTypes.get(i));
+                        .setDatatype(dataTypes.get(i)) //
+                        .setDatatypeExtension(dataTypeExtensions.get(i));
                 rows.columnSchemas.add(builder.build());
             }
             return rows;
@@ -334,7 +340,7 @@ public interface WriteRows {
             for (int i = 0; i < values.length; i++) {
                 RowData.ColumnSchema columnSchema = this.columnSchemas.get(i);
                 Object value = values[i];
-                RowHelper.addValue(rowBuilder, columnSchema.getDatatype(), value);
+                RowHelper.addValue(rowBuilder, columnSchema.getDatatype(), columnSchema.getDatatypeExtension(), value);
             }
             this.rows.add(rowBuilder.build());
 

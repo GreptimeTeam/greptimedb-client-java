@@ -15,6 +15,11 @@
  */
 package io.greptime.models;
 
+import io.greptime.common.util.Ensures;
+import io.greptime.v1.Common;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
@@ -44,6 +49,11 @@ public class Util {
     }
 
     static int getDateValue(Object value) {
+        if (value instanceof Instant) {
+            long epochDay = ((Instant) value).getEpochSecond() / ONE_DAY_IN_SECONDS;
+            return (int) epochDay;
+        }
+
         if (value instanceof Date) {
             Instant instant = ((Date) value).toInstant();
             long epochDay = instant.getEpochSecond() / ONE_DAY_IN_SECONDS;
@@ -58,12 +68,39 @@ public class Util {
     }
 
     static int getDateTimeValue(Object value) {
+        if (value instanceof Instant) {
+            long epochSecond = ((Instant) value).getEpochSecond();
+            return (int) epochSecond;
+        }
+
         if (value instanceof Date) {
             Instant instant = ((Date) value).toInstant();
-            long epochDay = instant.getEpochSecond();
-            return (int) epochDay;
+            long epochSecond = instant.getEpochSecond();
+            return (int) epochSecond;
         }
 
         return (int) getLongValue(value);
+    }
+
+    static Common.IntervalMonthDayNano getIntervalMonthDayNanoValue(Object value) {
+        Ensures.ensure(value instanceof IntervalMonthDayNano, "Expected type: `IntervalMonthDayNano`, actual: %s",
+                value.getClass());
+        return ((IntervalMonthDayNano) value).into();
+    }
+
+    static Common.Decimal128 getDecimal128Value(Common.ColumnDataTypeExtension dataTypeExtension, Object value) {
+        Ensures.ensure(value instanceof BigDecimal, "Expected type: `BigDecimal`, actual: %s", value.getClass());
+        Ensures.ensureNonNull(dataTypeExtension, "Null `dataTypeExtension`");
+        Common.DecimalTypeExtension decimalTypeExtension =
+                dataTypeExtension.hasDecimalType() ? dataTypeExtension.getDecimalType()
+                        : ColumnDataType.DecimalTypeExtension.DEFAULT.into();
+        BigDecimal decimal = (BigDecimal) value;
+        BigDecimal converted = decimal.setScale(decimalTypeExtension.getScale(), RoundingMode.HALF_UP);
+
+        BigInteger unscaledValue = converted.unscaledValue();
+        long high64Bits = unscaledValue.shiftRight(64).longValue();
+        long low64Bits = unscaledValue.longValue();
+
+        return Common.Decimal128.newBuilder().setHi(high64Bits).setLo(low64Bits).build();
     }
 }

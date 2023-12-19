@@ -26,7 +26,10 @@ import io.greptime.v1.RowData;
  */
 public final class RowHelper {
 
-    public static void addValue(RowData.Row.Builder builder, Common.ColumnDataType dataType, Object value) {
+    public static void addValue(RowData.Row.Builder builder, //
+            Common.ColumnDataType dataType, //
+            Common.ColumnDataTypeExtension dataTypeExtension, //
+            Object value) {
         RowData.Value.Builder valueBuilder = RowData.Value.newBuilder();
         if (value == null) {
             builder.addValues(valueBuilder.build());
@@ -87,6 +90,42 @@ public final class RowHelper {
                 break;
             case TIMESTAMP_NANOSECOND:
                 valueBuilder.setTimestampNanosecondValue(Util.getLongValue(value));
+                break;
+            case TIME_SECOND:
+                valueBuilder.setTimeSecondValue(Util.getLongValue(value));
+                break;
+            case TIME_MILLISECOND:
+                valueBuilder.setTimeMillisecondValue(Util.getLongValue(value));
+                break;
+            case TIME_MICROSECOND:
+                valueBuilder.setTimeMicrosecondValue(Util.getLongValue(value));
+                break;
+            case TIME_NANOSECOND:
+                valueBuilder.setTimeNanosecondValue(Util.getLongValue(value));
+                break;
+            case INTERVAL_YEAR_MONTH:
+                valueBuilder.setIntervalYearMonthValue((int) value);
+                break;
+            case INTERVAL_DAY_TIME:
+                valueBuilder.setIntervalDayTimeValue(Util.getLongValue(value));
+                break;
+            case INTERVAL_MONTH_DAY_NANO:
+                valueBuilder.setIntervalMonthDayNanoValue(Util.getIntervalMonthDayNanoValue(value));
+                break;
+            case DURATION_SECOND:
+                valueBuilder.setDurationSecondValue(Util.getLongValue(value));
+                break;
+            case DURATION_MILLISECOND:
+                valueBuilder.setDurationMillisecondValue(Util.getLongValue(value));
+                break;
+            case DURATION_MICROSECOND:
+                valueBuilder.setDurationMicrosecondValue(Util.getLongValue(value));
+                break;
+            case DURATION_NANOSECOND:
+                valueBuilder.setDurationNanosecondValue(Util.getLongValue(value));
+                break;
+            case DECIMAL128:
+                valueBuilder.setDecimal128Value(Util.getDecimal128Value(dataTypeExtension, value));
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported `data_type`: %s", dataType));

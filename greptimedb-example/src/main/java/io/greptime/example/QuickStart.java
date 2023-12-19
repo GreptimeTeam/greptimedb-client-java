@@ -33,6 +33,7 @@ import io.greptime.models.WriteRows;
 import io.greptime.options.GreptimeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -76,15 +77,16 @@ public class QuickStart {
         TableSchema schema =
                 TableSchema
                         .newBuilder(TableName.with("public", "monitor"))
-                        .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field)
+                        .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field,
+                                SemanticType.Field, SemanticType.Field)
                         .dataTypes(ColumnDataType.String, ColumnDataType.TimestampMillisecond, ColumnDataType.Float64,
-                                ColumnDataType.Float64) //
-                        .columnNames("host", "ts", "cpu", "memory") //
+                                ColumnDataType.Float64, ColumnDataType.Decimal128) //
+                        .columnNames("host", "ts", "cpu", "memory", "decimal_value") //
                         .build();
 
         WriteRows rows = WriteRows.newBuilder(schema).build();
-        rows.insert("127.0.0.1", now, 0.1, null) //
-                .insert("127.0.0.2", now, 0.3, 0.5) //
+        rows.insert("127.0.0.1", now, 0.1, null, new BigDecimal("128.111")) //
+                .insert("127.0.0.2", now, 0.3, 0.5, new BigDecimal("1111111111111111111.2333333")) //
                 .finish();
 
         // For performance reasons, the SDK is designed to be purely asynchronous.
@@ -105,16 +107,17 @@ public class QuickStart {
         TableName tableName = TableName.with("public", "monitor");
         TableSchema
                 .newBuilder(tableName)
-                .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field)
+                .semanticTypes(SemanticType.Tag, SemanticType.Timestamp, SemanticType.Field, SemanticType.Field,
+                        SemanticType.Field)
                 .dataTypes(ColumnDataType.String, ColumnDataType.TimestampMillisecond, ColumnDataType.Float64,
-                        ColumnDataType.Float64) //
-                .columnNames("host", "ts", "cpu", "memory") //
+                        ColumnDataType.Float64, ColumnDataType.Decimal128) //
+                .columnNames("host", "ts", "cpu", "memory", "decimal_value") //
                 .buildAndCache(); // cache for reuse
         StreamWriter<WriteRows, WriteOk> streamWriter = greptimeDB.streamWriter();
 
         for (int i = 0; i < 100; i++) {
             WriteRows rows = WriteRows.newBuilder(TableSchema.findSchema(tableName)).build();
-            rows.insert("127.0.0.1", now + i, i, null).finish();
+            rows.insert("127.0.0.1", now + i, i, null, BigDecimal.valueOf(i)).finish();
 
             streamWriter.write(rows);
         }
