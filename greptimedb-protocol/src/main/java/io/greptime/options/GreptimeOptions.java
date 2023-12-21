@@ -315,6 +315,7 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
             opts.setRouterOptions(routerOpts);
 
             WriteOptions writeOpts = new WriteOptions();
+            writeOpts.setAuthInfo(this.authInfo);
             writeOpts.setAsyncPool(this.asyncWritePool);
             writeOpts.setMaxRetries(this.writeMaxRetries);
             writeOpts.setMaxInFlightWriteRows(this.maxInFlightWriteRows);
@@ -323,6 +324,7 @@ public class GreptimeOptions implements Copiable<GreptimeOptions> {
             opts.setWriteOptions(writeOpts);
 
             QueryOptions queryOpts = new QueryOptions();
+            queryOpts.setAuthInfo(this.authInfo);
             queryOpts.setAsyncPool(this.asyncReadPool);
             queryOpts.setMaxRetries(this.readMaxRetries);
             opts.setQueryOptions(queryOpts);
