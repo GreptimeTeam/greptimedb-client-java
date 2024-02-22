@@ -7,7 +7,7 @@
 A Java Client for GreptimeDB, which is compatible with GreptimeDB protocol and lightweight.
 
 > [!WARNING]  
-> `greptimedb-client-java` has been discontinued and is deprecated. The code in this repository is no longer maintained. Please use our new ingester [greptimedb-ingester-java](https://github.com/GreptimeTeam/greptimedb-ingester-java)
+> `greptimedb-client-java` has been discontinued and is deprecated. The code in this repository is no longer maintained. Please use our new ingester [greptimedb-ingester-java](https://github.com/GreptimeTeam/greptimedb-ingester-java).
 
 ## Features
 
